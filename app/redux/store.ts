@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import apartmentForRentReducer from "./slices/searchApartmentForRentSlice";
+import notificationReducer from './slices/pushNotificationSlice';
 
 
 export const store = configureStore({
   reducer: {
-    apartmentForRent: apartmentForRentReducer
+    apartmentForRent: apartmentForRentReducer,
+    pushNotification: notificationReducer,
   },
 });
 

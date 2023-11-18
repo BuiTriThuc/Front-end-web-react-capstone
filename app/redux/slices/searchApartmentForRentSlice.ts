@@ -29,6 +29,8 @@ const initialState = {
     resortId: null,
     checkIn: null,
     checkOut: null,
+    min: null,
+    max: null,
     guest: null,
     listOfInRoomAmenity: [],
     listOfPropertyView: [],

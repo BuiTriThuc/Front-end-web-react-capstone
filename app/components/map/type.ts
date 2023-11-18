@@ -264,6 +264,8 @@ export interface SearchApartmentForRentParams {
   resortId: number | null;
   checkIn: Date | null;
   checkOut: Date | null;
+  min: number | null;
+  max: number | null;
   guest: number | null;
   listOfInRoomAmenity: number[];
   listOfPropertyView: number[];
@@ -272,3 +274,76 @@ export interface SearchApartmentForRentParams {
   sortDirection: "asc" | "desc";
 }
 
+export interface InRoomAmenity {
+  id: number;
+  inRoomAmenityName: string;
+  inRoomAmenityDescription: string;
+  inRoomAmenityLinkIcon: string;
+  isDeleted: boolean;
+  inRoomAmenityTypeId: number;
+}
+
+export interface InRoomAmenityType {
+  id: number;
+  inRoomAmenityTypeName: string;
+  inRoomAmenityTypeDescription: string;
+  isDeleted: boolean;
+  inRoomAmenities: InRoomAmenity[];
+}
+
+export interface InRoomAmenityTypeResponse {
+  content: InRoomAmenityType[];
+  pageable: Pageable;
+  totalPages: number;
+  totalElements: number;
+  last: boolean;
+  size: number;
+  number: number;
+  sort: Sort;
+  numberOfElements: number;
+  first: boolean;
+  empty: boolean;
+}
+
+export interface PropertyType {
+  id: number;
+  propertyTypeName: string;
+  propertyTypeDescription: string;
+  deleted: boolean;
+}
+
+export interface PropertyTypeResponse {
+  content: PropertyType[];
+  pageable: Pageable;
+  totalPages: number;
+  totalElements: number;
+  last: boolean;
+  size: number;
+  number: number;
+  sort: Sort;
+  numberOfElements: number;
+  first: boolean;
+  empty: boolean;
+}
+
+
+export interface PropertyView {
+  id: number;
+  propertyViewName: string;
+  propertyViewDescription: string;
+  deleted: boolean;
+}
+
+export interface PropertyViewResponse {
+  content: PropertyView[];
+  pageable: Pageable;
+  totalPages: number;
+  totalElements: number;
+  last: boolean;
+  size: number;
+  number: number;
+  sort: Sort;
+  numberOfElements: number;
+  first: boolean;
+  empty: boolean;
+}

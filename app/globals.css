@@ -39,3 +39,10 @@ body {
   min-width: 450px !important;
   width: 100% !important;
 }
+
+.filepond--item {
+  width: calc(40% - 0.5em) !important;
+}
+/*.filepond--panel-root{*/
+/*  background-color: transparent !important;*/
+/*}*/

@@ -10,7 +10,6 @@ import { IoMdClose } from "react-icons/io";
 import Navbar from "./navbar/Navbar";
 import clsx from "clsx";
 import useLoginModal from "../hooks/useLoginModal";
-import { useSession } from "next-auth/react";
 import UserMenu from "./navbar/UserMenu";
 import { usePathname } from "next/navigation";
 
@@ -23,6 +22,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser }) => {
   const loginModal = useLoginModal();
   const pathName = usePathname();
   const [scroll, setScroll] = useState(false);
+
 
   // const { data: session } = useSession();
   // console.log("Session: ", { session });
@@ -50,8 +50,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser }) => {
   return (
     <div
       className={clsx(
-        `w-full z-50`,
-        pathName === ("/chat" || "/chatUser") ? "" : "fixed"
+        `w-full z-50`
       )}
     >
       <Container
@@ -89,6 +88,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser }) => {
           </div>
         </div>
       </Container>
+
       {openMenu ? (
         <div className="md:hidden sm:block min-h-full transition-all overflow-x-hidden overflow-y-auto relative">
           <div

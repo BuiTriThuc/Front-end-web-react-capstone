@@ -10,7 +10,7 @@ export default function Chat() {
   return (
     <div
       className={clsx(
-        `lg:pl-80 lg:block h-screen`,
+        `lg:block h-screen`,
         isOpen ? "block" : "hidden"
       )}
     >

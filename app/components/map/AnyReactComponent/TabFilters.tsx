@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from 'react';
 import { Dialog, Popover, Transition } from "@headlessui/react";
 import NcInputNumber from "./NcInputNumber";
 import ButtonPrimary from "@/shared/ButtonPrimary";
@@ -9,6 +9,13 @@ import ButtonClose from "@/shared/ButtonClose";
 import Checkbox from "@/shared/Checkbox";
 import Slider from "rc-slider";
 import convertNumbThousand from "@/utils/convertNumbThousand";
+import { InRoomAmenityType, InRoomAmenityTypeResponse, PropertyType, PropertyView } from '@/app/components/map/type';
+import GetInRoomAmenityType from '@/app/actions/getInRoomAmenityType';
+import InRoomAmenityTypeApis from '@/app/components/map/apis/InRoomAmenityTypeApis';
+import PropertyTypeApis from '@/app/components/map/apis/PropertyTypeApis';
+import PropertyViewApis from '@/app/components/map/apis/PropertyViewApis';
+import { useDispatch, useSelector } from 'react-redux';
+import { setApartmentForRentParams } from '@/app/redux/slices/searchApartmentForRentSlice';
 
 // DEMO DATA
 const typeOfPaces = [
@@ -68,9 +75,14 @@ const moreFilter3 = [
 const moreFilter4 = [{ name: " Pets allowed" }, { name: "Smoking allowed" }];
 
 const TabFilters = () => {
+  const dispatch = useDispatch();
+  const params = useSelector((state: any) => state.apartmentForRent.searchParams);
   const [isOpenMoreFilter, setisOpenMoreFilter] = useState(false);
   const [isOpenMoreFilterMobile, setisOpenMoreFilterMobile] = useState(false);
-  const [rangePrices, setRangePrices] = useState([1, 9999]);
+  const [rangePrices, setRangePrices] = useState([params.min??1, params.max??9999]);
+  const [inRoomAmenityType, setInRoomAmenityType] = useState<InRoomAmenityType[]>([]);
+  const [propertyType, setPropertyType] = useState<PropertyType[]>([]);
+  const [propertyView, setPropertyView] = useState<PropertyView[]>([]);
 
   //
   const closeModalMoreFilter = () => setisOpenMoreFilter(false);
@@ -78,6 +90,44 @@ const TabFilters = () => {
   //
   const closeModalMoreFilterMobile = () => setisOpenMoreFilterMobile(false);
   const openModalMoreFilterMobile = () => setisOpenMoreFilterMobile(true);
+
+  useEffect(() => {
+    InRoomAmenityTypeApis.getAll()
+      .then((res) => {
+        setInRoomAmenityType(res.content as InRoomAmenityType[]);
+      })
+      .catch((err) => console.error(err));
+    PropertyTypeApis.getAll()
+      .then((res) => {
+        setPropertyType(res.content as PropertyType[]);
+      })
+      .catch((err) => console.error(err));
+    PropertyViewApis.getAll()
+      .then((res) => {
+        setPropertyView(res.content as PropertyView[]);
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
+  const handlePropertyTypeChange = (id: number) => {
+    const updatedListOfPropertyType = params.listOfPropertyType?.includes(id)
+      ? params.listOfPropertyType?.filter((propertyId: number) => propertyId !== id) || []
+      : [...(params.listOfPropertyType || []), id];
+
+    dispatch(setApartmentForRentParams({ ...params, listOfPropertyType: updatedListOfPropertyType }));
+    console.log(params);
+  };
+
+  const handlePriceChange = () => {
+    dispatch(setApartmentForRentParams({ ...params, min: rangePrices[0], max: rangePrices[1] }));
+    console.log(params);
+  };
+
+  useEffect(() => {
+    console.log("params", params);
+  }, []);
+
+
 
   const renderXClear = () => {
     return (
@@ -108,7 +158,7 @@ const TabFilters = () => {
                 open ? "!border-primary-500 " : ""
               }`}
             >
-              <span>Type of place</span>
+              <span>Type of apartment</span>
               <i className="las la-angle-down ml-2"></i>
             </Popover.Button>
             <Transition
@@ -123,12 +173,14 @@ const TabFilters = () => {
               <Popover.Panel className="absolute z-20 w-screen max-w-sm px-4 mt-3 left-0 sm:px-0 lg:max-w-md">
                 <div className="overflow-hidden rounded-2xl shadow-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700">
                   <div className="relative flex flex-col px-5 py-6 space-y-5">
-                    {typeOfPaces.map((item) => (
-                      <div key={item.name} className="">
+                    {propertyType.map((item) => (
+                      <div key={item.id} className="">
                         <Checkbox
-                          name={item.name}
-                          label={item.name}
-                          subLabel={item.description}
+                          name={item.propertyTypeName}
+                          label={item.propertyTypeName}
+                          subLabel={item.propertyTypeDescription}
+                          defaultChecked={params && params.listOfPropertyType?.includes(item.id)}
+                          onChange={() => handlePropertyTypeChange(item.id)}
                         />
                       </div>
                     ))}
@@ -191,7 +243,10 @@ const TabFilters = () => {
                         max={9999}
                         defaultValue={[rangePrices[0], rangePrices[1]]}
                         allowCross={false}
-                        onChange={(e) => setRangePrices(e as number[])}
+                        onChange={(e) => {
+                          setRangePrices(e as number[])
+                          ;handlePriceChange();
+                        }}
                       />
                     </div>
 
@@ -266,6 +321,7 @@ const TabFilters = () => {
 
   const renderMoreFilterItem = (
     data: {
+      id: number;
       name: string;
       defaultChecked?: boolean;
     }[]
@@ -305,7 +361,7 @@ const TabFilters = () => {
           className={`flex items-center justify-center px-4 py-2 text-sm border border-primary-500 bg-primary-50 text-primary-700 focus:outline-none cursor-pointer`}
           onClick={openModalMoreFilter}
         >
-          <span>More filters (3)</span>
+          <span>More filters</span>
           {renderXClear()}
         </div>
 
@@ -360,30 +416,26 @@ const TabFilters = () => {
 
                   <div className="flex-grow overflow-y-auto">
                     <div className="px-10 divide-y divide-neutral-200 dark:divide-neutral-800">
-                      <div className="py-7">
-                        <h3 className="text-xl font-medium">Amenities</h3>
-                        <div className="mt-6 relative ">
-                          {renderMoreFilterItem(moreFilter1)}
-                        </div>
-                      </div>
-                      <div className="py-7">
-                        <h3 className="text-xl font-medium">Facilities</h3>
-                        <div className="mt-6 relative ">
-                          {renderMoreFilterItem(moreFilter2)}
-                        </div>
-                      </div>
-                      <div className="py-7">
-                        <h3 className="text-xl font-medium">Property type</h3>
-                        <div className="mt-6 relative ">
-                          {renderMoreFilterItem(moreFilter3)}
-                        </div>
-                      </div>
-                      <div className="py-7">
-                        <h3 className="text-xl font-medium">House rules</h3>
-                        <div className="mt-6 relative ">
-                          {renderMoreFilterItem(moreFilter4)}
-                        </div>
-                      </div>
+                      {
+                        propertyView &&(
+                          <div className="py-7">
+                            <h3 className="text-xl font-medium">Apartment View</h3>
+                            <div className="mt-6 relative ">
+                              {renderMoreFilterItem(propertyView.map((res) => ({ id: res.id, name: res.propertyViewName })))}
+                            </div>
+                          </div>
+                        )
+                      }
+                      {
+                        inRoomAmenityType && inRoomAmenityType?.map((item) => (
+                          <div className="py-7" key={item.id}>
+                            <h3 className="text-xl font-medium">{item.inRoomAmenityTypeName}</h3>
+                            <div className="mt-6 relative ">
+                              {renderMoreFilterItem(item.inRoomAmenities.map((res) => ({ id: res.id, name: res.inRoomAmenityName })))}
+                            </div>
+                          </div>
+                        ))
+                      }
                     </div>
                   </div>
 
@@ -473,9 +525,9 @@ const TabFilters = () => {
                     <div className="px-4 sm:px-6 divide-y divide-neutral-200 dark:divide-neutral-800">
                       {/* ---- */}
                       <div className="py-7">
-                        <h3 className="text-xl font-medium">Type of place</h3>
+                        <h3 className="text-xl font-medium">Type of apartment</h3>
                         <div className="mt-6 relative ">
-                          {renderMoreFilterItem(typeOfPaces)}
+                          {renderMoreFilterItem(propertyType.map(res=>({name: res.propertyTypeName, description: res.propertyTypeDescription, id: res.id})))}
                         </div>
                       </div>
 
@@ -557,38 +609,16 @@ const TabFilters = () => {
                           <NcInputNumber label="Bathrooms" max={10} />
                         </div>
                       </div>
-
-                      {/* ---- */}
-                      <div className="py-7">
-                        <h3 className="text-xl font-medium">Amenities</h3>
-                        <div className="mt-6 relative ">
-                          {renderMoreFilterItem(moreFilter1)}
-                        </div>
-                      </div>
-
-                      {/* ---- */}
-                      <div className="py-7">
-                        <h3 className="text-xl font-medium">Facilities</h3>
-                        <div className="mt-6 relative ">
-                          {renderMoreFilterItem(moreFilter2)}
-                        </div>
-                      </div>
-
-                      {/* ---- */}
-                      <div className="py-7">
-                        <h3 className="text-xl font-medium">Property type</h3>
-                        <div className="mt-6 relative ">
-                          {renderMoreFilterItem(moreFilter3)}
-                        </div>
-                      </div>
-
-                      {/* ---- */}
-                      <div className="py-7">
-                        <h3 className="text-xl font-medium">House rules</h3>
-                        <div className="mt-6 relative ">
-                          {renderMoreFilterItem(moreFilter4)}
-                        </div>
-                      </div>
+                      {
+                        inRoomAmenityType && inRoomAmenityType?.map((item) => (
+                          <div className="py-7" key={item.id}>
+                            <h3 className="text-xl font-medium">{item.inRoomAmenityTypeName}</h3>
+                            <div className="mt-6 relative ">
+                              {renderMoreFilterItem(item.inRoomAmenities.map((res) => ({ id: res.id, name: res.inRoomAmenityName })))}
+                            </div>
+                          </div>
+                        ))
+                      }
                     </div>
                   </div>
 
@@ -620,9 +650,9 @@ const TabFilters = () => {
       <div className="hidden lg:flex space-x-4">
         {renderTabsTypeOfPlace()}
         {renderTabsPriceRage()}
-        {renderTabMoreFilter()}
+        {inRoomAmenityType && renderTabMoreFilter()}
       </div>
-      {renderTabMoreFilterMobile()}
+      {inRoomAmenityType && renderTabMoreFilterMobile()}
     </div>
   );
 };
