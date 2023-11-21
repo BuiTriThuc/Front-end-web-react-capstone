@@ -229,12 +229,29 @@ const FormEditProperty: React.FC<FormDetailPropertyProps> = ({ propertyId }) => 
       }
     });
   };
-  const validateBed = () => {
+  const validateBeds = () => {
+    const kingBedValue = formEditProperty.getFieldValue('numberKingBeds');
+    const queenBedValue = formEditProperty.getFieldValue('numberQueenBeds');
+    const singleValue = formEditProperty.getFieldValue('numberSingleBeds');
+    const doubleBedValue = formEditProperty.getFieldValue('numberDoubleBeds');
+    const twinBedValue = formEditProperty.getFieldValue('numberTwinBeds');
+    const fullBedValue = formEditProperty.getFieldValue('numberFullBeds');
+    const murphyBedValue = formEditProperty.getFieldValue('numberSofaBeds');
+    const sofaBedValue = formEditProperty.getFieldValue('numberMurphyBeds');
     return new Promise((resolve, reject) => {
-      if (fileList.length > 0) {
-        resolve('ok');
+      if (
+        kingBedValue == 0 &&
+        queenBedValue == 0 &&
+        singleValue == 0 &&
+        doubleBedValue == 0 &&
+        twinBedValue == 0 &&
+        fullBedValue == 0 &&
+        murphyBedValue == 0 &&
+        sofaBedValue == 0
+      ) {
+        reject('The room must have 1 of bed!.');
       } else {
-        reject('Please input your property image!');
+        resolve('ok');
       }
     });
   };
@@ -310,7 +327,19 @@ const FormEditProperty: React.FC<FormDetailPropertyProps> = ({ propertyId }) => 
               <Form.Item<PropertyTypeUpdate>
                 label="King Bed"
                 name="numberKingBeds"
-                // rules={[{ required: true, message: 'Please input your property description!' }]}
+                rules={[
+                  {
+                    validator(rule, value, callback) {
+                      validateBeds()
+                        .then((result) => {
+                          callback();
+                        })
+                        .catch((error) => {
+                          callback(error);
+                        });
+                    },
+                  },
+                ]}
               >
                 <InputNumber min={0} />
               </Form.Item>
@@ -319,7 +348,19 @@ const FormEditProperty: React.FC<FormDetailPropertyProps> = ({ propertyId }) => 
               <Form.Item<PropertyTypeUpdate>
                 label="Queen Bed"
                 name="numberQueenBeds"
-                // rules={[{ required: true, message: 'Please input your property description!' }]}
+                rules={[
+                  {
+                    validator(rule, value, callback) {
+                      validateBeds()
+                        .then((result) => {
+                          callback();
+                        })
+                        .catch((error) => {
+                          callback(error);
+                        });
+                    },
+                  },
+                ]}
               >
                 <InputNumber min={0} />
               </Form.Item>
@@ -328,7 +369,19 @@ const FormEditProperty: React.FC<FormDetailPropertyProps> = ({ propertyId }) => 
               <Form.Item<PropertyTypeUpdate>
                 label="Single Bed"
                 name="numberSingleBeds"
-                // rules={[{ required: true, message: 'Please input your property description!' }]}
+                rules={[
+                  {
+                    validator(rule, value, callback) {
+                      validateBeds()
+                        .then((result) => {
+                          callback();
+                        })
+                        .catch((error) => {
+                          callback(error);
+                        });
+                    },
+                  },
+                ]}
               >
                 <InputNumber min={0} />
               </Form.Item>
@@ -337,7 +390,19 @@ const FormEditProperty: React.FC<FormDetailPropertyProps> = ({ propertyId }) => 
               <Form.Item<PropertyTypeUpdate>
                 label="Double Bed"
                 name="numberDoubleBeds"
-                // rules={[{ required: true, message: 'Please input your property description!' }]}
+                rules={[
+                  {
+                    validator(rule, value, callback) {
+                      validateBeds()
+                        .then((result) => {
+                          callback();
+                        })
+                        .catch((error) => {
+                          callback(error);
+                        });
+                    },
+                  },
+                ]}
               >
                 <InputNumber min={0} />
               </Form.Item>
@@ -346,16 +411,19 @@ const FormEditProperty: React.FC<FormDetailPropertyProps> = ({ propertyId }) => 
               <Form.Item<PropertyTypeUpdate>
                 label="Twin Bed"
                 name="numberTwinBeds"
-                // rules={[{ required: true, message: 'Please input your property description!' }]}
-              >
-                <InputNumber min={0} />
-              </Form.Item>
-            </Col>
-            <Col className="gutter-row" span={12}>
-              <Form.Item<PropertyTypeUpdate>
-                label="Full Bed"
-                name="numberFullBeds"
-                // rules={[{ required: true, message: 'Please input your property description!' }]}
+                rules={[
+                  {
+                    validator(rule, value, callback) {
+                      validateBeds()
+                        .then((result) => {
+                          callback();
+                        })
+                        .catch((error) => {
+                          callback(error);
+                        });
+                    },
+                  },
+                ]}
               >
                 <InputNumber min={0} />
               </Form.Item>
@@ -364,7 +432,40 @@ const FormEditProperty: React.FC<FormDetailPropertyProps> = ({ propertyId }) => 
               <Form.Item<PropertyTypeUpdate>
                 label="Murphy Bed"
                 name="numberMurphyBeds"
-                // rules={[{ required: true, message: 'Please input your property description!' }]}
+                rules={[
+                  {
+                    validator(rule, value, callback) {
+                      validateBeds()
+                        .then((result) => {
+                          callback();
+                        })
+                        .catch((error) => {
+                          callback(error);
+                        });
+                    },
+                  },
+                ]}
+              >
+                <InputNumber min={0} />
+              </Form.Item>
+            </Col>
+            <Col className="gutter-row" span={12}>
+              <Form.Item<PropertyTypeUpdate>
+                label="Full Bed"
+                name="numberFullBeds"
+                rules={[
+                  {
+                    validator(rule, value, callback) {
+                      validateBeds()
+                        .then((result) => {
+                          callback();
+                        })
+                        .catch((error) => {
+                          callback(error);
+                        });
+                    },
+                  },
+                ]}
               >
                 <InputNumber min={0} />
               </Form.Item>
@@ -373,9 +474,21 @@ const FormEditProperty: React.FC<FormDetailPropertyProps> = ({ propertyId }) => 
               <Form.Item<PropertyTypeUpdate>
                 label="Sofa Bed"
                 name="numberSofaBeds"
-                // rules={[{ required: true, message: 'Please input your property description!' }]}
+                rules={[
+                  {
+                    validator(rule, value, callback) {
+                      validateBeds()
+                        .then((result) => {
+                          callback();
+                        })
+                        .catch((error) => {
+                          callback(error);
+                        });
+                    },
+                  },
+                ]}
               >
-                <InputNumber min={0} />
+                <InputNumber min={1} />
               </Form.Item>
             </Col>
             <Col className="gutter-row" span={12}>
@@ -383,17 +496,37 @@ const FormEditProperty: React.FC<FormDetailPropertyProps> = ({ propertyId }) => 
                 label="Bed Room"
                 name="numberBedsRoom"
                 rules={[
-                  { required: true, message: 'Please input your property number Beds Room!' },
+                  {
+                    required: true,
+                    validator: (rule, value, callback) => {
+                      if (value === undefined || value < 1) {
+                        callback('Number of bed rooms must be greater than or equal to 1!');
+                      } else {
+                        callback();
+                      }
+                    },
+                  },
                 ]}
               >
-                <InputNumber min={0} />
+                <InputNumber min={1} />
               </Form.Item>
             </Col>
             <Col className="gutter-row" span={12}>
               <Form.Item<PropertyTypeUpdate>
-                label="Bath Bed"
+                label="Bath Room"
                 name="numberBathRoom"
-                rules={[{ required: true, message: 'Please input your property number BathRoom!' }]}
+                rules={[
+                  {
+                    required: true,
+                    validator: (rule, value, callback) => {
+                      if (value === undefined || value < 1) {
+                        callback('Number of bath rooms must be greater than or equal to 1!');
+                      } else {
+                        callback();
+                      }
+                    },
+                  },
+                ]}
               >
                 <InputNumber min={0} />
               </Form.Item>

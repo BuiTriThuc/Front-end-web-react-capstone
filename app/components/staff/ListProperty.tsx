@@ -356,8 +356,10 @@ export default function ListProperty() {
           >
             <a onClick={(e) => e.preventDefault()}>
               <Space>
-                Action
-                <DownOutlined />
+                <Button>
+                  Action
+                  <DownOutlined />
+                </Button>
               </Space>
             </a>
           </Dropdown>
@@ -385,8 +387,10 @@ export default function ListProperty() {
           >
             <a onClick={(e) => e.preventDefault()}>
               <Space>
-                Status
-                <DownOutlined />
+                <Button>
+                  Status
+                  <DownOutlined />
+                </Button>
               </Space>
             </a>
           </Dropdown>
