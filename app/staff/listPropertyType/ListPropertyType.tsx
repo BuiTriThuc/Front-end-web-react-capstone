@@ -7,6 +7,7 @@ import { Pagination } from 'flowbite-react';
 import GetPropertyTypeStaff from '@/app/actions/getPropertyTypeStaff';
 import ModalEditPropertyType from './ModalEditPropertyType';
 import ModalDeletePropertyType from './ModalDeletePropertyType';
+import { Input, Button } from '@material-tailwind/react';
 interface IPropertyType {
   id: number;
   propertyTypeName: string;
@@ -61,6 +62,11 @@ const ListPropertyType: React.FC<ListPropertyTypeProps> = () => {
     fetchPropertyType();
   }, [JSON.stringify(pageable), JSON.stringify(searchName)]);
 
+  function onChangeSearchName(e: any) {
+    e.preventDefault();
+    setSeachName(e.target.searchName?.value);
+  }
+
   return (
     <Fragment>
       <div className="">
@@ -71,6 +77,31 @@ const ListPropertyType: React.FC<ListPropertyTypeProps> = () => {
       </div>
 
       <div className="py-10">
+        <div
+          className="my-2 max-w-[24rem]"
+          style={{ borderRadius: '1px', border: '1px solid black' }}
+        >
+          <form
+            className="flex justify-start "
+            onSubmit={(e) => {
+              onChangeSearchName(e);
+            }}
+          >
+            <Input
+              name="searchName"
+              type="searchName"
+              // value={searchName}
+            />
+            <Button
+              type="submit"
+              color={searchName ? 'gray' : 'blue-gray'}
+              // disabled={!searchName}
+              style={{ color: searchName ? 'white' : 'black' }}
+            >
+              Search
+            </Button>
+          </form>
+        </div>
         <Table>
           <Table.Head>
             <Table.HeadCell>No</Table.HeadCell>
@@ -106,7 +137,6 @@ const ListPropertyType: React.FC<ListPropertyTypeProps> = () => {
             ))}
           </Table.Body>
         </Table>
-
         <div className="flex overflow-x-auto sm:justify-center py-3">
           <Pagination
             currentPage={currentPage}
