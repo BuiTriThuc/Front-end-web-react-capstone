@@ -17,7 +17,7 @@ const CreatePropertyType = () => {
     register,
     handleSubmit,
     formState: { errors },
-    reset
+    reset,
   } = useForm<FieldValues>({
     defaultValues: {
       propertyTypeName: '',
@@ -34,7 +34,8 @@ const CreatePropertyType = () => {
       .post(`/property-types`, data, config)
       .then(() => {
         toast.success('Create property type success');
-        reset();
+        router.push(`/staff/listPropertyType`);
+        // reset();
       })
       .catch((response) => {
         toast.error(response.response.data.message);

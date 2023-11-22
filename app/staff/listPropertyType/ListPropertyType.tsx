@@ -40,7 +40,7 @@ const ListPropertyType: React.FC<ListPropertyTypeProps> = () => {
   const [pageable, setPageable] = useState<Pageable>({
     pageNo: 0,
     pageSize: 10,
-    sortDirection: 'asc',
+    sortDirection: 'desc',
     sortBy: 'id',
   });
   const [searchName, setSeachName] = useState<string>('');
@@ -67,7 +67,7 @@ const ListPropertyType: React.FC<ListPropertyTypeProps> = () => {
         <span className="hover:underline" onClick={() => router.push('/staff')}>
           Dashboard
         </span>{' '}
-        {'>'} <span className="text-common">List property view</span>
+        {'>'} <span className="text-common">List property type</span>
       </div>
 
       <div className="py-10">
