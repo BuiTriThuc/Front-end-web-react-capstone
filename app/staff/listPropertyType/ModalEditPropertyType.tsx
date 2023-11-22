@@ -63,13 +63,13 @@ export default function ModalEditPropertyType({
   };
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     if (
       propertyTypeUpdate.propertyTypeName.propertyTypeName === '' ||
       propertyTypeUpdate.propertyTypeDescription.propertyTypeDescription == ''
     ) {
       setDisableSubmit(true);
     } else {
-      e.preventDefault();
       const resutl = await UpdatePropertyTypeStaff(id, {
         propertyTypeName: propertyTypeUpdate.propertyTypeName.propertyTypeName,
         propertyTypeDescription: propertyTypeUpdate.propertyTypeDescription.propertyTypeDescription,
