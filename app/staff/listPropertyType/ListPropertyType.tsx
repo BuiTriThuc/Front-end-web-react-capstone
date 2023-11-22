@@ -4,11 +4,9 @@ import { Table } from 'flowbite-react';
 import { useRouter } from 'next/navigation';
 import React, { Fragment, useEffect, useState } from 'react';
 import { Pagination } from 'flowbite-react';
-import axios from 'axios';
-import GetPropertyViewStaff from '@/app/actions/getPropertyViewStaff';
 import GetPropertyTypeStaff from '@/app/actions/getPropertyTypeStaff';
-import { PropertyType } from '@/app/components/map/type';
 import ModalEditPropertyType from './ModalEditPropertyType';
+import ModalDeletePropertyType from './ModalDeletePropertyType';
 interface IPropertyType {
   id: number;
   propertyTypeName: string;
@@ -91,17 +89,18 @@ const ListPropertyType: React.FC<ListPropertyTypeProps> = () => {
                 <Table.Cell>{item.propertyTypeName}</Table.Cell>
                 <Table.Cell>{item.propertyTypeDescription}</Table.Cell>
                 <Table.Cell>
-                  {/* <a
-                    href="#"
-                    className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
-                  >
-                    Edit
-                  </a> */}
-                  <ModalEditPropertyType
-                    id={item.id}
-                    propertyTypeItem={item}
-                    callback={() => fetchPropertyType(item.id)}
-                  />
+                  <div className="flex">
+                    <ModalEditPropertyType
+                      id={item.id}
+                      propertyTypeItem={item}
+                      callback={() => fetchPropertyType(item.id)}
+                    />
+                    <ModalDeletePropertyType
+                      id={item.id}
+                      propertyTypeItem={item}
+                      callback={() => fetchPropertyType(item.id)}
+                    />
+                  </div>
                 </Table.Cell>
               </Table.Row>
             ))}
