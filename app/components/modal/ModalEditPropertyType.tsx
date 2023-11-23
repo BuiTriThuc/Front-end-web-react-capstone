@@ -4,9 +4,10 @@ import React, { useEffect, useState } from 'react';
 import Modal from './Modal';
 import Input from '../input/Input';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
-import { Textarea, Label } from 'flowbite-react';
+import { Textarea } from 'flowbite-react';
 import useEditPropertyTypeModal from '@/app/hooks/useEditPropertyTypeModal';
 import UpdatePropertyTypeStaff from '@/app/actions/UpdatePropertyTypeStaff';
+import { message } from 'antd';
 export default function ModalEditPropertyType() {
   const [isLoading, setIsLoading] = useState(false);
   const editPropertyTypeModal = useEditPropertyTypeModal();
@@ -29,8 +30,11 @@ export default function ModalEditPropertyType() {
       .then((rs) => {
         editPropertyTypeModal.isSuccess = !editPropertyTypeModal.isSuccess;
         editPropertyTypeModal.onClose();
+        message.success('Edit success!.');
       })
-      .catch((err) => {});
+      .catch((err) => {
+        message.error('Edit Faild!.');
+      });
   };
   const bodyContent = (
     <div className="flex flex-col gap-4">

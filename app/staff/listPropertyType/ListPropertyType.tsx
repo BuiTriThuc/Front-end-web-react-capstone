@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
 import { Table } from 'flowbite-react';
@@ -5,8 +6,8 @@ import { useRouter } from 'next/navigation';
 import React, { Fragment, useEffect, useState } from 'react';
 import { Pagination } from 'flowbite-react';
 import GetPropertyTypeStaff from '@/app/actions/getPropertyTypeStaff';
-import ModalDeletePropertyType from './ModalDeletePropertyType';
 import useEditPropertyTypeModal from '@/app/hooks/useEditPropertyTypeModal';
+import useDeletePropertyTypeModal from '@/app/hooks/useDeletePropertyTypeModal';
 interface IPropertyType {
   id: number;
   propertyTypeName: string;
@@ -27,6 +28,7 @@ const ListPropertyType: React.FC<ListPropertyTypeProps> = () => {
   const router = useRouter();
   const [propertyViewList, setPropertyViewList] = useState<IPropertyType[]>([]);
   const editPropertyTypeModal = useEditPropertyTypeModal();
+  const deletePropertyTypeModal = useDeletePropertyTypeModal();
 
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
@@ -37,7 +39,7 @@ const ListPropertyType: React.FC<ListPropertyTypeProps> = () => {
   const [pageable, setPageable] = useState<Pageable>({
     pageNo: 0,
     pageSize: 10,
-    sortDirection: 'asc',
+    sortDirection: 'desc',
     sortBy: 'id',
   });
   const [searchName, setSeachName] = useState<string>('');
@@ -58,9 +60,18 @@ const ListPropertyType: React.FC<ListPropertyTypeProps> = () => {
     editPropertyTypeModal.item = item;
     editPropertyTypeModal.onOpen();
   };
+  const handleDeleteClick = (item: IPropertyType) => {
+    deletePropertyTypeModal.item = item;
+    deletePropertyTypeModal.onOpen();
+  };
   useEffect(() => {
     fetchPropertyType(editPropertyTypeModal.item.id);
-  }, [JSON.stringify(pageable), JSON.stringify(searchName), editPropertyTypeModal.isSuccess]);
+  }, [
+    JSON.stringify(pageable),
+    JSON.stringify(searchName),
+    editPropertyTypeModal.isSuccess,
+    deletePropertyTypeModal.isSuccess,
+  ]);
 
   return (
     <Fragment>
@@ -93,9 +104,15 @@ const ListPropertyType: React.FC<ListPropertyTypeProps> = () => {
                   <div className="flex">
                     <div
                       onClick={() => handleEditClick(item)}
-                      className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
+                      className="font-medium text-cyan-600 hover:underline dark:text-cyan-500 mx-1"
                     >
                       Edit
+                    </div>
+                    <div
+                      onClick={() => handleDeleteClick(item)}
+                      className="font-medium text-cyan-600 hover:underline dark:text-cyan-500 mx-1"
+                    >
+                      Delete
                     </div>
                   </div>
                 </Table.Cell>

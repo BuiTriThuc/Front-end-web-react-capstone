@@ -25,6 +25,7 @@ import ModalApartmentReview from './components/modal/ModalApartmentReview';
 import ModalWriteBlog from './components/modal/ModalWriteBlog';
 import ModalCreateReview from './components/modal/ModalCreateReview';
 import ModalEditPropertyType from './components/modal/ModalEditPropertyType';
+import ModalDeletePropertyType from './components/modal/ModalDeletePropertyType';
 
 const font = Poppins({
   subsets: ['latin'],
@@ -64,6 +65,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                   <ModalApartmentReview />
                   <ModalCreateReview />
                   <ModalEditPropertyType />
+                  <ModalDeletePropertyType />
                   <ToasterProvider />
                 </ClientOnly>
 
