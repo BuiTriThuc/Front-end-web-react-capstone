@@ -1,10 +1,16 @@
-import axios from "axios";
+import axios from 'axios';
 
-export default async function GetListUser() {
+export default async function GetListUser(config: any = {}) {
   try {
-    const users = await axios.get(
-      `${process.env.API_URL}/users/search?limit=20&offset=0`
-    );
+    const { email } = config;
+
+    let apiUrl = `${process.env.API_URL}/users/search?limit=999&offset=0&sortProps=id&sortDirection=desc`;
+
+    if (email) {
+      apiUrl += `&email=${email}`;
+    }
+
+    const users = await axios.get(apiUrl);
 
     if (!users) {
       return null;

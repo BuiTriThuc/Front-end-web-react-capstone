@@ -78,14 +78,14 @@ const GuestCard: React.FC<GuestCardProps> = ({ setGuestNumber, setRoomsNumber, t
   return (
     <Card className={`AnimateRight rounded-2xl md:mt-1`}>
       <CardContent>
-        <NcInputNumber
-          className="w-full text-sm md:px-1.5"
-          defaultValue={roomsInputValue}
-          onChange={(value) => handleChangeData(value, "rooms")}
-          max={999}
-          min={1}
-          label="Rooms"
-        />
+        {/*<NcInputNumber*/}
+        {/*  className="w-full text-sm md:px-1.5"*/}
+        {/*  defaultValue={roomsInputValue}*/}
+        {/*  onChange={(value) => handleChangeData(value, "rooms")}*/}
+        {/*  max={999}*/}
+        {/*  min={1}*/}
+        {/*  label="Rooms"*/}
+        {/*/>*/}
         <NcInputNumber
           className="w-full mt-2 text-sm md:px-1.5"
           defaultValue={guestAdultsInputValue}

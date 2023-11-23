@@ -13,6 +13,7 @@ import Pagination from './AnyReactComponent/Pagination';
 import TabFilters from './AnyReactComponent/TabFilters';
 import LocationInput from './AnyReactComponent/LocationInput';
 import { useDispatch, useSelector } from 'react-redux';
+import { Skeleton } from 'antd';
 
 function mapApartmentToStayCard(
   apartmentForRentResponse: ApartmentForRentResponse
@@ -48,6 +49,7 @@ interface MainMapProps {
 
 const MainMap: React.FC<MainMapProps> = ({ data }) => {
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
   const params = useSelector((state: any) => state.apartmentForRent.searchParams);
   const [coordinates, setCoordinates] = useState<Coords>({ lat: 10.200809, lng: 103.96685 });
   const [places, setPlaces] = useState<StayDataType[]>([]);
@@ -61,46 +63,53 @@ const MainMap: React.FC<MainMapProps> = ({ data }) => {
   }, [params]);
 
   const fetchApartmentForRents = () => {
+    setLoading(true);
     ApartmentForRentApis.getAllBySearchParams(params)
       .then((res) => {
         setPlaces(mapApartmentToStayCard(res));
         console.log(res);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => console.error(err))
+      .finally(() => setLoading(false));
   };
 
-  // useEffect(() => {
-  //   console.log(placeId);
-  // }, [placeId]);
 
   return (
     <div className="w-full flex flex-wrap-reverse md:flex-nowrap md:h-screen">
       <div className="h-auto md:h-full w-full md:w-[60%] overflow-visible overflow-y-auto">
         <div className="w-full text-center"></div>
         <SearchBar />
-        <div className="mb-3 mt-2 lg:mb-11">
+        <div className="mb-1 mt-2 ml-1 lg:mb-4">
           <TabFilters />
         </div>
         {/* Sidebar Component Rendered with filteredPlaces (Determined by place type and rating from filter) if found or all places passed in prop to 'places' */}
         {/* <Sidebar places={filteredPlaces ? filteredPlaces : places}  /> */}
         {/* --- */}
 
-        <div className="grid grid-cols-1 gap-3">
-          {places.map((item) => (
-            <div
-              key={item.id}
-              onMouseEnter={() => setCurrentHoverID((_) => item.id)}
-              onMouseLeave={() => setCurrentHoverID((_) => -1)}
-            >
-              <PropertyCardH data={item} />
+        {!loading ? (
+          <>
+            <span className="mb-4 ml-4 text-sm">{places?.length ?? 0} apartment(s)</span>
+            <div className="grid grid-cols-1 gap-3">
+              {places.map((item) => (
+                <div
+                  key={item.id}
+                  onMouseEnter={() => setCurrentHoverID(item.id)}
+                  onMouseLeave={() => setCurrentHoverID(-1)}
+                >
+                  <PropertyCardH data={item} />
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-        {places && places.length > 0 && (
-          <div className="flex mt-16 justify-center items-center">
-            <Pagination />
-          </div>
+            {places.length > 0 && (
+              <div className="flex mt-16 justify-center items-center">
+                <Pagination />
+              </div>
+            )}
+          </>
+        ) : (
+          <Skeleton />
         )}
+
       </div>
       <div className="h-[60vh] md:h-full w-full relative">
         {/* Map Header Component, with setCoordinate State passed in as props */}
@@ -108,7 +117,7 @@ const MainMap: React.FC<MainMapProps> = ({ data }) => {
         {/* --- */}
 
         {/* Map Component with 'setBounds', 'setCoordinates', 'coordinates' and either 'filteredPlaces' or 'places' states passed in as props to component  */}
-        {/* <Map 
+        {/* <Map
                     setBounds={setBounds}
                     setCoordinates={setCoordinates}
                     coordinates={coordinates}

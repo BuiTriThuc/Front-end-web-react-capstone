@@ -1,5 +1,6 @@
 import DropDownEditResort from '@/app/components/staff/DropDownEditResort';
 import ListActionApproveApartment from '@/app/components/staff/ListActionApproveApartment';
+import requireAuth from '@/app/libs/requireAuth';
 import Image from 'next/image';
 import React from 'react';
 import { AiOutlineCheck, AiOutlineClose, AiTwotoneStar } from 'react-icons/ai';
@@ -11,7 +12,7 @@ import { IoIosPeople } from 'react-icons/io';
 import { RxRadiobutton } from 'react-icons/rx';
 
 export default function StaffDetailResort() {
-  return (
+  return requireAuth(
     <div>
       <div>
         Staff {'>'} <span className="text-common">Detail Resort</span>
@@ -23,39 +24,21 @@ export default function StaffDetailResort() {
               <div className="pt-10  text-[40px]">
                 JW Marriott Phu Quoc Emerald Bay Resort & Spa
               </div>
-              <div className="text-gray-500">Phu Quoc</div>
+              <div className="flex flex-row items-center gap-1">
+                <div className="font-bold text-[20px]">Address: </div>
+                <div>Kien Giang Phu Quoc</div>
+              </div>
+              <div className="flex flex-row items-center gap-1">
+                <div className="font-bold text-[20px]">Property type: </div>
+                <div>Deluxe, site</div>
+              </div>
+              <div className="flex flex-row items-center gap-1">
+                <div className="font-bold text-[20px]">Amenity: </div>
+                <div>Sports, Dining services, Public area, health & wellness</div>
+              </div>
             </div>
             <div>
               <DropDownEditResort />
-            </div>
-          </div>
-          <div className="flex flex-row items-center">
-            <AiTwotoneStar color="#FFA11A" />
-            <AiTwotoneStar color="#FFA11A" />
-            <AiTwotoneStar color="#FFA11A" />
-            <AiTwotoneStar color="#FFA11A" />
-            <span className="pl-2">(1 Reviews)</span>
-          </div>
-          <div className="flex flex-row items-center w-[850px] justify-between pb-[30px]">
-            <div className="flex flex-row items-center pt-8 pb-5">
-              <BsClock size={20} color="" className="mr-[10px]" />
-              <span className="pl-1 text-gray-500 text-[17px]">5 Hours</span>
-            </div>
-            <div className="flex flex-row items-center pt-8 pb-5">
-              <IoIosPeople size={22} color="" className="mr-[10px]" />
-              <span className="pl-1 text-gray-500 text-[17px]">Max Guests : 200</span>
-            </div>
-            <div className="flex flex-row items-center pt-8 pb-5">
-              <FaWifi size={20} color="" className="mr-[10px]" />
-              <span className="pl-1 text-gray-500 text-[17px]">Wifi Available</span>
-            </div>
-            <div className="flex flex-row items-center pt-8 pb-5">
-              <BsCalendarDate size={20} color="" className="mr-[10px]" />
-              <span className="pl-1 text-gray-500 text-[17px]">Jan - July</span>
-            </div>
-            <div className="flex flex-row items-center pt-8 pb-5">
-              <BiDollarCircle size={22} color="" className="mr-[10px]" />
-              <span className="pl-1 text-gray-500 text-[17px]">1200$ - 2500$</span>
             </div>
           </div>
         </div>
@@ -160,6 +143,7 @@ export default function StaffDetailResort() {
         </div>
       </div>
       {/* <ListActionApproveApartment /> */}
-    </div>
+    </div>,
+    [3]
   );
 }

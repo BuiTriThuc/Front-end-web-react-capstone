@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 import React, { ChangeEvent, useState } from 'react';
 import InputMini from '../input/InputMini';
 import UploadAvtStaff from './UploadAvtStaff';
-import { DatePicker } from 'antd';
+import { DatePicker, Image } from 'antd';
 import dayjs from 'dayjs';
 import { BiBlock } from 'react-icons/bi';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
@@ -12,19 +12,27 @@ import useAxiosAuthClient from '@/app/hooks/useAxiosAuthClient';
 import toast from 'react-hot-toast';
 import { FileInput } from 'flowbite-react';
 import { format } from 'date-fns';
+import SelectRouterAdmin from './SelectRouterAdmin';
 
 export default function CreateStaffAccount() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [file, setFile] = useState<any>();
+  const [file, setFile] = useState<any>(null);
+  const [previewImage, setPreviewImage] = useState<any>(null); // State for storing the preview image
   const router = useRouter();
   const dateFormat = 'YYYY/MM/DD';
   const axiosAuthClient = useAxiosAuthClient();
 
-  const handleChangeFile = (e: ChangeEvent<HTMLInputElement>) => {
-    const newFile = e.target.files;
-    if (newFile) {
-      setFile(newFile);
+  const handleChangeFile = (e: any) => {
+    if (e) {
+      const newFile = e.target.files[0];
+      if (newFile) {
+        setFile(newFile);
+
+        // Create a preview image URL
+        const previewURL = URL.createObjectURL(newFile);
+        setPreviewImage(previewURL);
+      }
     }
   };
 
@@ -93,24 +101,39 @@ export default function CreateStaffAccount() {
 
   return (
     <div>
-      <div>
+      <div className="mt-10">
         <span className="hover:underline" onClick={() => router.push('/staff')}>
           Dashboard
         </span>{' '}
         {'>'} <span className="text-common">Create Staff</span>
       </div>
+      <SelectRouterAdmin />
       <div className="my-3">
         <div className="text-[20px] font-bold">Fill information of staff</div>
         <div className="pb-2 mt-6">Avatar*</div>
+        {previewImage && (
+          <div>
+            <Image
+              width={100}
+              height={100}
+              className=" rounded-full"
+              src={previewImage}
+              alt="Avatar Preview"
+            />
+          </div>
+        )}
         <div className="flex flex-row items-center gap-20 w-full ">
           <div className="">
-            {/* <UploadAvtStaff /> */}
+            {/* File input for avatar */}
             <FileInput
               id="avatar"
               {...register('avatar', { required: true })}
               onChange={handleChangeFile}
             />
           </div>
+
+          {/* Display the preview image if available */}
+
           <div className="flex flex-row items-center rounded-md p-4 border border-gray-600 gap-3">
             <div className="font-bold">Role: </div>
             <div className="flex flex-row items-center gap-1">
@@ -173,6 +196,7 @@ export default function CreateStaffAccount() {
           <Input id="fullName" label="Full name" register={register} errors={errors} required />
           <Input id="phone" label="Phone Number" register={register} errors={errors} required />
         </div>
+        S
       </div>
       <div className="flex flex-row justify-end w-full py-3">
         <button

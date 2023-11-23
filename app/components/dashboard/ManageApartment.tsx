@@ -83,7 +83,7 @@ const ManageApartment: React.FC<ManageApartmentProps> = ({ detailCoOwner, proper
                 </div>
               )}
             </div>
-            <div className="border-2 border-gray-500 px-2 rounded-md">
+            <div className="border border-gray-500 w-full rounded-md px-5">
               <div className="py-2">
                 <div className="flex flex-row items-center justify-between gap-3 mb-3 mt-3">
                   <div className="underline text-[20px] ">{propertyDetail?.propertyName}</div>
@@ -106,7 +106,10 @@ const ManageApartment: React.FC<ManageApartmentProps> = ({ detailCoOwner, proper
                   </div>
                   <BiBlock />
                 </div>
-
+                <div className="flex flex-row items-center w-full justify-between ">
+                  <div>Pbulic time:</div>
+                  <FiEdit size={20} />
+                </div>
                 <div className="flex flex-row items-center w-full justify-between py-4">
                   <div>
                     Apartment ID: <span className="text-common">{detail.id.roomId}</span>

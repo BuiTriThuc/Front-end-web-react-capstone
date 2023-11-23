@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Feed from "./Feed";
 import Notification from "./Notification";
@@ -10,68 +10,45 @@ import { useDispatch, useSelector } from 'react-redux';
 import { NotificationResponse } from '@/app/components/notification/types';
 import { fetchNotifications, removeNotifications } from '@/app/redux/slices/pushNotificationSlice';
 import Divider from '@mui/material/Divider';
+import { Conversation } from '@/app/actions/ConversationApis';
+import { fetchConversations } from '@/app/redux/slices/conversationSlice';
+import ConversationBox from '@/app/components/chat/ConversationBox';
+import { useRouter } from 'next/navigation';
 
-const notificationsTest2 = [
-  {
-    id: "2",
-    hoursAgo: 1,
-    typeNotification: "Chat",
-    textNotification: "You have received a message.",
-    icon: "Chat",
-  },
-  {
-    id: "3",
-    hoursAgo: 1,
-    typeNotification: "Chat",
-    textNotification: "You have received a message2.",
-    icon: "Chat",
-  },
-];
-
-export default function ChatWidget() {
+interface Props {
+  currentUser?: Object | any | null;
+}
+export default function ChatWidget({ currentUser }: Props) {
   const dispatch = useDispatch();
-  const notification = useSelector((state: any) => state.pushNotification.data);
+  const conversations = useSelector((state: any) => state.conversation.data);
   const [showFeed, setShowFeed] = useState(false);
-  const [notificationsList, setNotificationsList] =
-    useState(notification??[])
+  const [conversationsList, setConversationsList] =
+    useState(conversations ?? []);
+  const router = useRouter();
 
   useEffect(() => {
-    setNotificationsList(notification);
-    console.log("notificationsList",notificationsList);
-  }, [notification, notificationsList]);
+    setConversationsList(conversations);
+    console.log("conversationList",conversationsList);
+  }, [conversations, conversationsList]);
 
 
   return (
     <div className="w-[448px] rounded overflow-hidden">
-      <header className="bg-white dark:bg-zinc-900 py-4 px-6 flex items-center justify-between">
+      <header className="bg-white rounded-t border-b dark:bg-zinc-900 py-4 px-6 flex items-center justify-between">
         <span className="font-bold">Messages</span>
       </header>
-      <Divider variant="middle" />
-      <div className="overflow-auto hover:overflow-y-scroll max-h-96">
+      <div className="overflow-auto hover:overflow-y-scroll max-h-96 bg-white">
         <Feed>
-          {notificationsList && (notificationsList.length !== 0 ? (
-            notificationsList.map(
-              (item: NotificationResponse) => (
-                <Notification
-                  clicked={(identificator) => {
-                    dispatch(fetchNotifications(notification.filter((item2: NotificationResponse) => item2.notificationId.toString() !== identificator)))
-                    setTimeout(() => {
-                      setNotificationsList((prev: NotificationResponse[]) =>
-                        prev.filter(({ notificationId }) => notificationId.toString() !== identificator)
-                      );
-                    }, 600);
-                    return item?.notificationId?.toString()??"";
-                  }}
-                  notificationId={item?.notificationId?.toString()??""}
-                  key={item.notificationId}
-                  createdOn={item.createdOn}
-                  icon={"Chat"}
-                  subject={item.subject}
-                  content={item.content}
-                  href={item.href}
-                  isRead={item.isRead}
-                  showFeed={showFeed}
-                />
+          {conversationsList && (conversationsList.length !== 0 ? (
+            conversationsList.map(
+              (item: Conversation, index: number) => (
+                <div key={item.conversationId} className={`${index !== 0 && 'border-t'}`}>
+                  <ConversationBox
+                    key={item.conversationId}
+                    data={item}
+                    currentUser={currentUser}
+                  />
+                </div>
               )
             )
           ) : (
@@ -79,9 +56,9 @@ export default function ChatWidget() {
           ))}
         </Feed>
       </div>
-      <Divider variant="middle" />
-      <footer className="bg-white dark:bg-zinc-900 py-2 px-6 flex items-center justify-end">
+      <footer className="bg-white rounded-b border-t dark:bg-zinc-900 py-2 px-6 flex items-center justify-end">
         <button
+          onClick={() => router.push(`/chat`)}
           className="text-red-700 font-bold text-xs hover:text-red-400 hover:border-red-400 p-1 border border-red-700"
         >
           View messages

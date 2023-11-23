@@ -5,12 +5,14 @@ import Wallet from './Wallet';
 import GetUserWallet from '@/app/actions/getUserWallet';
 import GetTransfer from '@/app/actions/getTransfer';
 import GetHistoryTransaction from '@/app/actions/getHistoryTransaction';
+import requireAuth from '@/app/libs/requireAuth';
 
 export default async function WalletPage() {
   const userWallet = await GetUserWallet();
   const transfer = await GetTransfer();
   const historyTransaction = await GetHistoryTransaction();
-  return (
-    <Wallet userWallet={userWallet} transfer={transfer} historyTransaction={historyTransaction} />
+  return requireAuth(
+    <Wallet userWallet={userWallet} transfer={transfer} historyTransaction={historyTransaction} />,
+    [2, 4]
   );
 }

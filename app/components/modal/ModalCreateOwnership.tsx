@@ -1,17 +1,17 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import Input from '../input/Input';
-import Modal from './Modal';
 import { toast } from 'react-hot-toast';
-import useCreatePlanModal from '@/app/hooks/useCreatePlanModal';
 import { Select, Textarea, Label, FileInput } from 'flowbite-react';
 import useAxiosAuthClient from '@/app/hooks/useAxiosAuthClient';
 import { useSession } from 'next-auth/react';
 import axios from 'axios';
 import useCreateOwnershipModal from '@/app/hooks/useCreateOwnershipModal';
+import { AiOutlineCloseCircle } from 'react-icons/ai';
+import ModalCreate from './ModalCreate';
 
 export const type = [
   {
@@ -42,7 +42,9 @@ export default function ModalCreateOwnership() {
   const [startYear, setStartYear] = useState(new Date());
   const [endYear, setEndYear] = useState(new Date());
   const [weekNumberValue, setWeekNumberValue] = useState<any>([]);
+  const [weekNumberSingle, setWeekNumberSingle] = useState<any>();
   const axiosAuthClient = useAxiosAuthClient();
+  const [previewImages, setPreviewImages] = useState<{ src: string; index: number }[]>([]);
 
   const [weekNumbers, setWeekNumbers] = useState([{ id: 1 }]);
 
@@ -58,13 +60,29 @@ export default function ModalCreateOwnership() {
     setWeekNumbers(newWeekNumbers);
   };
 
+  const handleDeleteImage = (index: number) => {
+    setFile((prevFiles) => prevFiles.filter((_, i) => i !== index));
+    setPreviewImages((prevImages) => prevImages.filter((image) => image.index !== index));
+  };
+
   const handleChangeImage = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) {
       return null;
     } else {
       const selectedFile = Array.from(e.target.files);
+
       if (selectedFile) {
-        setFile(selectedFile);
+        setFile((prevFiles) => [...prevFiles, ...selectedFile]);
+
+        // Assuming only one file is selected, update the preview image
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setPreviewImages((prevImages) => [
+            ...prevImages,
+            { src: reader.result as string, index: prevImages.length },
+          ]);
+        };
+        reader.readAsDataURL(selectedFile[0]);
       }
     }
   };
@@ -106,7 +124,7 @@ export default function ModalCreateOwnership() {
       const newArray = value.split(',');
       setWeekNumberValue(newArray);
     } else {
-      setWeekNumberValue(value);
+      setWeekNumberSingle(value);
     }
   };
 
@@ -139,7 +157,10 @@ export default function ModalCreateOwnership() {
       endTime: typeValue === 'DEEDED' ? null : endYear,
       startTime: typeValue === 'DEEDED' ? null : startYear,
       type: typeValue,
-      timeFrames: weekNumberValue.map((element: any) => ({ weekNumber: element as number })),
+      timeFrames:
+        weekNumberValue.length === 1
+          ? { weekNumber: weekNumberSingle }
+          : weekNumberValue?.map((element: any) => ({ weekNumber: element as number })),
     };
     const coOwnerIdBlob = new Blob([JSON.stringify(coOwnerId)], {
       type: 'application/json',
@@ -169,10 +190,10 @@ export default function ModalCreateOwnership() {
       });
   };
 
-  console.log('Check type', typeValue);
+  console.log('Check length', weekNumberValue.length);
 
   const bodyContent = (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 ">
       <div className="grid grid-cols-2 gap-4">
         <div>
           <Label value="Select resort" />
@@ -291,12 +312,29 @@ export default function ModalCreateOwnership() {
           onChange={handleChangeImage}
           multiple
         />
+        <div className="grid grid-cols-2">
+          {previewImages.map((image) => (
+            <div key={image.index} className="relative w-full">
+              <img
+                src={image.src}
+                alt="Preview"
+                style={{ width: '100%', maxHeight: '200px', marginTop: '10px' }}
+              />
+
+              <AiOutlineCloseCircle
+                size={20}
+                className="absolute top-5 right-3"
+                onClick={() => handleDeleteImage(image.index)}
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
 
   return (
-    <Modal
+    <ModalCreate
       disabled={isLoading}
       isOpen={createOwnershipModal.isOpen}
       title="Create Ownership"

@@ -1,6 +1,6 @@
-import Image from "next/image";
-import Link from "next/link";
-import React from "react";
+import Image from 'next/image';
+import Link from 'next/link';
+import React from 'react';
 
 export default function Footer() {
   return (
@@ -13,13 +13,13 @@ export default function Footer() {
             </div>
             <div className="text-[#5C98F2] text-[25px]">Swap</div>
           </div>
-          <Image
+          {/* <Image
             width={80}
             height={80}
             className=" mb-6 md:w-10 md:h-10 md:rounded-full md:mt-3 "
             src="/images/logo.png"
             alt="logo"
-          />
+          /> */}
         </div>
         <div className="flex flex-col overflow-hidden">
           <div className="text-white text-[25px] mb-[25px]">Contact</div>
@@ -50,40 +50,25 @@ export default function Footer() {
           </div>
         </div>
         <div className="flex flex-col">
-          <div className="text-white text-[25px] mb-[25px]">
-            Pay Safely With Us
-          </div>
+          <div className="text-white text-[25px] mb-[25px]">Pay Safely With Us</div>
           <div className=" text-[#A7A7A7] font-thin pb-[65px]">
-            The payment is encrypted and transmitted securely with an SSL
-            protocol.
+            The payment is encrypted and transmitted securely with an SSL protocol.
           </div>
         </div>
       </div>
       <div className="bg-black w-full h-20 flex justify-center items-center md:bg-black md:w-full md:h-16 md:px-[20px] md:flex md:justify-center">
         <div className="flex flex-col justify-center items-center md:flex md:flex-row md:items-center md:justify-around md:gap-20 md:text-[15px] lg:grid lg:grid-cols-2 lg:gap-96">
           <div className="flex flex-row items-center justify-start md:flex md:justify-start">
-            <Link
-              className="text-[#A7A7A7] font-light px-3 md:px-2"
-              href="/Home"
-            >
+            <Link className="text-[#A7A7A7] font-light px-3 md:px-2" href="/Home">
               Home
             </Link>
-            <Link
-              className="text-[#A7A7A7] font-light px-3 md:px-2"
-              href="/About"
-            >
+            <Link className="text-[#A7A7A7] font-light px-3 md:px-2" href="/About">
               About
             </Link>
-            <Link
-              className="text-[#A7A7A7] font-light px-3 md:px-2"
-              href="/Blog"
-            >
+            <Link className="text-[#A7A7A7] font-light px-3 md:px-2" href="/Blog">
               Blog
             </Link>
-            <Link
-              className="text-[#A7A7A7] font-light px-3 md:px-2"
-              href="/Contact"
-            >
+            <Link className="text-[#A7A7A7] font-light px-3 md:px-2" href="/Contact">
               Contact
             </Link>
           </div>

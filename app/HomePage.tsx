@@ -6,9 +6,16 @@ import Container from './components/Container';
 import Banner from './components/banner/Banner';
 import TopDestination from './components/TopDestination';
 import TopApartment from './components/TopApartment';
-import { useSession } from 'next-auth/react';
 
-const HomePage = () => {
+interface HomePageProps {
+  listResort: any;
+}
+
+const HomePage: React.FC<HomePageProps> = ({ listResort }) => {
+  const [notification, setNotification] = useState({ title: '', body: '' });
+  const [isTokenFound, setTokenFound] = useState(false);
+  const [currentToken, setCurrentToken] = useState<any>();
+
   return (
     <ClientOnly>
       <Container>
@@ -16,7 +23,7 @@ const HomePage = () => {
           <div className='grid md:grid-cols-2 grid-cols-1'>
             <Banner />
           </div>
-          <TopDestination />
+          <TopDestination listResort={listResort} />
           <TopApartment />
         </div>
       </Container>

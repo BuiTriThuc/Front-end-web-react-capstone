@@ -11,6 +11,7 @@ import { MdComputer, MdOutlineSwapHorizontalCircle } from 'react-icons/md';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { BiMessageDetail, BiSolidNotification, BiWallet } from 'react-icons/bi';
+import { FaMoneyBillTransfer } from 'react-icons/fa6';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
@@ -29,19 +30,19 @@ const Sidebar = () => {
       name: 'Edit Profile',
       href: '/dashboard/editProfile',
       icon: FiEdit,
-      current: pathName === '/dashboard/editProfile' ? true : false,
+      current: pathName?.includes('/dashboard/editProfile') ? true : false,
     },
     {
       name: 'Change password',
       href: '/dashboard/changePassword',
       icon: AiOutlineUnlock,
-      current: pathName === '/dashboard/changePassword' ? true : false,
+      current: pathName?.includes('/dashboard/changePassword') ? true : false,
     },
     {
       name: 'Ownership',
       href: '/dashboard/ownership',
       icon: AiOutlineHome,
-      current: pathName === '/dashboard/ownership' ? true : false,
+      current: pathName?.includes('/dashboard/ownership') ? true : false,
     },
   ];
 
@@ -50,13 +51,13 @@ const Sidebar = () => {
       name: 'My wallet',
       href: '/dashboard/wallet',
       icon: BiWallet,
-      current: pathName === '/dashboard/wallet' ? true : false,
+      current: pathName?.includes('/dashboard/wallet') ? true : false,
     },
     {
       name: 'Transfer',
       href: '/dashboard/transfer',
-      icon: BiWallet,
-      current: pathName === '/dashboard/transfer' ? true : false,
+      icon: FaMoneyBillTransfer,
+      current: pathName?.includes('/dashboard/transfer') ? true : false,
     },
   ];
   const sidebarBooking = [
@@ -64,19 +65,25 @@ const Sidebar = () => {
       name: 'My Booking',
       href: '/dashboard/myBooking',
       icon: PiNotepadBold,
-      current: pathName === '/dashboard/myBooking' ? true : false,
+      current: pathName?.includes('/dashboard/myBooking') ? true : false,
+    },
+    {
+      name: 'Owner Booking',
+      href: '/dashboard/ownerBooking',
+      icon: PiNotepadBold,
+      current: pathName?.includes('/dashboard/ownerBooking') ? true : false,
     },
     {
       name: 'Invoices',
       href: '/dashboard/invoices',
       icon: LiaFileInvoiceDollarSolid,
-      current: pathName === '/dashboard/invoices' ? true : false,
+      current: pathName?.includes('/dashboard/invoices') ? true : false,
     },
     {
       name: 'Reviews',
       href: '/dashboard/review',
       icon: AiOutlineStar,
-      current: pathName === '/dashboard/review' ? true : false,
+      current: pathName?.includes('/dashboard/review') ? true : false,
     },
   ];
   const sidebarExchange = [
@@ -84,19 +91,19 @@ const Sidebar = () => {
       name: 'My Exchange',
       href: '/dashboard/myExchange',
       icon: MdOutlineSwapHorizontalCircle,
-      current: pathName === '/dashboard/myExchange' ? true : false,
+      current: pathName?.includes('/dashboard/myExchange') ? true : false,
     },
     {
       name: 'Invoices Exchange',
       href: '/dashboard/invoiceExchange',
       icon: LiaFileInvoiceDollarSolid,
-      current: pathName === '/dashboard/invoiceExchange' ? true : false,
+      current: pathName?.includes('/dashboard/invoiceExchange') ? true : false,
     },
     {
       name: 'Reviews Exchange',
       href: '/dashboard/reviewExchange',
       icon: AiOutlineStar,
-      current: pathName === '/dashboard/reviewExchange' ? true : false,
+      current: pathName?.includes('/dashboard/reviewExchange') ? true : false,
     },
   ];
 
@@ -105,22 +112,22 @@ const Sidebar = () => {
       name: 'Chats',
       href: '/chat',
       icon: BiMessageDetail,
-      current: pathName === '/dashboard/chat' ? true : false,
+      current: pathName === '/chat',
     },
     {
       name: 'Notifications',
       href: '/dashboard/invoiceExchange',
       icon: BiSolidNotification,
-      current: pathName === '/dashboard/invoiceExchange' ? true : false,
+      current: pathName === '/notification',
     }
   ];
 
   return (
-    <div className="pt-5 pl-5 pr-5">
+    <div className="hidden md:hidden md:pt-5 md:pl-5 md:pr-5 lg:block ">
       <div className="hidden lg:flex lg:min-h-full lg:rounded-md lg:w-72 lg:flex-col h-full">
         <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-[#F8F8F8] px-6 pb-4 border-r-2">
           <div className="flex h-16 shrink-0 items-center">
-            <h1 className="text-3xl font-bold text-gray-700">My Account</h1>
+            <div className="text-3xl font-bold text-gray-700">My Account</div>
           </div>
 
           <div className="flex flex-1 flex-col">
@@ -149,7 +156,7 @@ const Sidebar = () => {
           </div>
 
           <div className="flex h-16 shrink-0 items-center">
-            <h1 className="text-3xl font-bold text-gray-700">My Wallet</h1>
+            <div className="text-3xl font-bold text-gray-700">My Wallet</div>
           </div>
 
           <div className="flex flex-1 flex-col">
@@ -177,7 +184,7 @@ const Sidebar = () => {
             </ul>
           </div>
           <div className="flex h-16 shrink-0 items-center">
-            <h1 className="text-3xl font-bold text-gray-700">Booking</h1>
+            <div className="text-3xl font-bold text-gray-700">Booking</div>
           </div>
           <div className="flex flex-1 flex-col">
             <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -204,7 +211,7 @@ const Sidebar = () => {
             </ul>
           </div>
           <div className="flex h-16 shrink-0 items-center">
-            <h1 className="text-3xl font-bold text-gray-700">Exchange</h1>
+            <div className="text-3xl font-bold text-gray-700">Exchange</div>
           </div>
           <div className="flex flex-1 flex-col">
             <ul role="list" className="flex flex-1 flex-col gap-y-7">

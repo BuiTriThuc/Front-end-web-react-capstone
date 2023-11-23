@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import axios from "axios";
+import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import { toast } from "react-toastify";
+import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 
-import Button from "./input/Button";
-import Input from "./input/Input";
-import Select from "./input/Select";
-import Modal from "./Modal";
+import Button from './input/Button';
+import Input from './input/Input';
+import MemberSelect from './input/MemberSelect';
+import Modal from './Modal';
 import { User } from '@/app/actions/UserApis';
 import ConversationApis from '@/app/actions/ConversationApis';
-import { useRouter } from "next/navigation";
+import { useRouter } from 'next/navigation';
 
 type Props = {
   onClose: () => void;
@@ -31,68 +31,58 @@ function GroupChatModal({ users, onClose, isOpen, currentUser }: Props) {
     formState: { errors },
   } = useForm<FieldValues>({
     defaultValues: {
-      name: "",
+      name: '',
       members: [],
     },
   });
 
-  const members = watch("members");
+  const members = watch('members');
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
     // const updatedMemberArray = [...data.member, Number(currentUser?.userId)];
-    ConversationApis.createConversation(data.name, [...data.members?.map((m:{
+    ConversationApis.createConversation(data.name, [...data.members?.map((m: {
       value: number,
       label: string,
     }) => m.value), Number(currentUser?.userId)]).then((response) => {
       router.refresh();
       onClose();
     }).catch((err) => {
-    toast.error("Something went wrong");
+      toast.error('Something went wrong');
     }).finally(() => setIsLoading(false));
-    // axios
-    //   .post("/api/conversations", {
-    //     ...data,
-    //     isGroup: true,
-    //   })
-    //   .then(() => {
-    //     // router.refresh();
-    //     onClose();
-    //   })
-    //   .catch(() => toast.error("Something went wrong"))
-    //   .finally(() => setIsLoading(false));
   };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="space-y-12">
-          <div className="border-b- border-gray-900/10 dark:border-gray-300 pb-12">
-            <h2 className="text-base font-semibold leading-7 text-gray-900 dark:text-gray-100">
+        <div className='space-y-12'>
+          <div className='border-b- border-gray-900/10 dark:border-gray-300 pb-12'>
+            <h2 className='text-base font-semibold leading-7 text-gray-900 dark:text-gray-100'>
               Create a Chat
             </h2>
-            <p className="mt-1 text-sm leading-6 text-gray-600 dark:text-gray-300">
+            <p className='mt-1 text-sm leading-6 text-gray-600 dark:text-gray-300'>
               Create a chat with people.
             </p>
-            <div className="mt-10 flex flex-col gap-y-8">
-              {members?.length>1&&<Input
+            <div className='mt-10 flex flex-col gap-y-8'>
+              {members?.length > 1 && <Input
                 disabled={isLoading}
-                label="Name"
-                id="name"
+                label='Name'
+                id='name'
                 errors={errors}
                 register={register}
               />}
-              <Select
+              <MemberSelect
                 disabled={isLoading}
-                label="Members"
+                label='Members'
                 options={(users && users.length > 0
-                  && users?.filter((user) => user.userId.toString()!==currentUser?.userId)
+                  && users?.filter((user) => user.userId.toString() !== currentUser?.userId?.toString())
                     .map((user) => ({
-                  value: user.userId,
-                  label: user.username,
-                }))) || []}
+                      value: user.userId,
+                      label: user.username,
+                      avatar: user?.avatar,
+                    }))) || []}
                 onChange={(value) =>
-                  setValue("members", value, {
+                  setValue('members', value, {
                     shouldValidate: true,
                   })
                 }
@@ -101,16 +91,16 @@ function GroupChatModal({ users, onClose, isOpen, currentUser }: Props) {
             </div>
           </div>
         </div>
-        <div className="mt-6 flex items-center justify-end gap-x-6">
+        <div className='mt-6 flex items-center justify-end gap-x-6'>
           <Button
             disabled={isLoading}
             onClick={onClose}
-            type="button"
+            type='button'
             secondary
           >
             Cancel
           </Button>
-          <Button disabled={isLoading} type="submit">
+          <Button disabled={isLoading} type='submit'>
             Create
           </Button>
         </div>

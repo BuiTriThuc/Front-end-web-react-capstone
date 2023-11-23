@@ -23,9 +23,11 @@ const Ownership: React.FC<OwnershipProps> = ({ ownershipUser, resort, currentUse
   const [listResort, setListResort] = useState(resort);
   const router = useRouter();
   const createOwnershipModal = useCreateOwnershipModal();
-
+  const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(ownershipUser.totalPages);
+  const [totalPages, setTotalPages] = useState<number>(0);
+  const [loading, setLoading] = useState(false);
+
   const onPageChange = (page: number) => setCurrentPage(page);
 
   const handleRouter = (propertyId: any, userId: any, roomId: any, status: any) => {
@@ -36,82 +38,120 @@ const Ownership: React.FC<OwnershipProps> = ({ ownershipUser, resort, currentUse
     }
   };
 
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+
+      let apiUrl = `https://holiday-swap.click/api/co-owners?userId=${currentUser?.userId}&pageNo=${
+        currentPage - 1
+      }&pageSize=10&sortBy=property_id`;
+
+      // If search term is present, include it in the API call
+      if (searchTerm) {
+        apiUrl += `&roomId=${searchTerm}`;
+      }
+
+      const ownerships = await axios.get(apiUrl);
+
+      setOwnershipUserList(ownerships?.data);
+      setTotalPages(ownerships?.data.totalPages);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const getList = async () => {
-      const ownerships = await axios.get(
-        `https://holiday-swap.click/api/co-owners?userId=${currentUser.userId}&pageNo=${
-          currentPage - 1
-        }&pageSize=10&sortBy=property_id`
-      );
-      setOwnershipUserList(ownerships.data);
-      setTotalPages(ownerships.data.totalPages);
-    };
-    getList();
-  }, [currentPage]);
+    if (ownershipUserList) {
+      setTotalPages(ownershipUserList.totalPages);
+    }
+  }, [ownershipUserList]);
+
+  useEffect(() => {
+    fetchData();
+  }, [searchTerm, currentPage]);
 
   return (
     <Fragment>
-      <div className="text-xl font-bold text-common mb-5">Management Ownership</div>
-      <div className="py-6">
+      <div className="mt-10">
+        Dashboard {'>'} <span className="text-common">Ownership</span>
+      </div>
+      <div className="py-6 flex flex-row w-full justify-between">
+        <div className="flex flex-row items-center gap-2">
+          <div>Search by room ID</div>
+          <input
+            className="rounded-md"
+            type="text"
+            id="search"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
         <button
-          onClick={() => createOwnershipModal.onOpen(listResort.content, currentUser)}
+          onClick={() => createOwnershipModal.onOpen(listResort?.content, currentUser)}
           className="bg-common py-3 px-5 rounded-lg shadow-md text-white text-lg hover:bg-hover"
         >
           Create ownership apartment
         </button>
       </div>
-      <Table>
-        <Table.Head>
-          <Table.HeadCell>Property ID</Table.HeadCell>
-          <Table.HeadCell>Room ID</Table.HeadCell>
-          <Table.HeadCell>Start year</Table.HeadCell>
-          <Table.HeadCell>End year</Table.HeadCell>
-          <Table.HeadCell>Type</Table.HeadCell>
-          <Table.HeadCell>Status</Table.HeadCell>
-          <Table.HeadCell>
-            <span className="sr-only">Edit</span>
-          </Table.HeadCell>
-        </Table.Head>
-        <Table.Body className="divide-y">
-          {ownershipUserList?.content.map((item: any, index: number) => (
-            <Table.Row key={index} className="bg-white dark:border-gray-700 dark:bg-gray-800">
-              <Table.Cell>{item.id.propertyId}</Table.Cell>
-              <Table.Cell>{item.id.roomId}</Table.Cell>
-              <Table.Cell>
-                {item.startTime !== null ? format(new Date(item.startTime), 'yyyy') : 'Forever'}
-              </Table.Cell>
-              <Table.Cell>
-                {item.endTime !== null ? format(new Date(item.endTime), 'yyyy') : 'Forever'}
-              </Table.Cell>
-              <Table.Cell>
-                {item.type === 'DEEDED' ? 'Owner forever' : 'Owner for a period of time'}
-              </Table.Cell>
-              <Table.Cell>
-                {item.status === 'ACCEPTED' ? (
-                  <div className="py-2 px-1 text-sm text-center  bg-slate-200 rounded-md text-green-500">
-                    ACCEPTED
-                  </div>
-                ) : (
-                  <div className="py-2 px-1 text-center text-sm bg-slate-200 rounded-md text-orange-500">
-                    PENDING
-                  </div>
-                )}
-              </Table.Cell>
-              <Table.Cell>
-                <div
-                  onClick={() =>
-                    handleRouter(item.id.propertyId, item.id.userId, item.id.roomId, item.status)
-                  }
-                  className="font-medium text-cyan-600 hover:underline dark:text-cyan-500 hover:cursor-pointer"
-                >
-                  <p>Edit</p>
-                </div>
-              </Table.Cell>
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table>
-
+      {loading ? (
+        <p className="text-center">Loading...</p>
+      ) : (
+        <Table>
+          <Table.Head>
+            {TABLE_HEAD.map((header, index) => (
+              <Table.HeadCell key={index}>{header}</Table.HeadCell>
+            ))}
+          </Table.Head>
+          <Table.Body className="divide-y">
+            {(ownershipUserList?.content || [])
+              .slice()
+              .reverse()
+              .map((item: any, index: number) => (
+                <Table.Row key={index} className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                  <Table.Cell>{item.id.propertyId}</Table.Cell>
+                  <Table.Cell>{item.id.roomId}</Table.Cell>
+                  <Table.Cell>
+                    {item.startTime !== null ? format(new Date(item.startTime), 'yyyy') : 'Forever'}
+                  </Table.Cell>
+                  <Table.Cell>
+                    {item.endTime !== null ? format(new Date(item.endTime), 'yyyy') : 'Forever'}
+                  </Table.Cell>
+                  <Table.Cell>
+                    {item.type === 'DEEDED' ? 'Owner forever' : 'Owner for a period of time'}
+                  </Table.Cell>
+                  <Table.Cell>
+                    {item.status === 'ACCEPTED' ? (
+                      <div className="py-2 px-1 text-sm text-center  bg-slate-200 rounded-md text-green-500">
+                        ACCEPTED
+                      </div>
+                    ) : (
+                      <div className="py-2 px-1 text-center text-sm bg-slate-200 rounded-md text-orange-500">
+                        PENDING
+                      </div>
+                    )}
+                  </Table.Cell>
+                  <Table.Cell>
+                    <div
+                      onClick={() =>
+                        handleRouter(
+                          item.id.propertyId,
+                          item.id.userId,
+                          item.id.roomId,
+                          item.status
+                        )
+                      }
+                      className="font-medium text-cyan-600 hover:underline dark:text-cyan-500 hover:cursor-pointer"
+                    >
+                      <p>Edit</p>
+                    </div>
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+          </Table.Body>
+        </Table>
+      )}
       <div className="flex py-5 overflow-x-auto sm:justify-center">
         <Pagination
           currentPage={currentPage}

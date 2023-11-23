@@ -1,10 +1,12 @@
-import ListMembershipBanned from "@/app/components/staff/ListMembershipBanned";
-import React from "react";
+import ListMembershipBanned from '@/app/components/staff/ListMembershipBanned';
+import requireAuth from '@/app/libs/requireAuth';
+import React from 'react';
 
 export default function Banned() {
-  return (
+  return requireAuth(
     <div>
       <ListMembershipBanned />
-    </div>
+    </div>,
+    [3]
   );
 }

@@ -1,14 +1,12 @@
-import Link from "next/link";
-import React from "react";
-import BookingReview from "../dashboard/BookingReview";
+import Link from 'next/link';
+import React from 'react';
+import BookingReview from '../dashboard/BookingReview';
 
 export default function CurrentBooking() {
   return (
-    <div className="w-auto h-auto py-10">
+    <div className="hidden md:block md:w-auto md:h-auto md:py-10">
       <div className="flex flex-row justify-between items-center">
-        <div className="text-common text-[20px] font-bold pb-8">
-          Current Booking
-        </div>
+        <div className="text-common text-[20px] font-bold pb-8">Current Booking</div>
         <Link className="text-gray-400" href="#">
           View All Booking
         </Link>

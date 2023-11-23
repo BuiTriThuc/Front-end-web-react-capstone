@@ -14,6 +14,9 @@ import axios from 'axios';
 import useCreatePublicTimeModal from '@/app/hooks/useCreatePublicTimeModal';
 import CalendarAparment from '@/app/apartment/CalendarAparment';
 import { startOfWeek, endOfWeek, format, addDays, addMonths, subDays } from 'date-fns';
+import dayjs from 'dayjs';
+import isoWeek from 'dayjs/plugin/isoWeek';
+import weekday from 'dayjs/plugin/weekday';
 
 const initialDateRange = {
   startDate: new Date(),
@@ -51,7 +54,12 @@ export default function ModalCreatePublicTime() {
     const endDate = new Date(startDate);
     endDate.setDate(startDate.getDate() + 6); // A week is 7 days
 
-    setDateRange({ ...dateRange, startDate: new Date(startDate), endDate: new Date(endDate) });
+    setDateRange({ ...dateRange, startDate: startDate, endDate: endDate });
+    setPublicDateRange({
+      ...publicDateRange,
+      startDate: startDate,
+      endDate: endDate,
+    });
   };
 
   const getDatesOutsideDateRange = (dateRange: any) => {
@@ -77,11 +85,19 @@ export default function ModalCreatePublicTime() {
     setTimeFramesId(value);
   };
 
-  const handleChangeDateRangeWeek = () => {
+  useEffect(() => {
     if (timeFramesWeekNumber) {
+      console.log('Check week', timeFramesWeekNumber);
       getWeekDates(timeFramesWeekNumber, 2024);
     }
-  };
+  }, [timeFramesWeekNumber]);
+
+  useEffect(() => {
+    if (dateRange) {
+      const newDateOUt = getDatesOutsideDateRange(dateRange);
+      setDateOut(newDateOUt);
+    }
+  }, [dateRange]);
 
   const {
     register,
@@ -141,11 +157,6 @@ export default function ModalCreatePublicTime() {
       };
       fetchData();
     }
-
-    if (timeFramesId) {
-      const newDateOUt = getDatesOutsideDateRange(dateRange);
-      setDateOut(newDateOUt);
-    }
   }, [timeFramesId]);
 
   const bodyContent = (
@@ -156,7 +167,6 @@ export default function ModalCreatePublicTime() {
           value={timeFramesId}
           onChange={(e: ChangeEvent<HTMLSelectElement>) => {
             handleChangeTimeFrameId(e.target.value);
-            handleChangeDateRangeWeek();
           }}
         >
           <option value="">Any</option>
@@ -171,9 +181,8 @@ export default function ModalCreatePublicTime() {
         <div className="w-full">
           <Label value="Select dates within that date range to create public" />
           <CalendarAparment
-            value={dateRange}
+            value={publicDateRange}
             onChange={(value: any) => {
-              setDateRange(value.selection);
               setPublicDateRange(value.selection);
             }}
             minDate={dateRange.startDate}
@@ -193,29 +202,6 @@ export default function ModalCreatePublicTime() {
       </div>
     </div>
   );
-
-  //   const footerContent = (
-  //     <div className="grid grid-cols-1">
-  //       <hr />
-  //       <div className="text-neutral-500 text-center mt-4 font-light">
-  //         <div className="flex flex-row justify-center items-center gap-2">
-  //           <div>
-  //             First time using{" "}
-  //             <span className="font-bold text-black">
-  //               Holiday<span className="text-common">Swap</span>
-  //             </span>
-  //             ?
-  //           </div>
-  //           <div
-  //             onClick={toggle}
-  //             className="text-neutral-800 cursor-pointer hover:underline"
-  //           >
-  //             Create an account
-  //           </div>
-  //         </div>
-  //       </div>
-  //     </div>
-  //   );
 
   return (
     <Modal

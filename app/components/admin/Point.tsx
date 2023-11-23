@@ -8,6 +8,7 @@ import axios from 'axios';
 import { Table } from 'flowbite-react';
 import useEditPointModal from '@/app/hooks/useEditPointModal';
 import TooltipCreatePoint from './tooltip/TooltipCreatePoint';
+import SelectRouterAdmin from './SelectRouterAdmin';
 const TABLE_HEAD = ['ID', 'Point Price', 'Created Date', 'Status', ''];
 
 interface PointProps {
@@ -59,8 +60,12 @@ const Point: React.FC<PointProps> = ({ point }) => {
 
   return (
     <Fragment>
-      <div className="text-xl font-bold text-common mb-9">Management Point</div>
-      <div className="py-6">
+      <div className="mt-10">
+        Dashboard {'>'} <span className="text-common">Point</span>
+      </div>
+      <SelectRouterAdmin />
+      <div className="text-xl font-bold text-common py-5">Management Point</div>
+      <div>
         <label className="font-bold">Point Price</label>
         <div className="flex flex-row items-center my-3">
           <div>
@@ -79,7 +84,7 @@ const Point: React.FC<PointProps> = ({ point }) => {
         <button
           disabled={isLoading}
           onClick={handleCreatePrice}
-          className="bg-common py-3 px-5 rounded-lg shadow-md text-white text-lg hover:bg-hover"
+          className="bg-common py-3 my-5 px-5 rounded-lg shadow-md text-white text-lg hover:bg-hover"
         >
           Save
         </button>
@@ -90,6 +95,7 @@ const Point: React.FC<PointProps> = ({ point }) => {
           <Table.HeadCell>Point Price</Table.HeadCell>
           <Table.HeadCell>Created Date</Table.HeadCell>
           <Table.HeadCell>Status</Table.HeadCell>
+          <Table.HeadCell>Action</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
           <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">

@@ -5,13 +5,14 @@ import useCreateOwnershipModal from '@/app/hooks/useCreateOwnershipModal';
 
 import axios from 'axios';
 import { format } from 'date-fns';
-import { Dropdown, Table } from 'flowbite-react';
+import { Dropdown, Pagination, Table } from 'flowbite-react';
 import { useRouter } from 'next/navigation';
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { BiBlock } from 'react-icons/bi';
 import { BsCheck2Circle } from 'react-icons/bs';
 import { MdOutlinePending } from 'react-icons/md';
+import SelectRouterStaff from './SelectRouterStaff';
 
 const TABS = [
   {
@@ -65,30 +66,47 @@ const ListApproveOwnership: React.FC<OwnershipProps> = ({ ownershipStaff }) => {
   const [ownershipUserList, setOwnershipUserList] = useState(ownershipStaff);
   const router = useRouter();
 
-  const axiosAuthClient = useAxiosAuthClient();
+  const onPageChange = (page: number) => setCurrentPage(page);
 
-  const handleOnChangeStatus = (propertyId: any, userId: any, roomId: any, value: any) => {
-    const body = value;
-    const config = {
-      headers: { 'Content-type': 'application/json' },
-    };
-    axiosAuthClient
-      .put(
-        `https://holiday-swap.click/api/co-owners/status?propertyId=${propertyId}&userId=${userId}&roomId=${roomId}&coOwnerStatus=${value}`,
-        body,
-        config
-      )
-      .then(async () => {
-        toast.success('Update status success');
-        const ownership = await axios.get(
-          `https://holiday-swap.click/api/co-owners?pageNo=0&pageSize=50&sortBy=property_id`
-        );
-        setOwnershipUserList(ownership.data);
-      })
-      .catch((response) => {
-        toast.error(response.response.data.message);
-      });
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState<number>(0);
+  const [loading, setLoading] = useState(false);
+
+  const axiosAuthClient = useAxiosAuthClient();
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+
+      let apiUrl = `https://holiday-swap.click/api/co-owners?pageNo=${
+        currentPage - 1
+      }&pageSize=8&sortBy=property_id&sortDirection=desc`;
+
+      // If search term is present, include it in the API call
+      if (searchTerm) {
+        apiUrl += `&roomId=${searchTerm}`;
+      }
+
+      const ownerships = await axios.get(apiUrl);
+
+      setOwnershipUserList(ownerships?.data);
+      setTotalPages(ownerships?.data.totalPages);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  useEffect(() => {
+    if (ownershipStaff) {
+      setTotalPages(ownershipStaff.totalPages);
+    }
+  }, [ownershipStaff]);
+
+  useEffect(() => {
+    fetchData();
+  }, [currentPage, totalPages]);
 
   return (
     <div>
@@ -97,6 +115,7 @@ const ListApproveOwnership: React.FC<OwnershipProps> = ({ ownershipStaff }) => {
           Staff {'> '}
           <span className="text-common">List Approve Ownership</span>
         </div>
+        <SelectRouterStaff />
       </div>
       <Fragment>
         <Table>
@@ -150,6 +169,14 @@ const ListApproveOwnership: React.FC<OwnershipProps> = ({ ownershipStaff }) => {
             })}
           </Table.Body>
         </Table>
+        <div className="flex py-5 overflow-x-auto sm:justify-center">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={onPageChange}
+            showIcons
+          />
+        </div>
       </Fragment>
     </div>
   );

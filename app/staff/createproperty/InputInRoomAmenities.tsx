@@ -1,7 +1,8 @@
-"use client";
+'use client';
 
-import React, { Fragment, useEffect, useState } from "react";
-import { AiOutlinePlusCircle } from "react-icons/ai";
+import { Select } from 'antd';
+import React, { Fragment, useEffect, useState } from 'react';
+import { AiOutlinePlusCircle } from 'react-icons/ai';
 
 interface InputInRoomAmenitiesProps {
   inRoomAmenities?: any;
@@ -53,46 +54,49 @@ const InputInRoomAmenities: React.FC<InputInRoomAmenitiesProps> = ({
 
   return (
     <Fragment>
-      <div className="w-[198px] text-gray-700">Amenity Types</div>
-      <div className="flex flex-col">
+      <div className="w-full mt-16 text-gray-900">Amenity Types*</div>
+      <div className="flex flex-col ">
         {ameniteisTypes.map((propertyType, index) => (
           <Fragment key={index}>{propertyType}</Fragment>
         ))}
       </div>
 
-      <button onClick={handleAddPropertyType}>
+      <button className="mt-2" onClick={handleAddPropertyType}>
         <AiOutlinePlusCircle size={30} />
       </button>
     </Fragment>
   );
 };
 
-const AmeniteisType: React.FC<AmenityTypeProps> = ({
-  inRoomAmenities,
-  onAmenityValueChange,
-}) => {
+const AmeniteisType: React.FC<AmenityTypeProps> = ({ inRoomAmenities, onAmenityValueChange }) => {
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    // Get the selected value from the <select>
-    const selectedValue = event.target.value;
+    // Check if event.target is defined and event.target.value is not null or undefined
+    const selectedValue = event.target?.value;
 
-    // Call setCustomeValue to update the value
-    onAmenityValueChange(selectedValue); // Assuming you want to set it as an array
+    if (selectedValue !== undefined && selectedValue !== null) {
+      onAmenityValueChange(selectedValue);
+    }
   };
   return (
     <Fragment>
       <div className="flex flex-row">
-        <select
+        <Select
           id="inRoomAmenities"
+          className="border-2 h-[44px] mt-2 rounded-md border-gray-400 w-full "
           onChange={handleSelectChange}
-          className="text-gray-800 mr-[20px] px-4 py-3 bg-[#F8F8F8] border-b-2 border-black border-none focus:outline-none focus:border-t-transparent focus:border-l-transparent focus:border-r-transparent"
+          showSearch
+          optionFilterProp="children"
+          filterOption={(input: string, option?: { children: string }) =>
+            (option?.children ?? '').toLowerCase().includes(input.toLowerCase())
+          }
         >
           <option value="">-</option>
           {inRoomAmenities?.content.map((item: any) => (
-            <option key={item.id} value={item.id}>
+            <Select.Option key={item.id} value={item.id}>
               {item.inRoomAmenityName}
-            </option>
+            </Select.Option>
           ))}
-        </select>
+        </Select>
       </div>
     </Fragment>
   );

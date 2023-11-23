@@ -1,12 +1,14 @@
-import ListProperty from "@/app/components/staff/ListProperty";
-import React from "react";
+import ListProperty from '@/app/components/staff/ListProperty';
+import requireAuth from '@/app/libs/requireAuth';
+import React from 'react';
 
 export default function page() {
-  return (
+  return requireAuth(
     <div>
       <div>
         <ListProperty />
       </div>
-    </div>
+    </div>,
+    [3]
   );
 }

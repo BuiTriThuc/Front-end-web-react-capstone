@@ -1,4 +1,4 @@
-import EmptyState from '@/app/chat/components/EmptyState';
+import EmptyState from '@/app/components/chat/EmptyState';
 import Header from '@/app/components/chat/Header';
 import Form from '@/app/components/chat/Form';
 import Body from '@/app/components/chat/Body';
@@ -28,8 +28,8 @@ const ConversationId = async ({ params }: { params: IParams }) => {
   }
 
   return (
-    <div className="h-screen">
-      <div className="h-screen flex flex-col">
+    <div className="h-screen custom-max-height">
+      <div className="h-screen flex flex-col custom-max-height">
         <Header conversation={(conversations?.find((c:Conversation) => c?.conversationId?.toString()===params?.conversationId)as Conversation)}
                 currentUser={currentUser}
         />

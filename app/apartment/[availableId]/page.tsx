@@ -1,8 +1,9 @@
-import Container from "@/app/components/Container";
-import React from "react";
-import ApartmentDetail from "./ApartmentDetail";
-import GetApartmentById from "@/app/actions/getAparmetById";
-import GetCurrentUser from "@/app/actions/getCurrentUser";
+import Container from '@/app/components/Container';
+import React from 'react';
+import ApartmentDetail from './ApartmentDetail';
+import GetApartmentById from '@/app/actions/getAparmetById';
+import GetCurrentUser from '@/app/actions/getCurrentUser';
+import GetApartmentRating from '@/app/actions/getApartmentRating';
 
 interface IParams {
   availableId?: string;

@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React from "react";
-import { BiSearch } from "react-icons/bi";
+import React from 'react';
+import { BiSearch } from 'react-icons/bi';
 
 const SearchBanner = () => {
   return (
@@ -29,7 +29,7 @@ const SearchBanner = () => {
         </select>
       </div>
 
-      <div className="bg-common md:rounded-r-3xl md:rounded-l-none rounded-b-3xl py-5 flex flex-col justify-center items-center text-white hover:cursor-pointer hover:bg-sky-500">
+      <div className="bg-common w-full md:rounded-r-3xl md:rounded-l-none rounded-b-3xl py-5 flex flex-col justify-center items-center text-white hover:cursor-pointer hover:bg-sky-500">
         <BiSearch size={18} color="white" />
         <button>Search now</button>
       </div>

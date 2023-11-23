@@ -1,16 +1,19 @@
-"use client";
-import * as React from "react";
-import { styled } from "@mui/material/styles";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import Link from "next/link";
-import { format } from "date-fns";
-import DropDownBanMember from "./DropDownBanMember";
+'use client';
+import * as React from 'react';
+import { styled } from '@mui/material/styles';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import Link from 'next/link';
+import { format } from 'date-fns';
+import DropDownBanMember from './DropDownBanMember';
+import Image from 'next/image';
+import { Pagination } from 'flowbite-react';
+import SelectRouterStaff from './SelectRouterStaff';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -23,11 +26,11 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  "&:nth-of-type(odd)": {
+  '&:nth-of-type(odd)': {
     backgroundColor: theme.palette.action.hover,
   },
   // hide last border
-  "&:last-child td, &:last-child th": {
+  '&:last-child td, &:last-child th': {
     border: 0,
   },
 }));
@@ -45,60 +48,60 @@ function createData(
 
 const rows = [
   createData(
-    "/images/resort1.jpg",
-    "Trí Thức",
-    "Dak Lak province",
-    "buitrithuc1008@gmail.com",
-    "0856597778",
-    "4"
+    '/images/resort1.jpg',
+    'Trí Thức',
+    'Dak Lak province',
+    'buitrithuc1008@gmail.com',
+    '0856597778',
+    '4'
   ),
   createData(
-    "/images/resort2.jpg",
-    "Trọng Tín",
-    "Long An Province",
-    "trongtin@gmail.com",
-    "0965487221",
-    "3"
+    '/images/resort2.jpg',
+    'Trọng Tín',
+    'Long An Province',
+    'trongtin@gmail.com',
+    '0965487221',
+    '3'
   ),
   createData(
-    "/images/resort3.jpg",
-    "Đức Thịnh",
-    "Đak Lak province",
-    "thinhbui@gmail.com",
-    "0376985769",
-    "5"
+    '/images/resort3.jpg',
+    'Đức Thịnh',
+    'Đak Lak province',
+    'thinhbui@gmail.com',
+    '0376985769',
+    '5'
   ),
   createData(
-    "/images/resort1.jpg",
-    "Phú Hưng",
-    "Khanh Hoa province",
-    "phuhung@gmail.com",
-    "0826849763",
-    "3"
+    '/images/resort1.jpg',
+    'Phú Hưng',
+    'Khanh Hoa province',
+    'phuhung@gmail.com',
+    '0826849763',
+    '3'
   ),
   createData(
-    "/images/resort6.jpg",
-    "Đức Hưng",
-    "Ninh Thuan province",
-    "duchung@gmail.com",
-    "0964529752",
-    "6"
+    '/images/resort6.jpg',
+    'Đức Hưng',
+    'Ninh Thuan province',
+    'duchung@gmail.com',
+    '0964529752',
+    '6'
   ),
   createData(
-    "/images/resort4.jpg",
-    "Thanh Kiên",
-    "Phu Quoc",
-    "thanhkien@gmail.com",
-    "0897369946",
-    "1"
+    '/images/resort4.jpg',
+    'Thanh Kiên',
+    'Phu Quoc',
+    'thanhkien@gmail.com',
+    '0897369946',
+    '1'
   ),
   createData(
-    "/images/resort5.jpg",
-    "Duy Thưởng",
-    "Đak Lak province",
-    "duythuong@gmail.com",
-    "0976349982",
-    "3"
+    '/images/resort5.jpg',
+    'Duy Thưởng',
+    'Đak Lak province',
+    'duythuong@gmail.com',
+    '0976349982',
+    '3'
   ),
 ];
 
@@ -107,22 +110,36 @@ interface ListMembershipAllProps {
 }
 
 const ListMembershipAll: React.FC<ListMembershipAllProps> = ({ users }) => {
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const itemsPerPage = 7;
+
+  const pageCount = Math.ceil(users?.content?.length / itemsPerPage);
+
+  const handlePageChange = (selectedPage: { selected: number }) => {
+    setCurrentPage(selectedPage.selected);
+  };
+
+  const displayedItems = users?.content?.slice(
+    currentPage * itemsPerPage,
+    (currentPage + 1) * itemsPerPage
+  );
+  const onPageChange = (page: number) => setCurrentPage(page);
+
   return (
     <>
-      <div>
-        Staff {">"} <span className="text-common">List Membership</span>
+      <div className="mt-10">
+        Staff {'>'} <span className="text-common">List Membership</span>
       </div>
-      <div className="flex flex-row justify-between items-center mt-10 mb-5 ">
-        <div className="text-common text-[20px] font-bold ">
-          List Membership
-        </div>
+      <SelectRouterStaff />
+      <div className="flex flex-row justify-between items-center py-5 ">
+        <div className="text-common text-[20px] font-bold ">List Membership</div>
       </div>
       <TableContainer className="mb-10" component={Paper}>
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead>
             <TableRow>
               <StyledTableCell className="!bg-white !text-black !text-[17px] !font-semibold">
-                Name{" "}
+                Name{' '}
               </StyledTableCell>
               <StyledTableCell
                 className="!bg-white !text-black !text-[17px] !font-semibold"
@@ -140,46 +157,41 @@ const ListMembershipAll: React.FC<ListMembershipAllProps> = ({ users }) => {
                 className="!bg-white !text-black !text-[17px] !font-semibold"
                 align="right"
               >
-                Phone{" "}
+                Phone{' '}
               </StyledTableCell>
               <StyledTableCell
                 className="!bg-white !text-black !text-[17px] !font-semibold"
                 align="right"
               >
-                Status{" "}
+                Status{' '}
               </StyledTableCell>
               <StyledTableCell
                 className="!bg-white !text-black !text-[17px] !font-semibold"
                 align="right"
               >
-                Day of birth{" "}
+                Day of birth{' '}
               </StyledTableCell>
               <StyledTableCell
                 className="!bg-white !text-black !text-[17px] !font-semibold"
                 align="right"
               >
-                Action{" "}
+                Action{' '}
               </StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {users?.content.map((row: any) => (
+            {displayedItems.map((row: any) => (
               <StyledTableRow key={row.userId}>
-                <StyledTableCell
-                  className="!py-5 !text-common"
-                  component="th"
-                  scope="row"
-                >
+                <StyledTableCell className="!py-5 !text-common" component="th" scope="row">
                   <div className="flex flex-row items-center ">
-                    <img
+                    <Image
                       className="w-10 h-10 rounded-full mr-2"
-                      src="/images/resort1.jpg"
+                      width={50}
+                      height={50}
+                      src={row.avatar || '/images/placeholder.png'}
                       alt=""
                     />
-                    <Link
-                      href="/staff/editmembership"
-                      className="hover:underline"
-                    >
+                    <Link href="/staff/editmembership" className="hover:underline">
                       {row.username}
                     </Link>
                   </div>
@@ -190,23 +202,14 @@ const ListMembershipAll: React.FC<ListMembershipAllProps> = ({ users }) => {
                 <StyledTableCell className="!py-5 " align="right">
                   {row.email}
                 </StyledTableCell>
-                <StyledTableCell
-                  className="!py-5 !text-green-500 "
-                  align="right"
-                >
+                <StyledTableCell className="!py-5 !text-green-500 " align="right">
                   {row.phone}
                 </StyledTableCell>
-                <StyledTableCell
-                  className="!py-5 !text-green-500 "
-                  align="right"
-                >
+                <StyledTableCell className="!py-5 !text-green-500 " align="right">
                   {row.status}
                 </StyledTableCell>
-                <StyledTableCell
-                  className="!py-5 !text-green-500 "
-                  align="right"
-                >
-                  {format(new Date(row.dob), "yyyy-MM-dd")}
+                <StyledTableCell className="!py-5 !text-green-500 " align="right">
+                  {format(new Date(row.dob), 'yyyy-MM-dd')}
                 </StyledTableCell>
                 <StyledTableCell className="!py-5" align="right">
                   <DropDownBanMember />
@@ -216,6 +219,14 @@ const ListMembershipAll: React.FC<ListMembershipAllProps> = ({ users }) => {
           </TableBody>
         </Table>
       </TableContainer>
+      <div className="flex py-5 overflow-x-auto sm:justify-center">
+        <Pagination
+          currentPage={currentPage}
+          totalPages={pageCount}
+          onPageChange={onPageChange}
+          showIcons
+        />
+      </div>
     </>
   );
 };

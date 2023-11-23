@@ -1,26 +1,21 @@
-import ApartmentOfMembership from "@/app/components/staff/ApartmentOfMembership";
-import DropDownBanMember from "@/app/components/staff/DropDownBanMember";
-import Link from "next/link";
-import React from "react";
+import ApartmentOfMembership from '@/app/components/staff/ApartmentOfMembership';
+import DropDownBanMember from '@/app/components/staff/DropDownBanMember';
+import requireAuth from '@/app/libs/requireAuth';
+import Link from 'next/link';
+import React from 'react';
 
 export default function EditMembership() {
-  return (
+  return requireAuth(
     <div>
       <div className="bg-gray-200 w-auto h-auto rounded-lg px-20 pt-14">
         <div>
           <div className="flex flex-row justify-between items-center pb-10">
-            <div className="text-[20px] font-bold text-common">
-              Membership Profile
-            </div>
+            <div className="text-[20px] font-bold text-common">Membership Profile</div>
 
             <DropDownBanMember />
           </div>
           <div className="flex flex-row">
-            <img
-              className="rounded-full w-24 h-24 mr-10"
-              src="/images/resort1.jpg"
-              alt=""
-            />
+            <img className="rounded-full w-24 h-24 mr-10" src="/images/resort1.jpg" alt="" />
             <div className="flex flex-row mb-14 ">
               <div className="flex flex-col mr-10 text-gray-400 ">
                 <div className="mb-5">Name</div>
@@ -47,6 +42,7 @@ export default function EditMembership() {
         </div>
       </div>
       <ApartmentOfMembership />
-    </div>
+    </div>,
+    [3]
   );
 }

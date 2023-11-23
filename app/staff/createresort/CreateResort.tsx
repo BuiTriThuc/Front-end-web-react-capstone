@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useEffect, useState } from 'react';
 import InputCreateResort from './InputCreateResort';
@@ -16,18 +16,19 @@ import mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import '@mapbox/mapbox-gl-geocoder/lib/mapbox-gl-geocoder.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import Label from '@/shared/Label';
+
+import SelectRouterStaff from '@/app/components/staff/SelectRouterStaff';
 import Input from '@/shared/Input';
 import FormItem from '@/shared/FormItem';
+import Label from '@/shared/Label';
 
-mapboxgl.accessToken = "pk.eyJ1IjoiaHVuZ3BkMTcwNTAxIiwiYSI6ImNsbmMycGJldjBoNWUyeXBnZXM3aXhhYXEifQ.H-6U4cHRC5mRfJKH4GI0qQ";
-
+mapboxgl.accessToken =
+  'pk.eyJ1IjoiaHVuZ3BkMTcwNTAxIiwiYSI6ImNsbmMycGJldjBoNWUyeXBnZXM3aXhhYXEifQ.H-6U4cHRC5mRfJKH4GI0qQ';
 
 interface CreateResortProps {
   amenitiesArray?: any;
   propertyTypesArray?: any;
 }
-
 
 interface Context {
   id: string;
@@ -98,63 +99,68 @@ interface Location {
 
 function mapPlaceToLocation(place: Place): Location {
   return {
-    addressLine: place.place_name?.replace(` ${place?.context?.[0]?.text??''}`, "").replace(`${place?.text??""},`, "").trim() || "",
+    addressLine:
+      place.place_name
+        ?.replace(` ${place?.context?.[0]?.text ?? ''}`, '')
+        .replace(`${place?.text ?? ''},`, '')
+        .trim() || '',
     latitude: place.geometry.coordinates[1] || 0,
     longitude: place.geometry.coordinates[0] || 0,
-    locationFormattedName: place.place_name?.replace(` ${place?.context?.[0]?.text??''}`, "") || "",
-    locationDescription: "",
-    locationCode: place.id || "",
-    postalCode: place.context.find(ctx => ctx.id.startsWith("postcode."))?.text || "",
+    locationFormattedName:
+      place.place_name?.replace(` ${place?.context?.[0]?.text ?? ''}`, '') || '',
+    locationDescription: '',
+    locationCode: place.id || '',
+    postalCode: place.context.find((ctx) => ctx.id.startsWith('postcode.'))?.text || '',
     district: {
-      code: place.context?.[place.context.length-3]?.id || "",
-      name: place.context?.[place.context.length-3]?.text || "",
-      type: "locality"
+      code: place.context?.[place.context.length - 3]?.id || '',
+      name: place.context?.[place.context.length - 3]?.text || '',
+      type: 'locality',
     },
     stateOrProvince: {
-      code: place.context?.[place.context.length-2]?.id || "",
-      name: place.context?.[place.context.length-2]?.text || "",
-      type: "region"
+      code: place.context?.[place.context.length - 2]?.id || '',
+      name: place.context?.[place.context.length - 2]?.text || '',
+      type: 'region',
     },
     country: {
-      name: place.context.find(ctx => ctx.id.startsWith("country."))?.text || "",
-      code: place.context.find(ctx => ctx.id.startsWith("country."))?.id || ""
-    }
+      name: place.context.find((ctx) => ctx.id.startsWith('country.'))?.text || '',
+      code: place.context.find((ctx) => ctx.id.startsWith('country.'))?.id || '',
+    },
   };
 }
 
-type ContextType = "country." | "postcode.";
-const createContextHandler = (type: ContextType) => (e: React.ChangeEvent<HTMLInputElement>, prevState: Place | undefined) => {
-  let updatedContext = [...(prevState?.context || [])];
-  let contextIndex = updatedContext.findIndex(ctx => ctx?.id?.startsWith(type)) ?? -1;
-  updatedContext[contextIndex].text= e.target.value??"";
-  return {
-    ...prevState,
-    context: updatedContext
-  } as Place;
-};
+type ContextType = 'country.' | 'postcode.';
+const createContextHandler =
+  (type: ContextType) => (e: React.ChangeEvent<HTMLInputElement>, prevState: Place | undefined) => {
+    let updatedContext = [...(prevState?.context || [])];
+    let contextIndex = updatedContext.findIndex((ctx) => ctx?.id?.startsWith(type)) ?? -1;
+    updatedContext[contextIndex].text = e.target.value ?? '';
+    return {
+      ...prevState,
+      context: updatedContext,
+    } as Place;
+  };
 
-const createContextHandlerAdministrationLevel = (indexLevel: number) => (e: React.ChangeEvent<HTMLInputElement>, prevState: Place | undefined) => {
-  let updatedContext = [...(prevState?.context || [])];
-  let contextIndexLength = updatedContext.length;
-  updatedContext[contextIndexLength - indexLevel -1].text = e.target.value??"";
-  return {
-    ...prevState,
-    context: updatedContext
-  } as Place;
-};
+const createContextHandlerAdministrationLevel =
+  (indexLevel: number) =>
+  (e: React.ChangeEvent<HTMLInputElement>, prevState: Place | undefined) => {
+    let updatedContext = [...(prevState?.context || [])];
+    let contextIndexLength = updatedContext.length;
+    updatedContext[contextIndexLength - indexLevel - 1].text = e.target.value ?? '';
+    return {
+      ...prevState,
+      context: updatedContext,
+    } as Place;
+  };
 
-const CreateResort: React.FC<CreateResortProps> = ({
-  amenitiesArray,
-  propertyTypesArray,
-}) => {
+const CreateResort: React.FC<CreateResortProps> = ({ amenitiesArray, propertyTypesArray }) => {
   const { data: session } = useSession();
   const [isLoading, setIsLoading] = useState(false);
   const [file, setFile] = useState<any[]>([]);
   const [location, setLocation] = useState<Place>();
   const [locationContextLength, setLocationContextLength] = useState<number>(3);
   const router = useRouter();
-  const handleCountryChange = createContextHandler("country.");
-  const handlePostcodeChange = createContextHandler("postcode.");
+  const handleCountryChange = createContextHandler('country.');
+  const handlePostcodeChange = createContextHandler('postcode.');
   const handleDistrictChange = createContextHandlerAdministrationLevel(2);
   const handleProvinceChange = createContextHandlerAdministrationLevel(1);
 
@@ -185,15 +191,15 @@ const CreateResort: React.FC<CreateResortProps> = ({
   };
 
   const handleAmenitiesChange = (newAmenities: any[]) => {
-    setCustomeValue("amenities", newAmenities);
+    setCustomeValue('amenities', newAmenities);
   };
 
   const handlePropertiesChange = (newProperties: any[]) => {
-    setCustomeValue("propertyTypes", newProperties);
+    setCustomeValue('propertyTypes', newProperties);
   };
 
   const handleImageChange = (newImage: any[]) => {
-    setCustomeValue("resortImage", newImage);
+    setCustomeValue('resortImage', newImage);
   };
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
@@ -209,21 +215,21 @@ const CreateResort: React.FC<CreateResortProps> = ({
       propertyTypes: data.propertyTypes,
     };
     const resortDataBlob = new Blob([JSON.stringify(requestData)], {
-      type: "application/json",
+      type: 'application/json',
     });
-    formData.append("resort", resortDataBlob);
+    formData.append('resort', resortDataBlob);
     file.forEach((element) => {
-      formData.append("resortImage", element);
+      formData.append('resortImage', element);
     });
     const config = {
       headers: { Authorization: `Bearer ${session?.user.access_token}` },
     };
     console.log(mapPlaceToLocation(location as Place));
     axios
-      // .post(`https://holiday-swap.click/api/v1/resorts`, formData, config)
-      .post(`https://holiday-swap.click`, formData, config)
+      .post(`https://holiday-swap.click/api/v1/resorts`, formData, config)
+      // .post(`https://holiday-swap.click`, formData, config)
       .then(() => {
-        toast.success("Create resort success");
+        toast.success('Create resort success');
         reset();
       })
       .catch((response) => {
@@ -236,63 +242,60 @@ const CreateResort: React.FC<CreateResortProps> = ({
 
   useEffect(() => {
     const mapboxglMap = new mapboxgl.Map({
-      container: "map",
-      style: "mapbox://styles/mapbox/streets-v12",
+      container: 'map',
+      style: 'mapbox://styles/mapbox/streets-v12',
       center: [106.660172, 10.762622],
       zoom: 14,
-
     });
 
-    const marker = new mapboxgl.Marker({draggable: true, color: 'orange'});
+    const marker = new mapboxgl.Marker({ draggable: true, color: 'orange' });
 
     const geocoder = new MapboxGeocoder({
       accessToken: mapboxgl.accessToken,
       mapboxgl: mapboxgl,
       reverseGeocode: true,
-      marker: false
+      marker: false,
     });
 
-    mapboxglMap.addControl(geocoder, "top-left");
-    geocoder.on("result", (e:any) => {
+    mapboxglMap.addControl(geocoder, 'top-left');
+    geocoder.on('result', (e: any) => {
       setLocation(e.result as Place);
       setLocationContextLength(e.result.context.length);
-      console.log(e.result)
+      console.log(e.result);
       marker.setLngLat(e.result.geometry.coordinates).addTo(mapboxglMap);
     });
 
     marker.on('dragend', () => {
       const lngLat = marker.getLngLat();
-      setLocation(prev => {
+      setLocation((prev) => {
         return {
           ...prev,
           geometry: {
             ...prev?.geometry,
-            coordinates: [lngLat.lng, lngLat.lat]
-          }
+            coordinates: [lngLat.lng, lngLat.lat],
+          },
         } as Place;
       });
     });
-
   }, []);
 
   return (
     <div>
-      <div>
-        <span className="hover:underline" onClick={() => router.push("/staff")}>
+      <div className="mt-10">
+        <span className="hover:underline" onClick={() => router.push('/staff')}>
           Dashboard
-        </span>{" "}
-        {">"} <span className="text-common">Create Resort</span>
+        </span>{' '}
+        {'>'} <span className="text-common">Create Resort</span>
       </div>
-      <div className=" w-[600px] py-10">
-        <div className="flex flex-row items-center w-full "></div>
-      </div>
-      <div className="mb-14">
+      <SelectRouterStaff />
+
+      <div className="mb-14 mt-5">
         <div className="mb-3">Upload Image*</div>
         {/* <UploadImageResortCreate handleImageChange={handleImageChange} /> */}
         <div>
           <input
-            {...register("resortImage", {
-              required: "Recipe picture is required",
+            {...register('resortImage', {
+              required: 'Recipe picture is required',
             })}
             type="file"
             id="resortImage"
@@ -316,9 +319,10 @@ const CreateResort: React.FC<CreateResortProps> = ({
 
         <div className=" flex flex-row mb-14">
           <div className="w-[277px] text-gray-700">Description</div>
-          <Textarea
-            label="Description*"
-            {...register("resortDescription")}
+          <textarea
+            className="w-full rounded-md   border-2 border-gray-500"
+            // label="Description*"
+            {...register('resortDescription')}
             id="resortDescription"
             disabled={isLoading}
             required
@@ -329,77 +333,119 @@ const CreateResort: React.FC<CreateResortProps> = ({
           <div id="map" className="w-full h-96"></div>
         </div>
         <FormItem label="Country">
-          <Input placeholder="..." value={location?.context?.find(ctx => ctx.id.startsWith("country."))?.text}
-                 onChange={(e) => setLocation(prevState => handleCountryChange(e, prevState))}/>
+          <Input
+            placeholder="..."
+            value={location?.context?.find((ctx) => ctx.id.startsWith('country.'))?.text}
+            onChange={(e: any) => setLocation((prevState) => handleCountryChange(e, prevState))}
+          />
         </FormItem>
         <FormItem label="Address Line">
-          <Input placeholder="..." value={location?.place_name?.replace(` ${location?.context?.find(ctx => ctx.id.startsWith("postcode."))?.text??''},`, "").replace(`${location?.text??""},`, "").trim()}
-                 onChange={(e) =>
-                   setLocation(
-                     (prevState) => {
-                       return {
-                         ...prevState,
-                         place_name: e.target.value??"",
-                       } as Place;
-                     })}/>
+          <Input
+            placeholder="..."
+            value={location?.place_name
+              ?.replace(
+                ` ${location?.context?.find((ctx) => ctx.id.startsWith('postcode.'))?.text ?? ''},`,
+                ''
+              )
+              .replace(`${location?.text ?? ''},`, '')
+              .trim()}
+            onChange={(e: any) =>
+              setLocation((prevState) => {
+                return {
+                  ...prevState,
+                  place_name: e.target.value ?? '',
+                } as Place;
+              })
+            }
+          />
         </FormItem>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-5">
           <FormItem label="District/City">
             {locationContextLength && (
-              <Input value={location?.context[locationContextLength - 3]?.text??""}
-                     onChange={(e) => setLocation(prevState => handleDistrictChange(e, prevState))}/>
+              <Input
+                value={location?.context[locationContextLength - 3]?.text ?? ''}
+                onChange={(e: any) =>
+                  setLocation((prevState) => handleDistrictChange(e, prevState))
+                }
+              />
             )}
           </FormItem>
           <FormItem label="Province/State">
             {locationContextLength && (
-              <Input value={location?.context[locationContextLength - 2]?.text??""}
-                     onChange={(e) => setLocation(prevState => handleProvinceChange(e, prevState))}/>
+              <Input
+                value={location?.context[locationContextLength - 2]?.text ?? ''}
+                onChange={(e: any) =>
+                  setLocation((prevState) => handleProvinceChange(e, prevState))
+                }
+              />
             )}
           </FormItem>
           <FormItem label="Postal code">
-            <Input value={location?.context?.find(ctx => ctx.id.startsWith("postcode."))?.text}
-                   onChange={(e) => setLocation(prevState => handlePostcodeChange(e, prevState))}/>
+            <Input
+              value={location?.context?.find((ctx) => ctx.id.startsWith('postcode.'))?.text}
+              onChange={(e: any) => setLocation((prevState) => handlePostcodeChange(e, prevState))}
+            />
           </FormItem>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-5">
           <FormItem label="Longtitude">
-            <Input value={location?.geometry?.coordinates?.[0]}
-                   onChange={(e) =>
-                     setLocation(
-                       (prevState) => {
-                         let lngLat = prevState?.geometry?.coordinates;
-                          lngLat ? lngLat[0] = Number(e.target.value) : [] = e.target.value ? [e.target.value] : [];
-                         return {
-                           ...prevState,
-                           geometry: {
-                             ...prevState?.geometry,
-                             coordinates: lngLat
-                           }
-                         } as Place;
-                       })}
+            <Input
+              value={location?.geometry?.coordinates?.[0]}
+              onChange={(e: any) =>
+                setLocation((prevState) => {
+                  let lngLat = prevState?.geometry?.coordinates;
+                  lngLat
+                    ? (lngLat[0] = Number(e.target.value))
+                    : ([] = e.target.value ? [e.target.value] : []);
+                  return {
+                    ...prevState,
+                    geometry: {
+                      ...prevState?.geometry,
+                      coordinates: lngLat,
+                    },
+                  } as Place;
+                })
+              }
             />
           </FormItem>
           <FormItem label="Latitude">
-            <Input value={location?.geometry?.coordinates?.[1]}
-                   onChange={(e) =>
-                     setLocation(
-                       (prevState) => {
-                         let lngLat = prevState?.geometry?.coordinates;
-                         lngLat ? lngLat[1] = Number(e.target.value) : [] = e.target.value ? [e.target.value] : [];
-                         return {
-                           ...prevState,
-                           geometry: {
-                             ...prevState?.geometry,
-                             coordinates: lngLat
-                           }
-                         } as Place;
-                       })}/>
+            <Input
+              value={location?.geometry?.coordinates?.[1]}
+              onChange={(e: any) =>
+                setLocation((prevState) => {
+                  let lngLat = prevState?.geometry?.coordinates;
+                  lngLat
+                    ? (lngLat[1] = Number(e.target.value))
+                    : ([] = e.target.value ? [e.target.value] : []);
+                  return {
+                    ...prevState,
+                    geometry: {
+                      ...prevState?.geometry,
+                      coordinates: lngLat,
+                    },
+                  } as Place;
+                })
+              }
+            />
           </FormItem>
         </div>
         <div className="mb-10">
           <Label>Detailed address</Label>
           <span className="block w-full mt-1 text-sm text-neutral-500 dark:text-neutral-400">
-            {location &&(<span>{`${location?.text??""}, ` + location?.place_name?.replace(` ${location?.context?.find(ctx => ctx.id.startsWith("postcode."))?.text??''},`, "").replace(`${location?.text??""},`, "").trim()}</span>)}
+            {location && (
+              <span>
+                {`${location?.text ?? ''}, ` +
+                  location?.place_name
+                    ?.replace(
+                      ` ${
+                        location?.context?.find((ctx) => ctx.id.startsWith('postcode.'))?.text ?? ''
+                      },`,
+                      ''
+                    )
+                    .replace(`${location?.text ?? ''},`, '')
+                    .trim()}
+              </span>
+            )}
           </span>
         </div>
         <div className="flex flex-row mb-10">

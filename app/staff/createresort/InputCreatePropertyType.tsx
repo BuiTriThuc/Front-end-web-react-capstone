@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React, { Fragment, useEffect, useState } from "react";
-import { AiOutlinePlusCircle } from "react-icons/ai";
+import React, { Fragment, useEffect, useState } from 'react';
+import { AiOutlinePlusCircle } from 'react-icons/ai';
 
 interface InputCreatePropertyTypeProps {
   propertyTypesResort?: any;
@@ -30,7 +30,7 @@ const InputCreatePropertyType: React.FC<InputCreatePropertyTypeProps> = ({
 
   useEffect(() => {
     handlePropertiesChange(propertyValues);
-    console.log("Check value", propertyValues);
+    console.log('Check value', propertyValues);
   }, [propertyValues]);
 
   const [propertyTypes, setPropertyTypes] = useState([
@@ -84,12 +84,8 @@ const PropertyType: React.FC<PropertyTypeProps> = ({
 
   return (
     <Fragment>
-      <div className="flex flex-row">
-        <select
-          id="amenities"
-          className="text-gray-800 mr-[20px] px-4 py-3 bg-[#F8F8F8] border-b-2 border-black border-none focus:outline-none focus:border-t-transparent focus:border-l-transparent focus:border-r-transparent"
-          onChange={handleSelectChange}
-        >
+      <div className="flex flex-row mb-2">
+        <select id="amenities" className="rounded-md" onChange={handleSelectChange}>
           <option value="">-</option>
           {propertyTypesResort?.map((item: any) => (
             <option key={item.id} value={item.id}>

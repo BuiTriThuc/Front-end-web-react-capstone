@@ -12,6 +12,7 @@ import { Search } from "./AnyReactComponent/Search";
 import { useDispatch, useSelector } from 'react-redux';
 import { setApartmentForRentParams } from '@/app/redux/slices/searchApartmentForRentSlice';
 import dayjs from 'dayjs';
+import { useToggle } from '@/app/components/navbar/UserMenu';
 
 export default function SearchBar() {
   const dispatch = useDispatch();
@@ -35,33 +36,19 @@ export default function SearchBar() {
   const [guestNumber, setGuestNumber] = useState(params?.guest??1);
   const [roomsNumber, setRoomsNumber] = useState(1);
 
-
-
   const [daysNum, setDaysNum] = useState(null)
   useEffect(() => {
     setShow(true);
   }, []);
-  const handleBorder = () => {
-    setBorder(true);
-    setDatePicker(false);
-    setClickedCheckOut(false);
-  };
+
+  const toggleDatePicker = useToggle(setDatePicker, [setClickedCheckOut, setGuestSelect]);
+  const toggleGuestSelector = useToggle(setGuestSelect, [setDatePicker, setClickedCheckOut]);
   const handleDatePicker = () => {
-    setDatePicker(!datePicker);
-    setClickedCheckOut(false);
-    setGuestSelect(false);
-    updateDateSearchParams();
-  };
-  const handleClickedCheckOut = () => {
-    setClickedCheckOut(!clickedCheckOut);
-    setDatePicker(false);
-    setGuestSelect(false)
+    toggleDatePicker();
     updateDateSearchParams();
   };
   const handleGuestSelector = () => {
-    setDatePicker(false);
-    setClickedCheckOut(false);
-    setGuestSelect(!guestSelect);
+    toggleGuestSelector();
     updateGuestSearchParams();
   }
 
@@ -104,7 +91,7 @@ export default function SearchBar() {
                   }
                 </div>
                 <span className="partitionLine"></span>
-                <div onClick={handleClickedCheckOut} className="checkOutdate">
+                <div onClick={handleDatePicker} className="checkOutdate">
                   <div className="date-al date-al-margin">
                     <span>Check out</span>
                     <span>{checkOutDate}</span>
@@ -121,7 +108,8 @@ export default function SearchBar() {
                 <div onClick={handleGuestSelector} className="guestsnumber">
                   {/* <img src={addgroup} alt="" /> */}
                   <div className="guest-al">
-                    {roomsNumber && <span>{roomsNumber} Room</span>}
+                    <span>Who</span>
+                    {/*{roomsNumber && <span>{roomsNumber} Room</span>}*/}
                     {guestNumber && <span>{guestNumber} Guests</span>}
                   </div>
                 </div>

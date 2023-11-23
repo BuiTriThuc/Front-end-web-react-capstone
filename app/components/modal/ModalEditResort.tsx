@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import useLoginModal from "@/app/hooks/useLoginModal";
-import { useRouter } from "next/navigation";
-import React, { useCallback, useState } from "react";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import Heading from "../Heading";
-import Input from "../input/Input";
-import Modal from "./Modal";
-import { signIn } from "next-auth/react";
-import { toast } from "react-hot-toast";
-import useEidtResortModal from "@/app/hooks/useEditResortModal";
+import useLoginModal from '@/app/hooks/useLoginModal';
+import { useRouter } from 'next/navigation';
+import React, { useCallback, useState } from 'react';
+import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
+import Heading from '../Heading';
+import Input from '../input/Input';
+import Modal from './Modal';
+import { signIn } from 'next-auth/react';
+import { toast } from 'react-hot-toast';
+import useEidtResortModal from '@/app/hooks/useEditResortModal';
 
 export default function ModalEditResort() {
   const router = useRouter();
@@ -22,17 +22,17 @@ export default function ModalEditResort() {
     formState: { errors },
   } = useForm<FieldValues>({
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
   });
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
-    signIn("credentials", { ...data, redirect: false }).then((callback) => {
+    signIn('credentials', { ...data, redirect: false }).then((callback) => {
       setIsLoading(false);
       if (callback?.ok) {
-        toast.success("Logged in");
+        toast.success('Logged in');
         router.refresh();
         editResortModal.onClose();
       }
@@ -50,7 +50,7 @@ export default function ModalEditResort() {
   const bodyContent = (
     <div className="flex flex-col gap-4">
       <div className="flex justify-center">
-        <Heading title="Wellcome to" />{" "}
+        <Heading title="Wellcome to" />{' '}
         <span className="mx-1 text-2xl font-bold text-black">
           Holiday<span className="text-2xl text-common">Swap</span>
         </span>
@@ -83,16 +83,13 @@ export default function ModalEditResort() {
       <div className="text-neutral-500 text-center mt-4 font-light">
         <div className="flex flex-row justify-center items-center gap-2">
           <div>
-            First time using{" "}
+            First time using{' '}
             <span className="font-bold text-black">
               Holiday<span className="text-common">Swap</span>
             </span>
             ?
           </div>
-          <div
-            onClick={toggle}
-            className="text-neutral-800 cursor-pointer hover:underline"
-          >
+          <div onClick={toggle} className="text-neutral-800 cursor-pointer hover:underline">
             Create an account
           </div>
         </div>

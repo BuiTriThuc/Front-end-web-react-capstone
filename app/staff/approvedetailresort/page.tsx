@@ -1,21 +1,22 @@
-import DropDownEditResort from "@/app/components/staff/DropDownEditResort";
-import Image from "next/image";
-import React from "react";
-import { AiTwotoneStar } from "react-icons/ai";
-import { BiDollarCircle, BiMailSend } from "react-icons/bi";
-import { BsCalendarDate, BsClock } from "react-icons/bs";
-import { FaWifi } from "react-icons/fa6";
-import { FiPhoneCall } from "react-icons/fi";
-import { IoIosPeople } from "react-icons/io";
-import { RxRadiobutton } from "react-icons/rx";
+import DropDownEditResort from '@/app/components/staff/DropDownEditResort';
+import requireAuth from '@/app/libs/requireAuth';
+import Image from 'next/image';
+import React from 'react';
+import { AiTwotoneStar } from 'react-icons/ai';
+import { BiDollarCircle, BiMailSend } from 'react-icons/bi';
+import { BsCalendarDate, BsClock } from 'react-icons/bs';
+import { FaWifi } from 'react-icons/fa6';
+import { FiPhoneCall } from 'react-icons/fi';
+import { IoIosPeople } from 'react-icons/io';
+import { RxRadiobutton } from 'react-icons/rx';
 
 export default function ApproveDetailResort() {
-  return (
+  return requireAuth(
     <div>
-      {" "}
+      {' '}
       <div>
         <div>
-          Staff {">"} <span className="text-common">Detail Resort</span>
+          Staff {'>'} <span className="text-common">Detail Resort</span>
         </div>
         <div className="">
           <div className="flex-col">
@@ -44,27 +45,19 @@ export default function ApproveDetailResort() {
               </div>
               <div className="flex flex-row items-center pt-8 pb-5">
                 <IoIosPeople size={22} color="" className="mr-[10px]" />
-                <span className="pl-1 text-gray-500 text-[17px]">
-                  Max Guests : 200
-                </span>
+                <span className="pl-1 text-gray-500 text-[17px]">Max Guests : 200</span>
               </div>
               <div className="flex flex-row items-center pt-8 pb-5">
                 <FaWifi size={20} color="" className="mr-[10px]" />
-                <span className="pl-1 text-gray-500 text-[17px]">
-                  Wifi Available
-                </span>
+                <span className="pl-1 text-gray-500 text-[17px]">Wifi Available</span>
               </div>
               <div className="flex flex-row items-center pt-8 pb-5">
                 <BsCalendarDate size={20} color="" className="mr-[10px]" />
-                <span className="pl-1 text-gray-500 text-[17px]">
-                  Jan - July
-                </span>
+                <span className="pl-1 text-gray-500 text-[17px]">Jan - July</span>
               </div>
               <div className="flex flex-row items-center pt-8 pb-5">
                 <BiDollarCircle size={22} color="" className="mr-[10px]" />
-                <span className="pl-1 text-gray-500 text-[17px]">
-                  1200$ - 2500$
-                </span>
+                <span className="pl-1 text-gray-500 text-[17px]">1200$ - 2500$</span>
               </div>
             </div>
           </div>
@@ -119,18 +112,16 @@ export default function ApproveDetailResort() {
             <div className="text-[25px] py-[30px]">Detail</div>
             <div className="pr-[30px]">
               <div className="pb-[10px]">
-                Leave your guidebooks at home and dive into the local cultures
-                that make each destination so special. We’ll connect you with
-                our exclusive experiences. Each trip is carefully crafted to let
-                enjoy your vacation.
+                Leave your guidebooks at home and dive into the local cultures that make each
+                destination so special. We’ll connect you with our exclusive experiences. Each trip
+                is carefully crafted to let enjoy your vacation.
               </div>
               <div>
-                A wonderful serenity has taken possession of my entire soul,
-                like these sweet mornings of spring which I enjoy with my whole
-                heart. I am alone, and feel the charm of existence in this spot,
-                which was created for the bliss of souls like mine. I am so
-                happy, my dear friend, so absorbed in the exquisite sense of
-                mere tranquil existence, that I neglect my talents.
+                A wonderful serenity has taken possession of my entire soul, like these sweet
+                mornings of spring which I enjoy with my whole heart. I am alone, and feel the charm
+                of existence in this spot, which was created for the bliss of souls like mine. I am
+                so happy, my dear friend, so absorbed in the exquisite sense of mere tranquil
+                existence, that I neglect my talents.
               </div>
             </div>
 
@@ -171,6 +162,7 @@ export default function ApproveDetailResort() {
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    [3]
   );
 }

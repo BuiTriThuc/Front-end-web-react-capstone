@@ -1,12 +1,13 @@
-import TabRightSideBar from "@/app/components/detailResort/TabRightSideBar";
-import Link from "next/link";
-import React from "react";
-import { BsFillHouseCheckFill } from "react-icons/bs";
-import { FaBath, FaBed, FaKitchenSet } from "react-icons/fa6";
-import { MdOutlineApartment } from "react-icons/md";
+import TabRightSideBar from '@/app/components/detailResort/TabRightSideBar';
+import requireAuth from '@/app/libs/requireAuth';
+import Link from 'next/link';
+import React from 'react';
+import { BsFillHouseCheckFill } from 'react-icons/bs';
+import { FaBath, FaBed, FaKitchenSet } from 'react-icons/fa6';
+import { MdOutlineApartment } from 'react-icons/md';
 
 export default function StaffDetailApartment() {
-  return (
+  return requireAuth(
     <div>
       <div>
         <div className="">
@@ -17,14 +18,12 @@ export default function StaffDetailApartment() {
                   className=" border-[8px] border-b-[14px] border-gray-400 overflow-hidden absolute w-[150px] h-[150px] "
                   src="/images/resort1.jpg"
                   alt=""
-                  style={{ transform: "rotate(10deg)" }}
+                  style={{ transform: 'rotate(10deg)' }}
                 />
               </div>
               <div className="bg-green-300 w-[200px] h-[30px] absolute right-0 mt-6"></div>
               <div className="pl-48 pt-7">
-                <div className="text-[30px] text-common py-2">
-                  Khách sạn Nha Trang
-                </div>
+                <div className="text-[30px] text-common py-2">Khách sạn Nha Trang</div>
                 <div>Thành Phố Nha Trang, Tỉnh Khánh Hòa</div>
               </div>
             </div>
@@ -90,20 +89,13 @@ export default function StaffDetailApartment() {
                 </div>
                 <div className="text-[20px] font-bold pb-2]">7-Night stay</div>
                 <div className="pb-2 text-[20px]">
-                  Checkin:{" "}
-                  <span className="text-[20px] font-bold ]">
-                    Sat, Jan 20, 2024
-                  </span>
+                  Checkin: <span className="text-[20px] font-bold ]">Sat, Jan 20, 2024</span>
                 </div>
                 <div className="pb-2 text-[20px]">
-                  Checkout:{" "}
-                  <span className="text-[20px] font-bold ]">
-                    Sat, Jan 27, 2024
-                  </span>
+                  Checkout: <span className="text-[20px] font-bold ]">Sat, Jan 27, 2024</span>
                 </div>
                 <div className="pb-2 text-[20px]">
-                  Cancellation policy:{" "}
-                  <span className="text-[20px] font-bold ]">Moderate</span>
+                  Cancellation policy: <span className="text-[20px] font-bold ]">Moderate</span>
                 </div>
                 <button className="px-14 mb-2 text-white py-2 rounded-lg bg-common">
                   Request Exchange
@@ -126,23 +118,18 @@ export default function StaffDetailApartment() {
 
           <div className="w-[387px] h-auto bg-white shadow-xl rounded-lg mb-[40px] mt-[50px] ml-10">
             <div className="px-[40px] ">
-              <div className="py-2 text-[20px] font-bold text-common">
-                Best Change
-              </div>
+              <div className="py-2 text-[20px] font-bold text-common">Best Change</div>
               <TabRightSideBar />
             </div>
           </div>
         </div>
 
         <div className="flex flex-col ml-10 ">
-          <button className="px-4 py-3 bg-red-500 text-white rounded-md mb-5 ">
-            Delete
-          </button>
-          <button className="px-4 py-3 bg-common text-white rounded-md">
-            Approve
-          </button>
+          <button className="px-4 py-3 bg-red-500 text-white rounded-md mb-5 ">Delete</button>
+          <button className="px-4 py-3 bg-common text-white rounded-md">Approve</button>
         </div>
       </div>
-    </div>
+    </div>,
+    [3]
   );
 }

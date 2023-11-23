@@ -1,9 +1,9 @@
-"use client";
-import * as React from "react";
-import Button from "@mui/material/Button";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import { useRouter } from "next/navigation";
+'use client';
+import * as React from 'react';
+import Button from '@mui/material/Button';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import { useRouter } from 'next/navigation';
 
 export default function DropdownDeleteResort() {
   const route = useRouter();
@@ -21,9 +21,9 @@ export default function DropdownDeleteResort() {
     <div>
       <Button
         id="basic-button"
-        aria-controls={open ? "basic-menu" : undefined}
+        aria-controls={open ? 'basic-menu' : undefined}
         aria-haspopup="true"
-        aria-expanded={open ? "true" : undefined}
+        aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
       >
         ...
@@ -34,10 +34,9 @@ export default function DropdownDeleteResort() {
         open={open}
         onClose={handleClose}
         MenuListProps={{
-          "aria-labelledby": "basic-button",
+          'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem onClick={handleClose}>Edit</MenuItem>
         <MenuItem onClick={handleClose}>Active</MenuItem>
         <MenuItem onClick={handleClose}>In-active</MenuItem>
       </Menu>

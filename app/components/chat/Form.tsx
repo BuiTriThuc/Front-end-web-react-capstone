@@ -19,10 +19,10 @@ import "filepond/dist/filepond.min.css";
 import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
-import { FilePondFile } from 'filepond';
 
-// Register the plugins
-registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
+registerPlugin(
+  FilePondPluginImageExifOrientation,
+  FilePondPluginImagePreview);
 
 
 type Props = {
@@ -33,9 +33,6 @@ function Form({ currentUser }: Props) {
   const { conversationId } = useConversation();
   const imageInput = useRef<FilePond>(null);
   const [files, setFiles] = useState<any>([]);
-  useEffect(() => {
-
-  }, []);
   const {
     register,
     handleSubmit,
@@ -63,16 +60,10 @@ function Form({ currentUser }: Props) {
     setFiles([]);
   };
 
-  const handleUpload = (result: any) => {
-    axios.post('/api/messages', {
-      image: result.info.secure_url,
-      conversationId: conversationId,
-    });
-  };
 
   return (
     <>
-      <div className={`bg-transparent w-full ${files && files?.length?'':'hidden'}`}>
+      <div className={`bg-transparent w-full chat-image-preview ${files && files?.length?'':'hidden'}`}>
         <FilePond
           allowMultiple={false}
           allowReorder={true}
@@ -88,17 +79,12 @@ function Form({ currentUser }: Props) {
       </div>
     <div
       className='py-4 px-4 bg-white dark:bg-black border-t dark:border-t-gray-600 flex items-center gap-2 lg:gap-4 w-full'>
-        {/*<CldUploadButton*/}
-        {/*  options={{ maxFiles: 1 }}*/}
-        {/*  */}
-        {/*>*/}
       {imageInput&&<button className="filepond--label-action" onClick={() => {
         console.log("a");
         if (imageInput) imageInput?.current?.browse();
       }}>
         <HiPhoto size={30} className='text-sky-500'/>
       </button>}
-        {/*</CldUploadButton>*/}
       <form
         onSubmit={handleSubmit(onSubmit)}
         className='flex items-center gap-2 lg:gap-4 w-full'

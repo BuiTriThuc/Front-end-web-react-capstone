@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { format } from 'date-fns';
 import { BsCheck2Circle } from 'react-icons/bs';
 import { BiBlock } from 'react-icons/bi';
@@ -68,7 +68,7 @@ const DetailOwnershipApprove: React.FC<DetailOwnershipApproveProps> = ({
   };
   return (
     <div>
-      <div className="mt-8">
+      <div className="mt-10">
         <div>
           Staff {'> '}
           <span>
@@ -80,15 +80,32 @@ const DetailOwnershipApprove: React.FC<DetailOwnershipApproveProps> = ({
         <div className="grid grid-cols-2 mt-10 gap-5">
           <div className="w-full">
             <div className="flex flex-row justify-between gap-4">
-              {detail.contractImages.map((item: any, index: number) => (
-                <Image
-                  key={item.id}
-                  src={item.link}
-                  width={200}
-                  height={200}
-                  alt="contract image"
-                />
-              ))}
+              {detail.contractImages.length === 1 ? (
+                <Fragment>
+                  {detail.contractImages.map((item: any, index: number) => (
+                    <Image
+                      key={item.id}
+                      src={item.link}
+                      width="100%"
+                      height={500}
+                      alt="contract image"
+                    />
+                  ))}
+                </Fragment>
+              ) : (
+                <Fragment>
+                  {detail.contractImages.map((item: any, index: number) => (
+                    <Image
+                      key={item.id}
+                      src={item.link}
+                      width={200}
+                      height={200}
+                      alt="contract image"
+                    />
+                  ))}
+                </Fragment>
+              )}
+              {}
             </div>
           </div>
           <div className="w-full sticky">

@@ -1,7 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import { format } from "date-fns";
+import { format, formatRelative } from 'date-fns';
 import { motion } from "framer-motion";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -60,8 +60,8 @@ function MessageBox({ data, isLast, users, currentUser }: Props) {
           <div className="text-sm text-gray-500 dark:text-gray-400">
             {user?.username===currentUser?.username ? "You" : user?.username}
           </div>
-          <div className="text-xs text-gray-400 dark:text-gray-300">
-            {format(new Date(data.createdOn), "p")}
+          <div className="text-xs text-blue-600 dark:text-blue-500">
+            {formatRelative(new Date(data.createdOn), new Date())}
           </div>
         </div>
         <div>

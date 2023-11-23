@@ -12,42 +12,55 @@ import { fetchNotifications } from '@/app/redux/slices/pushNotificationSlice';
 import { useSocket } from '@/app/hooks/useSocket';
 import ChatWidget from '@/app/components/notification/ChatWidget';
 import Divider from '@mui/material/Divider';
+import ConversationApis, { Conversation } from '@/app/actions/ConversationApis';
+import { fetchConversations, setConversationLoaded } from '@/app/redux/slices/conversationSlice';
 
 interface UserMenuProps {
   currentUser?: Object | any | null;
 }
 
+export const useToggle = (setter: React.Dispatch<React.SetStateAction<boolean>>, reSetters: React.Dispatch<React.SetStateAction<boolean>>[] = []) => {
+  return useCallback(() => {
+    setter((value) => !value);
+    reSetters.forEach((item) => item(false));
+  }, [setter, reSetters]);
+};
+
+
 const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
   const dispatch = useDispatch();
-  const notification = useSelector((state: any) => state.pushNotification.data);
+  const notifications = useSelector((state: any) => state.pushNotification.data);
+  const conversations = useSelector((state: any) => state.conversation.data);
+  const conversationsLoaded = useSelector((state: any) => state.conversation.loaded);
   const [isOpen, setIsOpen] = useState(false);
-  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
-  const [isMessageOpen, setIsMessageOpen] = useState(false);
+  const [isNotificationOpen, setIsNotificationOpen]
+    = useState(false);
+  const [isMessageOpen, setIsMessageOpen]
+    = useState(false);
   const router = useRouter();
   const socket = useSocket();
+  const [notificationsList, setNotificationsList] =
+    useState(notifications ?? []);
+  const [conversationsList, setConversationsList] =
+    useState(conversations ?? []);
+
   useEffect(() => {
+    setNotificationsList(notifications);
+    console.log('notificationsList', notificationsList);
+  }, [notifications, notificationsList]);
+
+  useEffect(() => {
+    console.log('SUBSCRIBE NOTIFICATIONS...');
     socket.subscribeNotifications(currentUser)
       .catch((err) => {
         console.log('ERROR IN SUBSCRIBE NOTIFICATION', err);
       });
   }, [currentUser, socket]);
 
-  const [notificationsList, setNotificationsList] =
-    useState(notification ?? []);
-  useEffect(() => {
-    setNotificationsList(notification);
-    console.log('notificationsList', notificationsList);
-  }, [notification, notificationsList]);
+  const toggleOpen = useToggle(setIsOpen, [setIsNotificationOpen, setIsMessageOpen]);
+  const toggleNotificationOpen = useToggle(setIsNotificationOpen, [setIsOpen, setIsMessageOpen]);
+  const toggleMessageOpen = useToggle(setIsMessageOpen, [setIsOpen, setIsNotificationOpen]);
 
-  const toggleOpen = useCallback(() => {
-    setIsOpen((value) => !value);
-  }, []);
-  const toggleNotificationOpen = useCallback(() => {
-    setIsNotificationOpen((value) => !value);
-  }, []);
-  const toggleMessageOpen = useCallback(() => {
-    setIsMessageOpen((value) => !value);
-  }, []);
 
   const handleRouter = (route: string) => {
     router.push(route);
@@ -55,10 +68,32 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
   };
 
   useEffect(() => {
+    console.log('FETCH NOTIFICATIONS...');
     NotificationApis.getAll().then((res) => {
       dispatch(fetchNotifications(res));
+      console.log("NOTIFICATION RESPONSE", res);
+    });
+    ConversationApis.getCurrentUserConversation().then((res) => {
+      dispatch(fetchConversations(res));
+      dispatch(setConversationLoaded(true));
     });
   }, [dispatch]);
+
+  useEffect(() => {
+    console.log("NOTIFICATION STATE", notifications);
+  }, [notifications]);
+
+  useEffect(() => {
+    if(conversations && conversations.length > 0) {
+      console.log('SUBSCRIBE CONVERSATION IN USER MENU');
+      const conversationIds = conversations?.map((item: Conversation) => item.conversationId.toString()) || [];
+      socket.subscribeConversation(conversationIds)
+        .catch((err) => {
+          console.log('ERROR IN SUBSCRIBE CONVERSATION', err);
+        });
+    }
+  }, [conversations, conversationsLoaded, currentUser, dispatch, socket]);
+
 
 
   return (
@@ -76,14 +111,6 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
                   stroke='#000000' strokeWidth='0.65' strokeLinecap='round' strokeLinejoin='round'></path>
               </g>
             </svg>
-            {
-              notificationsList && (notificationsList.length > 0 ? (
-                <div className='px-1 neutral-100 rounded-full text-center text-gray text-sm absolute -top-3 -end-2'>
-                  {1}
-                  <div className='absolute top-0 start-0 rounded-full -z-10 animate-ping bg-gray-200 w-full h-full'></div>
-                </div>
-              ) : '')
-            }
           </div>
           <svg className='-mr-1 h-5 w-5 text-gray-400 ml-1.5' viewBox='0 0 20 20' fill='currentColor'
                aria-hidden='true'>
@@ -103,7 +130,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
             {
               notificationsList && (notificationsList.length > 0 ? (
                 <div className='px-1 neutral-100 rounded-full text-center text-gray text-sm absolute -top-3 -end-2'>
-                  {notification.length}
+                  {notificationsList.length}
                   <div className='absolute top-0 start-0 rounded-full -z-10 animate-ping bg-gray-200 w-full h-full'></div>
                 </div>
               ) : '')
@@ -116,13 +143,9 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
                   clipRule='evenodd' />
           </svg>
         </div>
-
-        <div
-          onClick={toggleOpen}
-          className='cursor-pointer flex items-center gap-3'
-        >
+        <div onClick={toggleOpen} className='cursor-pointer flex items-center gap-3'>
           <Image
-            src='/images/placeholder.jpg'
+            src={currentUser?.avatar || '/images/placeholder.jpg'}
             alt='Avartar'
             width={50}
             height={50}
@@ -133,10 +156,10 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
       </div>
 
       {isMessageOpen ? (
-        <div className='absolute rounded-xl shadow-md bg-white max-h-96 right-20 top-20 text-sm'>
+        <div className='absolute rounded-xl shadow-md bg-white max-h-96 right-20 top-20 text-sm z-max'>
           <div className='flex flex-col cursor-pointer'>
             <Fragment>
-              <ChatWidget></ChatWidget>
+              <ChatWidget currentUser={currentUser}></ChatWidget>
             </Fragment>
           </div>
         </div>
@@ -146,7 +169,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
 
 
       {isNotificationOpen ? (
-        <div className='absolute rounded-xl shadow-md bg-white max-h-96 right-20 top-20 text-sm'>
+        <div className='absolute rounded-xl shadow-md bg-white max-h-96 right-20 top-20 text-sm z-max'>
           <div className='flex flex-col cursor-pointer'>
             <Fragment>
               <NotificationWidget></NotificationWidget>
@@ -159,40 +182,43 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
 
       {isOpen ? (
         <div
-          className='absolute rounded-xl shadow-md w-[40vw] md:w-52 bg-white overflow-hidden right-20 top-24 text-sm'>
+          className='absolute rounded-xl shadow-md w-[40vw] md:w-52 border border-gray-300 bg-white overflow-hidden right-20 top-[78px] text-sm'>
           <div className='flex flex-col cursor-pointer'>
             <Fragment>
               {(() => {
                 if (currentUser?.role.roleId === 1) {
+                  return <MenuItem onClick={() => handleRouter('/admin')} label='Dashboard ' />;
+                } else if (currentUser?.role.roleId === 2 || currentUser?.role.roleId === 4) {
                   return (
-                    <MenuItem
-                      onClick={() => handleRouter('/admin')}
-                      label='Dashboard Admin'
-                    />
-                  );
-                } else if (
-                  currentUser?.role.roleId === 2 ||
-                  currentUser?.role.roleId === 4
-                ) {
-                  return (
-                    <MenuItem
-                      onClick={() => handleRouter('/dashboard')}
-                      label='Dashboard'
-                    />
+                    <Fragment>
+                      <MenuItem onClick={() => handleRouter('/dashboard')} label='Dashboard' />
+                      <MenuItem onClick={() => handleRouter('/recharge')} label='Recharge' />
+                      <MenuItem
+                        onClick={() => handleRouter('/dashboard/myBooking')}
+                        label='My Booking'
+                      />
+                    </Fragment>
                   );
                 } else if (currentUser?.role.roleId === 3) {
                   return (
-                    <MenuItem
-                      onClick={() => handleRouter('/staff')}
-                      label='Dashboard Staff'
-                    />
+                    <Fragment>
+                      <MenuItem onClick={() => handleRouter('/staff')} label='Dashboard ' />
+                      <MenuItem
+                        onClick={() => handleRouter('/staff/createresort')}
+                        label='Create resort'
+                      />
+                      <MenuItem
+                        onClick={() => handleRouter('/staff/createproperty')}
+                        label='Create property'
+                      />
+                      <MenuItem
+                        onClick={() => handleRouter('/staff/listapproveOwnership')}
+                        label='Approve ownership'
+                      />
+                    </Fragment>
                   );
                 }
               })()}
-              <MenuItem
-                onClick={() => handleRouter('/recharge')}
-                label='Recharge'
-              />
               <hr />
               <MenuItem onClick={() => SignOutMiddle()} label='Logout' />
             </Fragment>

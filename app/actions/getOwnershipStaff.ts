@@ -1,12 +1,12 @@
-import useAxiosAuth from "../hooks/useAxiosAuth";
-import GetCurrentUser from "./getCurrentUser";
-import axios from "axios";
+import useAxiosAuth from '../hooks/useAxiosAuth';
+import GetCurrentUser from './getCurrentUser';
+import axios from 'axios';
 
 export default async function GetOwnershipStaff() {
   try {
     const currentUser = await GetCurrentUser();
     const ownership = await axios.get(
-      `https://holiday-swap.click/api/co-owners?pageNo=0&pageSize=50&sortBy=property_id`
+      `https://holiday-swap.click/api/co-owners?pageNo=0&pageSize=8&sortBy=property_id&sortDirection=desc`
     );
 
     if (!ownership) {

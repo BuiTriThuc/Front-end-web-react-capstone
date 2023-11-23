@@ -10,10 +10,10 @@ export default function IconNotification({
                                            selectedIcon,
                                          }: IconNotificationProps) {
   const typeIcons: TypeIconsProps[] = [
-    { Rocket: <Rocket /> },
+    { Rocket: <Rocket size={30} strokeWidth={1.5}/> },
     { Hotel: <Hotel /> },
     { User: <User /> },
-    { Star: <Star /> },
+    { Star: <Star size={30} strokeWidth={1.5}/> },
     { Chat: <MessageSquare /> },
     { Flag: <Flag /> },
   ];
@@ -25,7 +25,7 @@ export default function IconNotification({
         const component = item[selectedIcon];
         if (component) {
           return (
-            <div key={key} className="m-auto">
+            <div key={key} className="flex rounded-full w-11 h-11 items-center">
               {component}
             </div>
           );

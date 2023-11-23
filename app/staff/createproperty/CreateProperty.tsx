@@ -1,18 +1,19 @@
-"use client";
+'use client';
 
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
-import InputCreateResort from "../createresort/InputCreateResort";
-import { useForm, FieldValues, SubmitHandler } from "react-hook-form";
-import { Select, Option } from "@material-tailwind/react";
-import useAxiosAuthClient from "@/app/hooks/useAxiosAuthClient";
-import toast from "react-hot-toast";
-import { peoples, sizes } from "@/app/components/register/RegisterBody";
-import SizeHomeInput from "@/app/components/register/SizeHomeInput";
-import Image from "next/image";
-import ButtonRegister from "@/app/components/register/BtnRegister";
-import Input from "@/app/components/input/Input";
-import InputInRoomAmenities from "./InputInRoomAmenities";
+import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
+import { useForm, FieldValues, SubmitHandler } from 'react-hook-form';
+// import { Select, Option } from '@material-tailwind/react';
+import useAxiosAuthClient from '@/app/hooks/useAxiosAuthClient';
+import toast from 'react-hot-toast';
+import { peoples, sizes } from '@/app/components/register/RegisterBody';
+import SizeHomeInput from '@/app/components/register/SizeHomeInput';
+import Image from 'next/image';
+import ButtonRegister from '@/app/components/register/BtnRegister';
+import Input from '@/app/components/input/Input';
+import InputInRoomAmenities from './InputInRoomAmenities';
+import SelectRouterStaff from '@/app/components/staff/SelectRouterStaff';
+import { Select } from 'antd';
 
 enum STEPS {
   BEDS = 0,
@@ -23,12 +24,14 @@ interface CreatePropertyProps {
   propertyTypes: any;
   propertyViews: any;
   inRoomAmenities: any;
+  listResort: any;
 }
 
 const CreateProperty: React.FC<CreatePropertyProps> = ({
   propertyTypes,
   propertyViews,
   inRoomAmenities,
+  listResort,
 }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -36,6 +39,7 @@ const CreateProperty: React.FC<CreatePropertyProps> = ({
   const [step, setStep] = useState(STEPS.BEDS);
   const [propertyTypeValue, setPropertyTypeValue] = useState<any>();
   const [propertyViewValue, setPropertyViewValue] = useState<any>();
+  const [resortIdValue, setResortIdValue] = useState<any>();
   const [file, setFile] = useState<any[]>([]);
 
   const handleChange = (e: any) => {
@@ -78,7 +82,11 @@ const CreateProperty: React.FC<CreatePropertyProps> = ({
   };
 
   const handleAmenitiesChange = (value: any[]) => {
-    setCustomeValue("inRoomAmenities", value);
+    setCustomeValue('inRoomAmenities', value);
+  };
+
+  const handelChangeResortId = (value: any) => {
+    setCustomeValue('resortId', value);
   };
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
@@ -101,24 +109,24 @@ const CreateProperty: React.FC<CreatePropertyProps> = ({
       numberBedsRoom: data.numberBedsRoom,
       numberBathRoom: data.numberBathRoom,
       roomSize: data.roomSize,
-      resortId: 1,
+      resortId: data.resortId,
       propertyTypeId: propertyTypeValue,
       propertyViewId: propertyViewValue,
       inRoomAmenities: data.inRoomAmenities,
     };
 
     const propertyBlod = new Blob([JSON.stringify(property)], {
-      type: "application/json ",
+      type: 'application/json ',
     });
-    formData.append("property", propertyBlod);
+    formData.append('property', propertyBlod);
     file.forEach((element) => {
-      formData.append("propertyImages", element);
+      formData.append('propertyImages', element);
     });
 
     axiosAuthClient
-      .post("/properties", formData)
+      .post('/properties', formData)
       .then(() => {
-        toast.success("Create Property Success!");
+        toast.success('Create Property Success!');
         reset();
       })
       .catch((response) => {
@@ -132,7 +140,7 @@ const CreateProperty: React.FC<CreatePropertyProps> = ({
   let bodyContent = (
     <div className="py-5 grid grid-cols-1 md:grid-cols-2 gap-5">
       <div className="flex flex-col">
-        <div className="py-14">
+        <div className="pb-14">
           {peoples.map((item, index) => (
             <SizeHomeInput
               key={index}
@@ -167,8 +175,8 @@ const CreateProperty: React.FC<CreatePropertyProps> = ({
         <div className="flex flex-col py-4">
           <div>
             <input
-              {...register("propertyImages", {
-                required: "Recipe picture is required",
+              {...register('propertyImages', {
+                required: 'Recipe picture is required',
               })}
               type="file"
               id="propertyImages"
@@ -181,7 +189,7 @@ const CreateProperty: React.FC<CreatePropertyProps> = ({
             errors={errors}
             type="text"
             id="propertyName"
-            label="Property Name"
+            label="Property Name*"
             placeholder="Property Name"
           />
           <Input
@@ -189,7 +197,7 @@ const CreateProperty: React.FC<CreatePropertyProps> = ({
             errors={errors}
             type="text"
             id="propertyDescription"
-            label="Property Description"
+            label="Property Description*"
             placeholder="Property Description"
           />
           <Input
@@ -197,33 +205,69 @@ const CreateProperty: React.FC<CreatePropertyProps> = ({
             errors={errors}
             type="number"
             id="roomSize"
-            label="Size"
+            label="Size*"
             placeholder="30"
           />
-          <div className="w-full py-4 grid grid-cols-2 gap-4">
-            <Select
-              label="Select Property Type"
-              value={propertyTypeValue}
-              onChange={handleChangePropertyType}
-            >
-              {propertyTypes.map((item: any, index: any) => (
-                <Option value={item.id} key={item.id}>
-                  {item.propertyTypeName}
-                </Option>
-              ))}
-            </Select>
 
+          <div className="mt-8 mb-5 w-full">
+            <div>Select resort*</div>
             <Select
-              label="Select Property View"
-              value={propertyViewValue}
-              onChange={handleChangePropertyView}
+              className="w-full h-[44px] border-2 border-gray-400 rounded-md focus:border-transparent"
+              value={resortIdValue}
+              onChange={handelChangeResortId}
+              showSearch
+              optionFilterProp="children"
+              filterOption={(input: string, option?: { children: string }) =>
+                (option?.children ?? '').toLowerCase().includes(input.toLowerCase())
+              }
             >
-              {propertyViews.map((item: any, index: any) => (
-                <Option value={item.id} key={item.id}>
-                  {item.propertyViewName}
-                </Option>
+              {listResort.content.map((item: any, index: any) => (
+                <Select.Option value={item.id} key={item.id}>
+                  {item.resortName}
+                </Select.Option>
               ))}
             </Select>
+          </div>
+
+          <div className="w-full py-4 grid grid-cols-2 gap-4">
+            <div>
+              <div>Select property types*</div>
+              <Select
+                className="w-full h-[44px] border-2  border-gray-400 rounded-md "
+                value={propertyTypeValue}
+                onChange={handleChangePropertyType}
+                showSearch
+                optionFilterProp="children"
+                filterOption={(input: string, option?: { children: string }) =>
+                  (option?.children ?? '').toLowerCase().includes(input.toLowerCase())
+                }
+              >
+                {propertyTypes.map((item: any, index: any) => (
+                  <Select.Option value={item.id} key={item.id}>
+                    {item.propertyTypeName}
+                  </Select.Option>
+                ))}
+              </Select>
+            </div>
+            <div>
+              <div>Select property view*</div>
+              <Select
+                className="w-full h-[44px] border-2 border-gray-400 rounded-md "
+                value={propertyViewValue}
+                onChange={handleChangePropertyView}
+                showSearch
+                optionFilterProp="children"
+                filterOption={(input: string, option?: { children: string }) =>
+                  (option?.children ?? '').toLowerCase().includes(input.toLowerCase())
+                }
+              >
+                {propertyViews.map((item: any, index: any) => (
+                  <Select.Option value={item.id} key={item.id}>
+                    {item.propertyViewName}
+                  </Select.Option>
+                ))}
+              </Select>
+            </div>
           </div>
 
           <div>
@@ -271,15 +315,13 @@ const CreateProperty: React.FC<CreatePropertyProps> = ({
   }
   return (
     <div>
-      <div>
-        <span className="hover:underline" onClick={() => router.push("/staff")}>
+      <div className="mt-10">
+        <span className="hover:underline" onClick={() => router.push('/staff')}>
           Dashboard
-        </span>{" "}
-        {">"} <span className="text-common">Create Property</span>
+        </span>{' '}
+        {'>'} <span className="text-common">Create Property</span>
       </div>
-      <div className=" w-[600px] py-10">
-        <div className="flex flex-row items-center w-full "></div>
-      </div>
+      <SelectRouterStaff />
 
       {bodyContent}
     </div>

@@ -1,5 +1,6 @@
 import DropDownEditResort from '@/app/components/staff/DropDownEditResort';
 import DropDownPropertyDetail from '@/app/components/staff/DropDownPropertyDetail';
+import requireAuth from '@/app/libs/requireAuth';
 import Image from 'next/image';
 import React from 'react';
 import { AiOutlineFundView } from 'react-icons/ai';
@@ -13,7 +14,7 @@ import { RxRadiobutton } from 'react-icons/rx';
 import { TbDeviceAudioTape, TbWashEco } from 'react-icons/tb';
 
 export default function StaffDetailResort() {
-  return (
+  return requireAuth(
     <div>
       <div>
         Staff {'>'} <span className="text-common">Detail Property</span>
@@ -185,6 +186,7 @@ export default function StaffDetailResort() {
         </div>
       </div>
       {/* <ListActionApproveApartment /> */}
-    </div>
+    </div>,
+    [3]
   );
 }

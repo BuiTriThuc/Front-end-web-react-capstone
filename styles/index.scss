@@ -1,6 +1,7 @@
 @import "./_theme_colors";
 @import "./_theme_custom";
 @import "./_dates_picker";
+@import './quill_editor';
 //
 @import "./header";
 
@@ -13,4 +14,49 @@
 
 .custom-translate {
   transform: translateX(-30%);
+}
+
+.chat-image-preview {
+  .filepond--item {
+    width: calc(40% - 0.5em) !important;
+  }
+}
+
+.mapboxgl-ctrl-geocoder {
+  position: absolute !important;
+  top: 0 !important;
+  min-width: 450px !important;
+  width: 100% !important;
+}
+
+.ant-drawer-content-wrapper {
+  height: 100% !important;
+  width: 100% !important;
+}
+
+.custom-max-height{
+  max-height: calc(100% - 3em) !important;
+}
+
+.max-height-conversation-list{
+  max-height: 75vh !important;
+}
+
+.profile-dob {
+  input {
+    background-color: #F8F8F8 !important;
+    color: #718096 !important;
+    border: none !important;
+  }
+  .MuiInputBase-root{
+    border-color: #6b7280 !important;
+    border-width: 1px !important;
+    border-style: solid !important;
+    box-sizing: border-box !important;
+    padding: 4px !important;
+  }
+  fieldset{
+    border: none !important;
+    border-width: 0;
+  }
 }

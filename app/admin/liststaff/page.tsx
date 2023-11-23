@@ -1,17 +1,20 @@
-import React, { Fragment } from "react";
-import ListStaff from "../../components/admin/ListStaff";
-import GetListUser from "@/app/actions/getListUser";
+import React, { Fragment } from 'react';
+import ListStaff from '../../components/admin/ListStaff';
+import GetListUser from '@/app/actions/getListUser';
+import requireAuth from '@/app/libs/requireAuth';
+import GetListUserStaffAdmin from '@/app/actions/getListUserStaffAdmin';
 
 export const metadata = {
-  title: "Manage Staff Admin",
+  title: 'Manage Staff Admin',
 };
 
 export default async function ListStaffPage() {
-  const listUser = await GetListUser();
+  const listAdminUser = await GetListUserStaffAdmin();
 
-  return (
+  return requireAuth(
     <Fragment>
-      <ListStaff listUser={listUser} />
-    </Fragment>
+      <ListStaff listUser={listAdminUser} />
+    </Fragment>,
+    [1]
   );
 }

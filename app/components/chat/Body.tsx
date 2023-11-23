@@ -69,9 +69,8 @@ function Body({ initialMessages, users, currentUser }: Props) {
           setMessages((current) => {
             return [...current, newMessage];
           })
-          bottomRef?.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          console.log('newMessage', newMessage);
-          console.log('m', initialMessages);
+          // bottomRef?.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          bottomRef?.current?.scrollTo(0, bottomRef?.current?.scrollHeight);
         }, {
           ['Authorization']: `${accessToken}`,
         });

@@ -3,13 +3,13 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { format } from "date-fns";
 import React, { Fragment, useMemo, useState } from "react";
-import { IoClose, IoTrash } from "react-icons/io5";
+import { IoClose, IoExitOutline, IoRemoveCircle } from "react-icons/io5";
 
-import ConfirmModal from "./ConfirmModal";
+import ConfirmLeaveModal from "./ConfirmLeaveModal";
 import AvatarGroup from '@/app/components/chat/AvatarGroup';
 import Image from 'next/image';
 import { Conversation } from '@/app/actions/ConversationApis';
-import { User } from '@/app/actions/UserApis';
+import ConfirmBlockModal from '@/app/components/chat/ConfirmBlockModal';
 
 type Props = {
   isOpen: boolean;
@@ -22,7 +22,8 @@ function ProfileDrawer({ isOpen, onClose, data, currentUser }: Props) {
   const otherUser = data?.participants?.filter(user => user?.user?.userId !== currentUser?.userId);
   const members = data?.participants;
   const isActive = true;
-  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [confirmLeaveOpen, setConfirmLeaveOpen] = useState(false);
+  const [confirmBlockOpen, setConfirmBlockOpen] = useState(false);
 
   const joinDate = useMemo(() => {
     return format(new Date(data?.creationDate), "PP");
@@ -42,10 +43,18 @@ function ProfileDrawer({ isOpen, onClose, data, currentUser }: Props) {
 
   return (
     <>
-      <ConfirmModal
-        isOpen={confirmOpen}
+      <ConfirmLeaveModal
+        isOpen={confirmLeaveOpen}
         onClose={() => {
-          setConfirmOpen(false);
+          setConfirmLeaveOpen(false);
+        }}
+      />
+      <ConfirmBlockModal
+        isOpen={confirmBlockOpen}
+        userId={otherUser[0]?.user?.userId?.toString()}
+        username={otherUser[0]?.user?.username}
+        onClose={() => {
+          setConfirmBlockOpen(false);
         }}
       />
       <Transition.Root show={isOpen} as={Fragment}>
@@ -106,30 +115,55 @@ function ProfileDrawer({ isOpen, onClose, data, currentUser }: Props) {
                           <div className="text-sm text-gray-500 dark:text-gray-300">
                             {statusText}
                           </div>
-                          <div className="flex gap-10 my-8">
-                            <div
-                              onClick={() => setConfirmOpen(true)}
-                              className="flex flex-col gap-3 items-center cursor-pointer hover:opacity-75"
-                            >
-                              <div className="w-10 h-10 bg-neutral-100 dark:bg-neutral-900 rounded-full flex items-center justify-center">
-                                <IoTrash size={20} />
-                              </div>
-                              <div className="text-sm font-light text-neutral-600 dark:text-neutral-300">
-                                Delete
+                          <div className="flex flex-row gap-4">
+                            <div className="flex gap-10 my-8">
+                              <div
+                                onClick={() => setConfirmLeaveOpen(true)}
+                                className="flex flex-col gap-2 items-center cursor-pointer hover:opacity-75"
+                              >
+                                <div className="w-10 h-10 bg-neutral-100 dark:bg-neutral-900 rounded-full flex items-center justify-center">
+                                  <IoExitOutline size={20} />
+                                </div>
+                                <div className="text-sm font-light text-neutral-600 dark:text-neutral-300">
+                                  Leave
+                                </div>
                               </div>
                             </div>
+
+                            {data?.participants?.length<=2 && <div className="flex gap-10 my-8">
+                              <div
+                                onClick={() => setConfirmBlockOpen(true)}
+                                className="flex flex-col gap-2 items-center cursor-pointer hover:opacity-75"
+                              >
+                                <div className="w-10 h-10 bg-neutral-100 dark:bg-neutral-900 rounded-full flex items-center justify-center">
+                                  <IoRemoveCircle size={20} />
+                                </div>
+                                <div className="text-sm font-light text-neutral-600 dark:text-neutral-300">
+                                  Block
+                                </div>
+                              </div>
+                            </div>}
                           </div>
                           <div className="w-full pb-5 pt-5 sm:px-0 sm:pt-0">
                             <dl className="space-y-8 px-4 sm:space-y-6 sm:px-6">
                               {data?.participants?.length>2 && (
                                 <div>
                                   <dt className="text-sm font-medium text-gray-500 dark:text-gray-300 sm:w-40 sm:flex-shrink-0">
-                                    Emails
+                                    Members:
                                   </dt>
+                                  {/*<dd className="mt-1 text-sm text-gray-900 dark:text-gray-100 sm:col-span-2">*/}
+                                  {/*  {data?.participants*/}
+                                  {/*    .map((user) => user?.user?.email)*/}
+                                  {/*    .join(", ")}*/}
+                                  {/*</dd>*/}
                                   <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100 sm:col-span-2">
                                     {data?.participants
-                                      .map((user) => user?.user?.email)
-                                      .join(", ")}
+                                      .map((user) => (<div key={`${user?.user?.userId}`} style={{ display: 'flex', alignItems: 'center' }}>
+                                        <div className='relative inline-block rounded-full overflow-hidden h-8 w-8 md:h-10 md:w-10 mb-2'>
+                                          <Image alt='Avatar' src={`${user?.user?.avatar ?? '/images/placeholder.jpg'}`} fill />
+                                        </div>
+                                        <span style={{ marginLeft: 8 }}>{user?.user?.username}</span>
+                                      </div>))}
                                   </dd>
                                 </div>
                               )}

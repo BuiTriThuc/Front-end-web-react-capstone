@@ -1,24 +1,22 @@
-"use client";
+'use client';
 
-import React, { Fragment, useCallback, useState } from "react";
-import {
-  MagnifyingGlassIcon,
-  ChevronUpDownIcon,
-} from "@heroicons/react/24/outline";
-import { PencilIcon, UserPlusIcon } from "@heroicons/react/24/solid";
-import { BsClipboard2PlusFill } from "react-icons/bs";
-import useCreatePlanModal from "@/app/hooks/useCreatePlanModal";
-import { Table } from "flowbite-react";
+import React, { Fragment, useCallback, useState } from 'react';
+import { MagnifyingGlassIcon, ChevronUpDownIcon } from '@heroicons/react/24/outline';
+import { PencilIcon, UserPlusIcon } from '@heroicons/react/24/solid';
+import { BsClipboard2PlusFill } from 'react-icons/bs';
+import useCreatePlanModal from '@/app/hooks/useCreatePlanModal';
+import { Table } from 'flowbite-react';
+import SelectRouterAdmin from './SelectRouterAdmin';
 
 const TABLE_HEAD = [
-  "ID",
-  "Plane Name",
-  "Description",
-  "Price",
-  "Price Type",
-  "Plan Price Interval",
-  "Status",
-  "",
+  'ID',
+  'Plane Name',
+  'Description',
+  'Price',
+  'Price Type',
+  'Plan Price Interval',
+  'Status',
+  '',
 ];
 
 interface PlanProps {
@@ -31,11 +29,15 @@ const Plan: React.FC<PlanProps> = ({ plan }) => {
 
   return (
     <Fragment>
-      <div className="text-xl font-bold text-common mb-5">Management Plan</div>
-      <div className="py-6">
+      <div className="mt-10">
+        Dashboard {'>'} <span className="text-common">Plan</span>
+      </div>
+      <SelectRouterAdmin />
+      <div className="text-xl font-bold text-common  py-5">Management Plan</div>
+      <div className="">
         <button
           onClick={createPlanModal.onOpen}
-          className="bg-common py-3 px-5 rounded-lg shadow-md text-white text-lg hover:bg-hover"
+          className="bg-common py-3 mb-5 px-5 rounded-lg shadow-md text-white text-lg hover:bg-hover"
         >
           Create plan
         </button>

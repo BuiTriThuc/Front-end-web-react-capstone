@@ -1,5 +1,6 @@
-import React from "react";
+import requireAuth from '@/app/libs/requireAuth';
+import React from 'react';
 
 export default function Invoices() {
-  return <div>Invoices</div>;
+  return requireAuth(<div>Invoices</div>, [2, 4]);
 }

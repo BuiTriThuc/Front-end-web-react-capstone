@@ -6,7 +6,7 @@ import { NotificationResponse } from "@/app/components/notification/types";
 
 export const fetchNotification = createAsyncThunk("notification/fetchNotification", async (_, thunkApi) => {
   try {
-    return await NotificationApis.getAll();
+    // return await NotificationApis.getAll();
   } catch (error) {
     thunkApi.dispatch(removeNotifications());
     return Promise.reject(error);
@@ -30,6 +30,9 @@ export const pushNotificationSlice = createSlice({
       console.log('action.payload', action.payload);
       console.log('state.data', state.data);
     },
+    addNotification: (state, action) => {
+      state.data = [...state.data, action.payload];
+    },
     removeNotifications: (state) => {
       state.data = initialState.data;
     },
@@ -42,7 +45,7 @@ export const pushNotificationSlice = createSlice({
     builder
       .addCase(fetchNotification.fulfilled, (state, action) => {
         state.loading = false;
-        state.data = action.payload;
+        // state.data = action.payload;
       })
       .addCase(fetchNotification.rejected, (state) => {
         state.loading = true;
@@ -54,5 +57,5 @@ export const pushNotificationSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setNotificationLoading, fetchNotifications,removeNotifications , readAllNotifications} = pushNotificationSlice.actions;
+export const { addNotification, setNotificationLoading, fetchNotifications,removeNotifications , readAllNotifications} = pushNotificationSlice.actions;
 export default pushNotificationSlice.reducer;

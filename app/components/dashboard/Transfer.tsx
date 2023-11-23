@@ -28,7 +28,7 @@ const Money = [
       <div className="mt-10 py-5 w-full bg-white flex flex-row items-center justify-center border border-gray-300 rounded-md">
         <div>
           <div>
-            <h1 className="font-bold mb-2 ">Source account</h1>
+            <div className="font-bold mb-2 ">Source account</div>
             <Input
               className="w-[500px] rounded-md text-gray-400"
               value={currentUser?.username}
@@ -37,9 +37,9 @@ const Money = [
             />
           </div>
           <div className="mt-5">
-            <h1 className="font-bold mb-2 ">
+            <div className="font-bold mb-2 ">
               Account to receive <span className="text-red-500">*</span>
-            </h1>
+            </div>
 
             <Select
               className="w-full h-[44px] border border-gray-400 rounded-md text-black font-bold"
@@ -59,11 +59,11 @@ const Money = [
             </Select>
           </div>
           <div className="my-5">
-            <h1 className="font-bold mb-2  ">
+            <div className="font-bold mb-2  ">
               Number of points to transfer <span className="text-red-500">*</span>
-            </h1>
+            </div>
             <Input
-              className="w-[500px] rounded-md"
+              className="w-[499 px] rounded-md"
               type="text"
               value={moneyTransfer}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -215,7 +215,10 @@ const TransferMoney: React.FC<TransferMoneyProps> = ({ currentUser, memberships 
 
   return (
     <>
-      <Steps current={current} items={items} />
+      <div className="mt-10">
+        Dashboard {'>'} <span className="text-common">Transfer</span>
+      </div>
+      <Steps className="mt-5" current={current} items={items} />
       <div>
         {Money[current].content({
           currentUser,

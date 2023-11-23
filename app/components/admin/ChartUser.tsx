@@ -1,17 +1,29 @@
-"use client";
+'use client';
 
-import React from "react";
-import { Chart as ChartJS, Tooltip, Legend, ArcElement } from "chart.js";
-import { Pie } from "react-chartjs-2";
+import React, { useState } from 'react';
+import { Chart as ChartJS, Tooltip, Legend, ArcElement } from 'chart.js';
+import { Pie } from 'react-chartjs-2';
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const ChartUser = () => {
+interface ChartUserProps {
+  listUser: any;
+}
+
+const ChartUser: React.FC<ChartUserProps> = ({ listUser }) => {
+  const [listUserData, setListUserData] = useState(listUser?.content);
+
+  const numberOfAdmin = listUserData.filter((admin: any) => admin.role.roleId === 1).length;
+  const numberOfMembership = listUserData.filter(
+    (membership: any) => membership.role.roleId === 2
+  ).length;
+  const numberOfStaff = listUserData.filter((staff: any) => staff.role.roleId === 3).length;
+  const numberOfGuest = listUserData.filter((guest: any) => guest.role.roleId === 4).length;
   const data = {
-    labels: ["Admin", "Membership", "Guest", "Staff"],
+    labels: ['Admin', 'Membership', 'Guest', 'Staff'],
     datasets: [
       {
-        data: [3, 9, 12, 6],
-        backgroundColor: ["aqua", "bloodorange", "purple", "green"],
+        data: [numberOfAdmin, numberOfMembership, numberOfStaff, numberOfGuest],
+        backgroundColor: ['aqua', 'bloodorange', 'purple', 'green'],
       },
     ],
   };

@@ -1,12 +1,12 @@
-import UploadImageResortEdit from "@/app/components/staff/UploadImageResortEdit";
-import React from "react";
-
+import UploadImageResortEdit from '@/app/components/staff/UploadImageResortEdit';
+import requireAuth from '@/app/libs/requireAuth';
+import React from 'react';
 
 export default function StaffEditResort() {
-  return (
+  return requireAuth(
     <div>
-      <div>
-        Dashboard {">"} <span className="text-common">Create Resort</span>
+      <div className="mt-10">
+        Dashboard {'>'} <span className="text-common">Update resort</span>
       </div>
       <div className=" w-[600px] py-10">
         <div className="flex flex-row items-center w-full "></div>
@@ -16,7 +16,7 @@ export default function StaffEditResort() {
         <UploadImageResortEdit />
       </div>
       <div className="w-[700px]">
-        <div className=" flex flex-row mb-14">
+        <div className=" flex flex-row mb-10">
           <div className="w-[277px] text-gray-700">Resort Name*</div>
           <input
             type="text"
@@ -25,86 +25,26 @@ export default function StaffEditResort() {
             className="text-gray-800 px-1 w-full bg-[#F8F8F8] border-b border-gray-500 focus:outline-none focus:border-t-transparent focus:border-l-transparent focus:border-r-transparent"
           />
         </div>
-        <div className=" flex flex-row mb-14">
-          <div className="w-[277px] text-gray-700">Address*</div>
-          <input
-            type="text"
-            placeholder="Thuc"
-            value="Khem Beach, An Thoi, Phu Quoc, Kien Giang."
-            className="text-gray-800 px-1 w-full bg-[#F8F8F8] border-b border-gray-500 focus:outline-none focus:border-t-transparent focus:border-l-transparent focus:border-r-transparent"
-          />
-        </div>
-        <div className=" flex flex-row mb-14">
-          <div className="w-[277px] text-gray-700">Address*</div>
-          <div id="map" className="w-full h-96 px-4 py-3"></div>
 
-        </div>
         <div className="flex flex-row items-center mb-10">
-          <div className="w-[198px] text-gray-700">Type</div>
-          <select
-            name=""
-            id=""
-            className=" text-gray-800 px-4 py-3 bg-[#F8F8F8] border-b border-gray-500 border-none focus:outline-none focus:border-t-transparent focus:border-l-transparent focus:border-r-transparent"
-          >
+          <div className="w-[198px] text-gray-700"> Property Type</div>
+          <select name="" id="" className="">
             <option value="">Spa Resort</option>
             <option value="">Moutaint Resort</option>
             <option value="">Sea Resort</option>
           </select>
         </div>
-        <div className="flex flex-row items-center mb-14">
-          <div className="w-[198px] text-gray-700">Wifi</div>
-          <div className="flex flex-row ">
-            <select className=" text-gray-800 mr-[20px] px-4 py-3 bg-[#F8F8F8] border-b border-gray-500 border-none focus:outline-none focus:border-t-transparent focus:border-l-transparent focus:border-r-transparent">
-              <option value="">Wifi Available</option>
-              <option value="">None</option>
-            </select>
-          </div>
+
+        <div className="flex flex-row items-center mb-10">
+          <div className="w-[198px] text-gray-700">Amenity</div>
+          <select name="" id="" className="">
+            <option value="">Sports </option>
+            <option value="">MDining services</option>
+            <option value=""> Public area</option>
+            <option value="">health & wellness</option>
+          </select>
         </div>
-        <div className=" flex flex-row mb-14">
-          <div className="w-[277px] text-gray-700">Max Guest*</div>
-          <input
-            type="email"
-            placeholder="Thuc"
-            value="2000"
-            className="text-gray-800 px-1 w-full bg-[#F8F8F8] border-b border-gray-500 focus:outline-none focus:border-t-transparent focus:border-l-transparent focus:border-r-transparent"
-          />
-        </div>
-        <div className=" flex flex-row mb-14">
-          <div className="w-[277px] text-gray-700">Price*</div>
-          <input
-            type="email"
-            placeholder="Thuc"
-            value="1200$ - 2500$"
-            className="text-gray-800 px-1 w-full bg-[#F8F8F8] border-b border-gray-500 focus:outline-none focus:border-t-transparent focus:border-l-transparent focus:border-r-transparent"
-          />
-        </div>
-        <div className=" flex flex-row mb-14">
-          <div className="w-[277px] text-gray-700">Email*</div>
-          <input
-            type="email"
-            placeholder="Thuc"
-            value="buitrithuc1008@gmail.com"
-            className="text-gray-800 px-1 w-full bg-[#F8F8F8] border-b border-gray-500 focus:outline-none focus:border-t-transparent focus:border-l-transparent focus:border-r-transparent"
-          />
-        </div>
-        <div className=" flex flex-row mb-14">
-          <div className="w-[277px] text-gray-700">Phone*</div>
-          <input
-            type="email"
-            placeholder="Thuc"
-            value="0856597778"
-            className=" text-gray-800 px-1 w-full bg-[#F8F8F8] border-b border-gray-500 focus:outline-none focus:border-t-transparent focus:border-l-transparent focus:border-r-transparent"
-          />
-        </div>
-        <div className=" flex flex-row mb-14">
-          <div className="w-[277px] text-gray-700">Price*</div>
-          <input
-            type="email"
-            placeholder="Thuc"
-            value="1200$ - 2500$"
-            className="text-gray-800 px-1 w-full bg-[#F8F8F8] border-b border-gray-500 focus:outline-none focus:border-t-transparent focus:border-l-transparent focus:border-r-transparent"
-          />
-        </div>
+
         <div className=" flex flex-row mb-14">
           <div className="w-[277px] text-gray-700">Detail*</div>
           <textarea
@@ -123,6 +63,7 @@ A wonderful serenity has taken possession of my entire soul, like these sweet mo
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    [3]
   );
 }

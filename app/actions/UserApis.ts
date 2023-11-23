@@ -39,6 +39,11 @@ export interface UserResponse {
 
 const UserApis = {
   getAllMembership: (): Promise<UserResponse> => AxiosClient.get('/users/search?status=ACTIVE&roleIds=2&limit=1000&offset=0&sortProps=username&sortDirection=asc'),
+  getCurrentUserProfile: (): Promise<User> => AxiosClient.get('/users/profile'),
+  updateCurrentUserProfile: (form: FormData): Promise<any> => AxiosClient.put(`/users/profile`, form, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    }}),
 };
 
 export default UserApis;

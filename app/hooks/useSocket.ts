@@ -4,13 +4,15 @@ import { useCallback, useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { Client, Message } from '@stomp/stompjs';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchNotifications } from '@/app/redux/slices/pushNotificationSlice';
+import { addNotification, fetchNotifications } from '@/app/redux/slices/pushNotificationSlice';
 import { NotificationResponse } from '@/app/components/notification/types';
-import { FullMessageType } from '@/app/components/chat/Body';
+import { Conversation, Message as ConversationMessage } from '@/app/actions/ConversationApis';
+import { fetchConversations } from '@/app/redux/slices/conversationSlice';
 
 export const useSocket = () => {
   const dispatch = useDispatch();
-  const notification = useSelector((state: any) => state.pushNotification.data);
+  const notifications = useSelector((state: any) => state.pushNotification.data);
+  const conversations = useSelector((state: any) => state.conversation.data);
   const [client, setClient] = useState<Client | null>(null);
   const [wsState, setWsState] = useState<'connected' | 'disconnected'>();
   const { data: session } = useSession();
@@ -73,19 +75,47 @@ export const useSocket = () => {
       client.onConnect = () => {
         client.subscribe(`/topic/notification-${currentUser?.userId}`, (message: Message) => {
           const newMessage =  JSON.parse(message.body) as NotificationResponse;
-          const updatedNotifications = [...notification, newMessage];
-          console.log('newMessage', newMessage);
-          dispatch(fetchNotifications(updatedNotifications));
+          const updatedNotifications = [...notifications, newMessage];
+          console.log('RECEIVED MESSAGE FROM NOTIFICATION...');
+          console.log(notifications);
+          console.log(newMessage);
+          console.log(updatedNotifications);
+          dispatch(addNotification(newMessage));
         }, {
           ['Authorization']: `${accessToken}`,
         });
       };
     }
-  }, [accessToken, client, dispatch, notification]);
+  }, [accessToken, client, dispatch, notifications]);
+
+  const subscribeConversation = useCallback(async (conversationIds?: string[]) => {
+    if (client) {
+      client.onConnect = () => {
+        conversationIds?.forEach((conversationId: string) => {
+          client.subscribe(`/topic/${conversationId}`, (message) => {
+            console.log('RECEIVED MESSAGE FROM CONVERSATION', conversationId);
+            const newMessage =  JSON.parse(message.body) as ConversationMessage;
+            const updatedConversations = conversations?.map((conversation: Conversation) => {
+              if (conversation.conversationId.toString() === conversationId) {
+                return {
+                  ...conversation,
+                  message: newMessage,
+                };
+              }
+              return conversation;
+            });
+            dispatch(fetchConversations(updatedConversations));
+          }, {
+            ['Authorization']: `${accessToken}`,
+          });
+        });
+      };
+    }
+  }, [accessToken, client, conversations, dispatch]);
 
   useEffect(() => {
     connect();
   }, [connect]);
 
-  return { wsState, subscribeNotifications, connect, killConnection };
+  return { wsState, subscribeNotifications, connect, killConnection, subscribeConversation };
 };

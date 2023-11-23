@@ -1,10 +1,10 @@
-import React from "react";
-import MyProfile from "../components/profile/MyProfile";
-import requireAuth from "../libs/requireAuth";
-import GetCurrentUser from "../actions/getCurrentUser";
+import React from 'react';
+import MyProfile from '../components/profile/MyProfile';
+import requireAuth from '../libs/requireAuth';
+import GetCurrentUser from '../actions/getCurrentUser';
 
 export const metadata = {
-  title: "DashBoard",
+  title: 'DashBoard',
 };
 
 export default async function DashBoard() {
@@ -15,6 +15,6 @@ export default async function DashBoard() {
         <MyProfile currentUser={currentUser} />
       </div>
     </div>,
-    [2, 1]
+    [2, 4]
   );
 }

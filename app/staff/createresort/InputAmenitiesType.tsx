@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React, { Fragment, useEffect, useState } from "react";
-import { AiOutlinePlusCircle } from "react-icons/ai";
+import React, { Fragment, useEffect, useState } from 'react';
+import { AiOutlinePlusCircle } from 'react-icons/ai';
 
 interface InputAmenitiesTypeProps {
   amenities?: any;
@@ -32,11 +32,7 @@ const InputAmenitiesType: React.FC<InputAmenitiesTypeProps> = ({
     handleAmenitiesChange(aminetyValue);
   }, [aminetyValue]);
   const [ameniteisTypes, setameniteisTypes] = useState([
-    <AmeniteisType
-      key={0}
-      amenities={amenities}
-      onAmenityValueChange={handleAmenityValueChange}
-    />,
+    <AmeniteisType key={0} amenities={amenities} onAmenityValueChange={handleAmenityValueChange} />,
   ]);
 
   const handleAddPropertyType = () => {
@@ -53,7 +49,7 @@ const InputAmenitiesType: React.FC<InputAmenitiesTypeProps> = ({
 
   return (
     <Fragment>
-      <div className="w-[198px] text-gray-700">Amenity Types</div>
+      <div className="w-[198px] text-gray-700">Amenity</div>
       <div className="flex flex-col">
         {ameniteisTypes.map((propertyType, index) => (
           <Fragment key={index}>{propertyType}</Fragment>
@@ -63,16 +59,11 @@ const InputAmenitiesType: React.FC<InputAmenitiesTypeProps> = ({
       <button onClick={handleAddPropertyType}>
         <AiOutlinePlusCircle size={30} />
       </button>
-
-  
     </Fragment>
   );
 };
 
-const AmeniteisType: React.FC<AmenityTypeProps> = ({
-  amenities,
-  onAmenityValueChange,
-}) => {
+const AmeniteisType: React.FC<AmenityTypeProps> = ({ amenities, onAmenityValueChange }) => {
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     // Get the selected value from the <select>
     const selectedValue = event.target.value;
@@ -82,12 +73,8 @@ const AmeniteisType: React.FC<AmenityTypeProps> = ({
   };
   return (
     <Fragment>
-      <div className="flex flex-row">
-        <select
-          id="amenities"
-          onChange={handleSelectChange}
-          className="text-gray-800 mr-[20px] px-4 py-3 bg-[#F8F8F8] border-b-2 border-black border-none focus:outline-none focus:border-t-transparent focus:border-l-transparent focus:border-r-transparent"
-        >
+      <div className="flex flex-row mb-2">
+        <select id="amenities" onChange={handleSelectChange} className="rounded-md">
           <option value="">-</option>
           {amenities?.map((item: any) => (
             <option key={item.id} value={item.id}>

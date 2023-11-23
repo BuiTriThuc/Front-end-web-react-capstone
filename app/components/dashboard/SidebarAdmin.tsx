@@ -6,6 +6,7 @@ import { FiEdit } from 'react-icons/fi';
 import { PiNotepadBold } from 'react-icons/pi';
 import { LiaFileInvoiceDollarSolid } from 'react-icons/lia';
 import { AiOutlineStar, AiFillPieChart } from 'react-icons/ai';
+import { FiUserPlus } from 'react-icons/fi';
 import { MdOutlineSwapHorizontalCircle, MdBusinessCenter } from 'react-icons/md';
 import { BiSolidCoin } from 'react-icons/bi';
 import { GrBusinessService } from 'react-icons/gr';
@@ -31,25 +32,25 @@ const SidebarAdmin = () => {
       name: 'List Staff',
       href: '/admin/liststaff',
       icon: PiNotepadBold,
-      current: pathName === '/admin/liststaff' ? true : false,
+      current: pathName?.includes('/admin/liststaff') ? true : false,
     },
     {
       name: 'Create Staff',
       href: '/admin/createstaff',
-      icon: PiNotepadBold,
-      current: pathName === '/admin/createstaff' ? true : false,
+      icon: FiUserPlus,
+      current: pathName?.includes('/admin/createstaff') ? true : false,
     },
     {
       name: 'Point',
       href: '/admin/point',
       icon: BiSolidCoin,
-      current: pathName === '/admin/point' ? true : false,
+      current: pathName?.includes('/admin/point') ? true : false,
     },
     {
       name: 'Plan',
       href: '/admin/plan',
       icon: MdBusinessCenter,
-      current: pathName === '/admin/plan' ? true : false,
+      current: pathName?.includes('/admin/plan') ? true : false,
     },
   ];
   const sidebarExchange = [
@@ -57,13 +58,13 @@ const SidebarAdmin = () => {
       name: 'List Approve',
       href: '/staff/listapprove',
       icon: MdOutlineSwapHorizontalCircle,
-      current: pathName === '/staff/listapprove' ? true : false,
+      current: pathName?.includes('/staff/listapprove') ? true : false,
     },
     {
       name: 'Infomation',
       href: '/staff/infomation',
       icon: LiaFileInvoiceDollarSolid,
-      current: pathName === '/staff/infomation' ? true : false,
+      current: pathName?.includes('/staff/infomation') ? true : false,
     },
   ];
   return (
@@ -71,7 +72,7 @@ const SidebarAdmin = () => {
       <div className="hidden lg:flex lg:min-h-full lg:rounded-md lg:w-72 lg:flex-col h-full">
         <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-[#F8F8F8] px-6 pb-4 border-r-2">
           <div className="flex h-16 shrink-0 items-center">
-            <h1 className="text-3xl font-bold text-gray-700">Statistic</h1>
+            <div className="text-3xl font-bold text-gray-700">Statistic</div>
           </div>
 
           <div className="flex flex-1 flex-col">
@@ -99,7 +100,7 @@ const SidebarAdmin = () => {
             </ul>
           </div>
           <div className="flex h-16 shrink-0 items-center">
-            <h1 className="text-3xl font-bold text-gray-700">Management</h1>
+            <div className="text-3xl font-bold text-gray-700">Management</div>
           </div>
           <div className="flex flex-1 flex-col">
             <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -126,7 +127,7 @@ const SidebarAdmin = () => {
             </ul>
           </div>
           {/* <div className="flex h-16 shrink-0 items-center">
-            <h1 className="text-3xl font-bold text-gray-700">Approve</h1>
+            <div className="text-3xl font-bold text-gray-700">Approve</div>
           </div>
           <div className="flex flex-1 flex-col">
             <ul role="list" className="flex flex-1 flex-col gap-y-7">

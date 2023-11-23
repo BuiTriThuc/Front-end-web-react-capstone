@@ -1,25 +1,24 @@
-"use client";
+'use client';
 
-import React, { Fragment, useState } from "react";
-import { FiChevronLeft } from "react-icons/fi";
-import Input from "../components/input/Input";
-import { useForm, FieldValues, SubmitHandler } from "react-hook-form";
-import { AiOutlinePlusCircle } from "react-icons/ai";
-import { useRouter } from "next/navigation";
-import useEditDateBookingModal from "../hooks/useEditDateBookingModal";
-import { addDays, addMonths, format, subDays } from "date-fns";
-import useEditGuestBookingModal from "../hooks/useEditGuestBookingMoadal";
-import axios from "axios";
-import toast from "react-hot-toast";
+import React, { Fragment, useState } from 'react';
+import { FiChevronLeft } from 'react-icons/fi';
+import Input from '../components/input/Input';
+import { useForm, FieldValues, SubmitHandler } from 'react-hook-form';
+import { AiOutlinePlusCircle } from 'react-icons/ai';
+import { useRouter } from 'next/navigation';
+import useEditDateBookingModal from '../hooks/useEditDateBookingModal';
+import { addDays, addMonths, format, subDays } from 'date-fns';
+import useEditGuestBookingModal from '../hooks/useEditGuestBookingMoadal';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 interface BookingInformationProps {
   totalGuest?: any;
   dateRangeBooking?: any;
   dateRange?: any;
   apartmentAllowGuest?: any;
-  apartmentId: any;
+  availableTimeId: any;
   userId: any;
-  roomId: any;
 }
 
 const BookingInformation: React.FC<BookingInformationProps> = ({
@@ -27,23 +26,22 @@ const BookingInformation: React.FC<BookingInformationProps> = ({
   dateRangeBooking,
   dateRange,
   apartmentAllowGuest,
-  apartmentId,
+  availableTimeId,
   userId,
-  roomId,
 }) => {
   const router = useRouter();
   const [totalGuestValue, setTotalGuestValue] = useState(totalGuest);
   const valueDateJson = JSON.parse(dateRangeBooking);
   const dateRangeJson = JSON.parse(dateRange);
   const [dateRanges, setDateRanges] = useState({
-    startDate: format(new Date(dateRangeJson.startDate), "yyyy-MM-dd"),
-    endDate: format(new Date(dateRangeJson.endDate), "yyyy-MM-dd"),
-    key: "selection",
+    startDate: format(new Date(dateRangeJson.startDate), 'yyyy-MM-dd'),
+    endDate: format(new Date(dateRangeJson.endDate), 'yyyy-MM-dd'),
+    key: 'selection',
   });
   const [dateRangeValue, setDateRangeValue] = useState({
     startDate: new Date(valueDateJson.startDate),
     endDate: new Date(valueDateJson.endDate),
-    key: "selection",
+    key: 'selection',
   });
   const editDateBookingModal = useEditDateBookingModal();
   const editGuestBookingModal = useEditGuestBookingModal();
@@ -55,11 +53,10 @@ const BookingInformation: React.FC<BookingInformationProps> = ({
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     const bookingData = {
-      propertyId: apartmentId,
-      roomId: roomId,
+      availableTimeId: availableTimeId,
       userId: userId,
-      checkInDate: format(dateRangeValue.startDate, "yyyy-MM-dd"),
-      checkOutDate: format(dateRangeValue.endDate, "yyyy-MM-dd"),
+      checkInDate: format(dateRangeValue.startDate, 'yyyy-MM-dd'),
+      checkOutDate: format(dateRangeValue.endDate, 'yyyy-MM-dd'),
       userOfBookingRequests: guests.map((item, index) => ({
         email: data[`email${index}`], // Use the indexed email field
         fullName: data[`fullName${index}`], // Use the indexed full name field
@@ -67,31 +64,25 @@ const BookingInformation: React.FC<BookingInformationProps> = ({
       })),
     };
     const config = {
-      headers: { "Content-type": "application/json" },
+      headers: { 'Content-type': 'application/json' },
     };
     axios
-      .post(
-        "https://holiday-swap.click/api/booking/create",
-        bookingData,
-        config
-      )
+      .post('https://holiday-swap.click/api/booking/create', bookingData, config)
       .then(() => {
-        router.push("/booking/success");
+        router.push('/booking/success');
       })
       .catch((response) => {
         toast.error(response.response.data.message);
       });
   };
 
-  const [guests, setGuests] = useState([
-    { email: "", fullName: "", phoneNumber: "" },
-  ]);
+  const [guests, setGuests] = useState([{ email: '', fullName: '', phoneNumber: '' }]);
 
   const addGuest = () => {
-    setGuests([...guests, { email: "", fullName: "", phoneNumber: "" }]);
+    setGuests([...guests, { email: '', fullName: '', phoneNumber: '' }]);
   };
 
-  console.log("Check date Ranges", dateRange);
+  console.log('Check date Ranges', dateRange);
 
   const handleChangeDateRange = (value: any) => {
     setDateRangeValue(value.selection);
@@ -117,14 +108,12 @@ const BookingInformation: React.FC<BookingInformationProps> = ({
             <div className="flex flex-col gap-2">
               <div className="text-base text-black font-semibold">Dates</div>
               <div className="text-gray-600">
-                {format(dateRangeValue.startDate, "d")} –{" "}
-                {format(dateRangeValue.endDate, "d MMM yyyy")}
+                {format(dateRangeValue.startDate, 'd')} –{' '}
+                {format(dateRangeValue.endDate, 'd MMM yyyy')}
               </div>
             </div>
             <div
-              onClick={() =>
-                editDateBookingModal.onOpen(JSON.stringify(dateRange))
-              }
+              onClick={() => editDateBookingModal.onOpen(JSON.stringify(dateRange))}
               className="text-black font-semibold underline cursor-pointer"
             >
               Edit
@@ -135,19 +124,12 @@ const BookingInformation: React.FC<BookingInformationProps> = ({
               <div className="text-base text-black font-semibold">Guests</div>
               <div className="text-gray-600">
                 {`${
-                  totalGuestValue === 1
-                    ? `${totalGuestValue} guest`
-                    : `${totalGuestValue} guests`
+                  totalGuestValue === 1 ? `${totalGuestValue} guest` : `${totalGuestValue} guests`
                 }`}
               </div>
             </div>
             <div
-              onClick={() =>
-                editGuestBookingModal.onOpen(
-                  totalGuestValue,
-                  apartmentAllowGuest
-                )
-              }
+              onClick={() => editGuestBookingModal.onOpen(totalGuestValue, apartmentAllowGuest)}
               className="text-black font-semibold underline cursor-pointer"
             >
               Edit
@@ -159,9 +141,8 @@ const BookingInformation: React.FC<BookingInformationProps> = ({
         <div className="flex flex-col pt-12 pb-8 border-b border-gray-400">
           <div className="text-xl font-bold">Guest Info</div>
           <div className="flex flex-row justify-end gap-2 cursor-pointer">
-            {totalGuestValue < 1 ||
-            guests.length === Number(totalGuestValue) ? (
-              ""
+            {totalGuestValue < 1 || guests.length === Number(totalGuestValue) ? (
+              ''
             ) : (
               <div className="flex flex-row items-center" onClick={addGuest}>
                 <AiOutlinePlusCircle size={15} />
@@ -172,7 +153,7 @@ const BookingInformation: React.FC<BookingInformationProps> = ({
           {guests.map((guest, index) => (
             <div key={index} className="flex flex-col">
               <div className="pt-5 text-lg font-bold">
-                {index === 0 ? "" : `Guest ${index + 1}`}
+                {index === 0 ? '' : `Guest ${index + 1}`}
               </div>
               <div className="grid grid-cols-2 gap-5">
                 <Input
@@ -205,7 +186,14 @@ const BookingInformation: React.FC<BookingInformationProps> = ({
             </div>
           ))}
         </div>
-
+        <div className="py-5">
+          <div className="text-[20px] font-bold">General standards</div>
+          <div className="py-3 text-gray-700">
+            We ask all guests to remember a few simple rules to be a great guest.
+          </div>
+          <div className="text-gray-700">- Comply with house rules</div>
+          <div className="text-gray-700">- Maintain the house as if it were your home</div>
+        </div>
         {/* Request to book */}
         <div className="py-8">
           <button

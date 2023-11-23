@@ -1,22 +1,23 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import { FiEdit } from "react-icons/fi";
-import { PiNotepadBold } from "react-icons/pi";
-import { LiaFileInvoiceDollarSolid } from "react-icons/lia";
-import { IoCreateOutline } from "react-icons/io5";
+import React, { useState } from 'react';
+import { FiEdit } from 'react-icons/fi';
+import { PiFolders, PiNotepadBold } from 'react-icons/pi';
+import { LiaFileInvoiceDollarSolid } from 'react-icons/lia';
+import { IoCreateOutline } from 'react-icons/io5';
 import {
   MdOutlineSwapHorizontalCircle,
   MdComputer,
   MdOutlineCreateNewFolder,
-} from "react-icons/md";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { signOut } from "next-auth/react";
-import { LuArrowUpSquare } from "react-icons/lu";
+} from 'react-icons/md';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import { signOut } from 'next-auth/react';
+import { LuArrowUpSquare } from 'react-icons/lu';
+import { BsHouseAdd, BsHouseAddFill, BsHouses } from 'react-icons/bs';
 
 function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
+  return classes.filter(Boolean).join(' ');
 }
 
 const SidebarStaff = () => {
@@ -24,67 +25,67 @@ const SidebarStaff = () => {
   const router = useRouter();
 
   const handelSignOut = () => {
-    router.push("/");
+    router.push('/');
     signOut();
   };
   const sidebarMyaccount = [
     {
-      name: "Dashboard",
-      href: "/staff",
+      name: 'Dashboard',
+      href: '/staff',
       icon: MdComputer,
-      current: pathName === "/staff" ? true : false,
+      current: pathName === '/staff' ? true : false,
     },
     {
-      name: "List Resort",
-      href: "/staff/listresort",
-      icon: FiEdit,
-      current: pathName === "/staff/listresort" ? true : false,
+      name: 'List Resort',
+      href: '/staff/listresort',
+      icon: BsHouses,
+      current: pathName?.includes('/staff/listresort') ? true : false,
     },
     {
-      name: "Create Resort",
-      href: "/staff/createresort",
+      name: 'Create Resort',
+      href: '/staff/createresort',
+      icon: BsHouseAdd,
+      current: pathName?.includes('/staff/createresort') ? true : false,
+    },
+    {
+      name: 'List Property',
+      href: '/staff/listproperty',
+      icon: PiFolders,
+      current: pathName?.includes('/staff/listproperty') ? true : false,
+    },
+    {
+      name: 'Create Property',
+      href: '/staff/createproperty',
       icon: MdOutlineCreateNewFolder,
-      current: pathName === "/staff/createresort" ? true : false,
-    },
-    {
-      name: "List Property",
-      href: "/staff/listproperty",
-      icon: FiEdit,
-      current: pathName === "/staff/listproperty" ? true : false,
-    },
-    {
-      name: "Create Property",
-      href: "/staff/createproperty",
-      icon: IoCreateOutline,
-      current: pathName === "/staff/createproperty" ? true : false,
+      current: pathName?.includes('/staff/createproperty') ? true : false,
     },
   ];
   const sidebarMember = [
     {
-      name: "List Membership",
-      href: "/staff/listmember",
+      name: 'List Membership',
+      href: '/staff/listmember',
       icon: PiNotepadBold,
-      current: pathName === "/staff/listmember" ? true : false,
+      current: pathName?.includes('/staff/listmember') ? true : false,
     },
     {
-      name: "Upgrade Member",
-      href: "/staff/upgrademembership",
+      name: 'Upgrade Member',
+      href: '/staff/upgrademembership',
       icon: LuArrowUpSquare,
-      current: pathName === "/staff/upgrademembership" ? true : false,
+      current: pathName?.includes('/staff/upgrademembership') ? true : false,
     },
   ];
   const sidebarExchange = [
     {
-      name: "List Approve Ownership",
-      href: "/staff/listapproveOwnership",
+      name: 'List Approve Ownership',
+      href: '/staff/listapproveOwnership',
       icon: MdOutlineSwapHorizontalCircle,
-      current: pathName === "/staff/listapproveOwnership" ? true : false,
+      current: pathName?.includes('/staff/listapproveOwnership') ? true : false,
     },
     {
-      name: "Infomation",
-      href: "/staff/infomation",
+      name: 'Infomation',
+      href: '/staff/infomation',
       icon: LiaFileInvoiceDollarSolid,
-      current: pathName === "/staff/infomation" ? true : false,
+      current: pathName?.includes('/staff/infomation') ? true : false,
     },
   ];
   return (
@@ -92,7 +93,7 @@ const SidebarStaff = () => {
       <div className="hidden lg:flex lg:min-h-full lg:rounded-md lg:w-72 lg:flex-col h-full">
         <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-[#F8F8F8] px-6 pb-4 border-r-2">
           <div className="flex h-16 shrink-0 items-center">
-            <h1 className="text-3xl font-bold text-gray-700">Resort</h1>
+            <div className="text-3xl font-bold text-gray-700">Resort</div>
           </div>
 
           <div className="flex flex-1 flex-col">
@@ -105,9 +106,9 @@ const SidebarStaff = () => {
                         href={option.href}
                         className={classNames(
                           option.current
-                            ? "bg-common text-white"
-                            : "text-gray-400 hover:text-white hover:bg-common",
-                          "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
+                            ? 'bg-common text-white'
+                            : 'text-gray-400 hover:text-white hover:bg-common',
+                          'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
                         )}
                       >
                         <option.icon className="text-gray-300 group-hover:text-white h-6 w-6 shrink-0" />
@@ -120,7 +121,7 @@ const SidebarStaff = () => {
             </ul>
           </div>
           <div className="flex h-16 shrink-0 items-center">
-            <h1 className="text-3xl font-bold text-gray-700">Member</h1>
+            <div className="text-3xl font-bold text-gray-700">Member</div>
           </div>
           <div className="flex flex-1 flex-col">
             <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -132,9 +133,9 @@ const SidebarStaff = () => {
                         href={option.href}
                         className={classNames(
                           option.current
-                            ? "bg-common text-white"
-                            : "text-gray-400 hover:text-white hover:bg-common",
-                          "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
+                            ? 'bg-common text-white'
+                            : 'text-gray-400 hover:text-white hover:bg-common',
+                          'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
                         )}
                       >
                         <option.icon className="text-gray-300 group-hover:text-white h-6 w-6 shrink-0" />
@@ -147,7 +148,7 @@ const SidebarStaff = () => {
             </ul>
           </div>
           <div className="flex h-16 shrink-0 items-center">
-            <h1 className="text-3xl font-bold text-gray-700">Approve</h1>
+            <div className="text-3xl font-bold text-gray-700">Approve</div>
           </div>
           <div className="flex flex-1 flex-col">
             <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -159,9 +160,9 @@ const SidebarStaff = () => {
                         href={option.href}
                         className={classNames(
                           option.current
-                            ? "bg-common text-white"
-                            : "text-gray-400 hover:text-white hover:bg-common",
-                          "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
+                            ? 'bg-common text-white'
+                            : 'text-gray-400 hover:text-white hover:bg-common',
+                          'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
                         )}
                       >
                         <option.icon className="text-gray-300 group-hover:text-white h-6 w-6 shrink-0" />

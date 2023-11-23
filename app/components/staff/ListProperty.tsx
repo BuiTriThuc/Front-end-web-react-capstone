@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { Pagination } from 'antd';
+import SelectRouterStaff from './SelectRouterStaff';
 export default function ListProperty() {
   const resortsPerPage = 6;
   const [currentPage, setCurrentPage] = useState(1);
@@ -86,6 +87,7 @@ export default function ListProperty() {
           <span className="text-common">List property</span>
         </div>
       </div>
+      <SelectRouterStaff />
       <div className="grid grid-cols-3 gap-5">
         {currentResorts.map((resort) => (
           <div

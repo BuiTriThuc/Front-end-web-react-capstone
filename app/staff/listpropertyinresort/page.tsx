@@ -1,8 +1,9 @@
 import ListPropertyResort from '@/app/components/staff/ListPropertyResort';
+import requireAuth from '@/app/libs/requireAuth';
 import React from 'react';
 
 export default function ListPropertyInResort() {
-  return (
+  return requireAuth(
     <div>
       <div className="mt-8 mb-10">
         <div>
@@ -13,6 +14,7 @@ export default function ListPropertyInResort() {
       <div>
         <ListPropertyResort />
       </div>
-    </div>
+    </div>,
+    [3]
   );
 }
