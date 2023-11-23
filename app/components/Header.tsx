@@ -9,7 +9,6 @@ import { IoMdClose } from 'react-icons/io';
 import Navbar from './navbar/Navbar';
 import clsx from 'clsx';
 import useLoginModal from '../hooks/useLoginModal';
-import { useSession } from 'next-auth/react';
 import UserMenu from './navbar/UserMenu';
 import { usePathname } from 'next/navigation';
 

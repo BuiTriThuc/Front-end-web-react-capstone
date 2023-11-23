@@ -15,7 +15,7 @@ export default async function EditApartment({ params }: { params: IParams }) {
   const propertyDetail = await GetPropertyDetail(propertyId);
   return requireAuth(
     <div>
-      <div className="mt-10">
+      <div>
         Dashboard {'>'} <span>Ownership</span> {'>'}{' '}
         <span className="text-common">Edit apartment</span>
       </div>

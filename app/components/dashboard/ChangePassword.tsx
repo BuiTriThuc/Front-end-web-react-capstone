@@ -12,7 +12,7 @@ export default function ChangePassword() {
     }
   };
   return (
-    <div>
+    <div className="px-10">
       <div className="w-full lg:w-[600px] xl:w-[600px]">
         <div className="block lg:hidden xl:hidden">
           <select
@@ -31,7 +31,7 @@ export default function ChangePassword() {
             <option value="/dashboard/myBooking">My Booking</option>
           </select>
         </div>
-        <div className="pb-10 xl:mt-10 lg:mt-10">
+        <div className="pb-10 ">
           Dashboard {'  >  '} <span className="text-common"> Change Password</span>
         </div>
 

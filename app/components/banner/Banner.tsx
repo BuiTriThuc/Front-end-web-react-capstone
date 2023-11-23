@@ -4,7 +4,11 @@ import Image from 'next/image';
 import React, { useEffect } from 'react';
 import SearchBanner from './SearchBanner';
 
-const Banner = () => {
+interface BannerProps {
+  listResort: any;
+}
+
+const Banner: React.FC<BannerProps> = ({ listResort }) => {
   return (
     <div className="flex-1 py-4">
       <div className="flex gap-8 space-x-5 w-full">
@@ -16,7 +20,7 @@ const Banner = () => {
             Discover amzaing places at exclusive deals. <br /> Eat, Shop, Visit interesting places
             around the world.
           </div>
-          <SearchBanner />
+          <SearchBanner listResort={listResort} />
         </div>
         <Image
           alt="banner"

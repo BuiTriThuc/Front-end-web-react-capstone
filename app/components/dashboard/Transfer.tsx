@@ -200,10 +200,11 @@ const TransferMoney: React.FC<TransferMoneyProps> = ({ currentUser, memberships 
   };
 
   useEffect(() => {
-    if (userTo && session?.user.access_token) {
+    if (userTo) {
       const fetchEmail = async () => {
         try {
           const response = await axios.get(`https://holiday-swap.click/api/v1/users/${userTo}`);
+          console.log('Check response', response.data);
           setUserToEmail(response.data.email);
         } catch (error: any) {
           toast.error(error.response.data.message);
@@ -211,11 +212,11 @@ const TransferMoney: React.FC<TransferMoneyProps> = ({ currentUser, memberships 
       };
       fetchEmail();
     }
-  }, [userTo, session?.user.access_token]);
+  }, [userTo]);
 
   return (
     <>
-      <div className="mt-10">
+      <div className="">
         Dashboard {'>'} <span className="text-common">Transfer</span>
       </div>
       <Steps className="mt-5" current={current} items={items} />

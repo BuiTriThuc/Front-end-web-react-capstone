@@ -8,6 +8,7 @@ import ReactStars from 'react-stars';
 import { Label, Textarea, Select } from 'flowbite-react';
 import ModalCreateReviewBase from './ModalCreateReviewBase';
 import useAxiosAuthClient from '@/app/hooks/useAxiosAuthClient';
+import toast from 'react-hot-toast';
 
 const ratingType = [
   {
@@ -22,6 +23,9 @@ const ratingType = [
 
 export default function ModalCreateReview() {
   const createReviewModal = useCreateReviewModal();
+  const availableId = createReviewModal.availableId;
+  const userId = createReviewModal.userId;
+  const bookingId = createReviewModal.bookingId;
   const [isLoading, setIsLoading] = useState(false);
   const [starValue, setStarValue] = useState(5);
   const [ratingTypeValue, setRatingTypeValue] = useState(ratingType[0].value);
@@ -54,8 +58,24 @@ export default function ModalCreateReview() {
       comment: data.comment,
       rating: starValue,
       ratingType: ratingTypeValue,
+      bookingId: bookingId,
     };
-  }
+
+    const config = { headers: { 'Content-type': 'application/json' } };
+
+    axiosAuthClient
+      .post(`/rating/property/${availableId}/user/${userId}`, ratingData, config)
+      .then(() => {
+        toast.success('Review success!');
+        createReviewModal.onClose();
+      })
+      .catch((response) => {
+        toast.error(response.response.data.message);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
 
   const bodyContent = (
     <div className="w-full">
@@ -81,7 +101,13 @@ export default function ModalCreateReview() {
         <div className="mb-2 block font-bold">
           <Label htmlFor="comment" value="Your comment" />
         </div>
-        <Textarea id="comment" placeholder="Leave a comment..." required rows={4} {...register("comment", { required: true })} />
+        <Textarea
+          id="comment"
+          placeholder="Leave a comment..."
+          required
+          rows={4}
+          {...register('comment', { required: true })}
+        />
       </div>
     </div>
   );
@@ -92,6 +118,7 @@ export default function ModalCreateReview() {
       isOpen={createReviewModal.isOpen}
       title="Review"
       actionLabel="Submit"
+      onSubmit={handleSubmit(onSubmit)}
       onClose={createReviewModal.onClose}
       body={bodyContent}
     />

@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import ListResortDashboard from './ListResortDashboard';
 import ListMembershipDashboard from './ListMembershipDashboard';
 import SelectRouterStaff from './SelectRouterStaff';
+import { format } from 'date-fns';
 
 interface StaffDasboardProps {
   currentUser?: any | null;
@@ -27,7 +28,7 @@ const StaffDashboard: React.FC<StaffDasboardProps> = ({ currentUser }) => {
           </div>
           <div className="flex flex-col gap-3 px-4 py-4 md:hidden lg:hidden xl:hidden">
             <div>Name: {currentUser?.username}</div>
-            <div>Birth Date: {currentUser?.dob} </div>
+            <div>Birth Date: {format(new Date(currentUser?.dob), 'dd-MM-yyyy')}</div>
             <div>Email: {currentUser?.email}</div>
             <div>Gender: {currentUser?.gender}</div>
             <div>Phone: {currentUser?.phone}</div>
@@ -40,7 +41,7 @@ const StaffDashboard: React.FC<StaffDasboardProps> = ({ currentUser }) => {
             </div>
             <div className="flex flex-col mr-16 text-gray-600 ">
               <div className="mb-5 ml-9">{currentUser?.username}</div>
-              <div className="mb-5 ml-9">{currentUser?.dob}</div>
+              <div className="mb-5 ml-9"> {format(new Date(currentUser?.dob), 'dd-MM-yyyy')} </div>
               <div className="mb-5 ml-9">{currentUser?.email}</div>
             </div>
             <div className="flex flex-col mr-10 text-gray-400   ">
@@ -55,12 +56,6 @@ const StaffDashboard: React.FC<StaffDasboardProps> = ({ currentUser }) => {
             </div>
           </div>
         </div>
-      </div>
-      <div>
-        <ListResortDashboard />
-      </div>
-      <div>
-        <ListMembershipDashboard />
       </div>
     </div>
   );

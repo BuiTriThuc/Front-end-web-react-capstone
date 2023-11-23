@@ -5,6 +5,7 @@ import CardListResort from '../components/listResort/CardListResort';
 import axios from 'axios';
 import { Pagination } from 'flowbite-react';
 import { format } from 'date-fns';
+import { useSearchParams } from 'next/navigation';
 
 interface ListResortProps {
   listApartment: any;
@@ -27,35 +28,74 @@ const ListResort: React.FC<ListResortProps> = ({
 }) => {
   const [page, setPage] = useState<number>(1);
   const [listResort, setListResort] = useState<any>(listApartment);
+  const [resortIdValue, setResortIdValue] = useState(resortId);
+  const [numberOfGuestValue, setNumberOfGuestValue] = useState(numberOfGuest);
   const [initialDate, setInitialDate] = useState(initialDateRange);
   const [dateRangeNew, setDateRangeNew] = useState<any>(dateRange);
   const [totalPages, setTotalPages] = useState<any>(listApartment.totalPages);
 
+  const searchParams = useSearchParams();
+  const resortIdParams = searchParams?.get('resortId');
+  const dateRangeParamsSearch = searchParams?.get('dateRange');
+  let dateRangeParams: any;
+  const numberOfGuestParams = searchParams?.get('numberOfGuest');
+
   useEffect(() => {
     setDateRangeNew(dateRange);
-  }, [dateRange]);
+
+    if (dateRangeParamsSearch) {
+      dateRangeParams = JSON.parse(searchParams?.get('dateRange') ?? '');
+    }
+  }, [dateRange, dateRangeParamsSearch]);
+
+  useEffect(() => {
+    setDateRangeNew(dateRangeParams);
+    setResortIdValue(resortIdParams);
+    setNumberOfGuestValue(numberOfGuestParams);
+  }, [resortIdParams, dateRangeParams, numberOfGuestParams]);
 
   useEffect(() => {
     const getList = async () => {
-      let apiUrl = `https://holiday-swap.click/api/v1/apartment-for-rent?min=0&max=1000000&pageNo=${
-        page - 1
-      }&guest=${numberOfGuest}&resortId=${resortId}&pageSize=12&sortBy=id`;
+      if (resortIdValue && numberOfGuestValue) {
+        let apiUrl = `https://holiday-swap.click/api/v1/apartment-for-rent?min=0&max=1000000&pageNo=${
+          page - 1
+        }&guest=${numberOfGuestValue}&resortId=${resortIdValue}&pageSize=12&sortBy=id`;
 
-      if (dateRangeNew && dateRangeNew.endDate.toDateString() !== initialDate.endDate.toDateString()) {
-        apiUrl += `&checkIn=${format(dateRangeNew.startDate, 'yyyy-MM-dd')}&checkOut=${format(
-          dateRangeNew.endDate,
-          'yyyy-MM-dd'
-        )}`;
+        if (
+          dateRangeNew &&
+          dateRangeNew.endDate.toDateString() !== initialDate.endDate.toDateString()
+        ) {
+          apiUrl += `&checkIn=${format(dateRangeNew.startDate, 'yyyy-MM-dd')}&checkOut=${format(
+            dateRangeNew.endDate,
+            'yyyy-MM-dd'
+          )}`;
+        }
+
+        const list = await axios.get(apiUrl);
+        setListResort(list.data);
+        setTotalPages(list.data?.totalPages);
+      } else {
+        let apiUrl = `https://holiday-swap.click/api/v1/apartment-for-rent?min=0&max=1000000&pageNo=${
+          page - 1
+        }&pageSize=12&sortBy=id`;
+
+        if (dateRangeNew && dateRangeNew.endDate !== initialDate.endDate) {
+          apiUrl += `&checkIn=${format(
+            new Date(dateRangeNew.startDate),
+            'yyyy-MM-dd'
+          )}&checkOut=${format(new Date(dateRangeNew.endDate), 'yyyy-MM-dd')}`;
+        }
+
+        const list = await axios.get(apiUrl);
+        setListResort(list.data);
+        setTotalPages(list.data?.totalPages);
       }
-
-      const list = await axios.get(apiUrl);
-      setListResort(list.data);
-      setTotalPages(list.data?.totalPages);
     };
 
     getList();
-  }, [page, numberOfGuest, resortId, dateRangeNew, dateRange, initialDate]);
+  }, [page, numberOfGuest, resortId, dateRangeNew, initialDate, numberOfGuestValue, resortIdValue]);
 
+  console.log('Check date range new', dateRangeNew);
 
   return (
     <Fragment>

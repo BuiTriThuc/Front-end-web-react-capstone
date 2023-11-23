@@ -5,7 +5,11 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { useRouter } from 'next/navigation';
 
-export default function DropDownEditResort() {
+interface IParams {
+  resortId: string;
+}
+
+const DropDownEditResort: React.FC<IParams> = ({ resortId }) => {
   const route = useRouter();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -38,8 +42,9 @@ export default function DropDownEditResort() {
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem onClick={() => route.push('/staff/staffeditresort')}>Edit</MenuItem>
+        <MenuItem onClick={() => route.push(`/staff/staffeditresort/${resortId}`)}>Edit</MenuItem>
       </Menu>
     </div>
   );
-}
+};
+export default DropDownEditResort;

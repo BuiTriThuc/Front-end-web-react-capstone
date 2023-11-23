@@ -52,7 +52,7 @@ const LinkHeader = () => {
           pathname === '/apartment' ? 'text-black' : ''
         }`}
       >
-        Aparment
+        Apartment
         {pathname === '/apartment' ? (
           <span className="bg-gray-300 rounded-full w-2 h-2"></span>
         ) : (

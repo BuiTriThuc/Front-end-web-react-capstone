@@ -101,7 +101,7 @@ const MyBookingList: React.FC<MyBookingListProps> = ({ historyBooking }) => {
               <div className="grid grid-cols-9 h-full gap-5">
                 <div className="col-span-3 w-full h-full relative rounded-lg">
                   <Image
-                    src="/images/resort1.jpg"
+                    src={item.propertyImage}
                     fill
                     alt="image"
                     className="w-full object-cover rounded-lg"

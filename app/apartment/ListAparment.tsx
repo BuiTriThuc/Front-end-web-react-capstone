@@ -6,6 +6,7 @@ import Container from '../components/Container';
 import CalendarAparment from './CalendarAparment';
 import ListResort from './ListResort';
 import Categories from './Categories';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const initialDateRange = {
   startDate: new Date(),
@@ -20,17 +21,20 @@ interface ListApartmentProps {
 
 const ListAparment: React.FC<ListApartmentProps> = ({ listApartment, listResort }) => {
   const [resortId, setResortId] = useState<string>('');
-  const [dateRange, setDateRange] = useState({
+  const [dateRange, setDateRange] = useState<any>({
     startDate: new Date(),
     endDate: new Date(new Date().getTime() + 24 * 60 * 60 * 100000000),
     key: 'selection',
   });
   const [numberOfGuest, setNumberOfGuest] = useState<number>(1);
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const handleSubmitSearchApartment = (resortId: string, dateRange: any, numberOfGuest: number) => {
     setResortId(resortId);
     setDateRange(dateRange);
     setNumberOfGuest(numberOfGuest);
+    router.replace('/apartment', undefined);
   };
 
   return (
@@ -41,9 +45,9 @@ const ListAparment: React.FC<ListApartmentProps> = ({ listApartment, listResort 
       />
 
       <Container className="gap-5">
-        <div className="py-2">
+        {/* <div className="py-2">
           <Categories />
-        </div>
+        </div> */}
         <ListResort
           listApartment={listApartment}
           resortId={resortId}

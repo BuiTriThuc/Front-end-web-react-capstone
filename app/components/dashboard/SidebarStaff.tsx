@@ -59,6 +59,30 @@ const SidebarStaff = () => {
       icon: MdOutlineCreateNewFolder,
       current: pathName?.includes('/staff/createproperty') ? true : false,
     },
+    {
+      name: 'List Property View',
+      href: '/staff/listPropertyView',
+      icon: PiFolders,
+      current: pathName?.includes('/staff/listPropertyView') ? true : false,
+    },
+    {
+      name: 'Create Property View',
+      href: '/staff/createPropertyView',
+      icon: MdOutlineCreateNewFolder,
+      current: pathName?.includes('/staff/createPropertyView') ? true : false,
+    },
+    {
+      name: 'List Property Type',
+      href: '/staff/listPropertyType',
+      icon: PiFolders,
+      current: pathName?.includes('/staff/listPropertyType') ? true : false,
+    },
+    {
+      name: 'Create Property Type',
+      href: '/staff/createPropertyType',
+      icon: MdOutlineCreateNewFolder,
+      current: pathName?.includes('/staff/createPropertyType') ? true : false,
+    },
   ];
   const sidebarMember = [
     {
@@ -67,12 +91,12 @@ const SidebarStaff = () => {
       icon: PiNotepadBold,
       current: pathName?.includes('/staff/listmember') ? true : false,
     },
-    {
-      name: 'Upgrade Member',
-      href: '/staff/upgrademembership',
-      icon: LuArrowUpSquare,
-      current: pathName?.includes('/staff/upgrademembership') ? true : false,
-    },
+    // {
+    //   name: 'Upgrade Member',
+    //   href: '/staff/upgrademembership',
+    //   icon: LuArrowUpSquare,
+    //   current: pathName?.includes('/staff/upgrademembership') ? true : false,
+    // },
   ];
   const sidebarExchange = [
     {
@@ -81,12 +105,12 @@ const SidebarStaff = () => {
       icon: MdOutlineSwapHorizontalCircle,
       current: pathName?.includes('/staff/listapproveOwnership') ? true : false,
     },
-    {
-      name: 'Infomation',
-      href: '/staff/infomation',
-      icon: LiaFileInvoiceDollarSolid,
-      current: pathName?.includes('/staff/infomation') ? true : false,
-    },
+    // {
+    //   name: 'Infomation',
+    //   href: '/staff/infomation',
+    //   icon: LiaFileInvoiceDollarSolid,
+    //   current: pathName?.includes('/staff/infomation') ? true : false,
+    // },
   ];
   return (
     <div className="pt-[20px] pl-5 pr-5">

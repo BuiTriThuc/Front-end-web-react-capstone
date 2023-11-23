@@ -9,8 +9,10 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Link from 'next/link';
-import DropdownDeleteResort from './DropdownDeleteResort';
 import SelectRouterStaff from './SelectRouterStaff';
+import DropdownStatusResort from './DropdownStatusResort';
+import GetListResort from '@/app/actions/getListResort';
+import { Pagination } from 'flowbite-react';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -42,43 +44,29 @@ function createData(
   return { resortname, address, meter, bedroom, rules };
 }
 
-const rows = [
-  createData(
-    'JW Marriott Phu Quoc Emerald Bay Resort & Spa',
-    'Phu Quoc',
-    'Sea Resort',
-    '1200$ - 2500$',
-    '...'
-  ),
-  createData('Amanoi Resort', 'Ninh Thuan', 'Moutaint Resort', '890$ - 2000$', '...'),
-  createData('The Anam Cam Ranh', 'Khanh Hoa', 'Moutaint Resort', '990$ - 2300$', '...'),
-  createData(
-    'Vinpearl Resort & Spa Phu Quoc',
-    'Phu Quoc',
-    'Moutaint Resort',
-    '1890$ - 3000$',
-    '...'
-  ),
-  createData('Six Senses Ninh Van Bay', 'Khanh Hoa', 'Sea Resort', '190$ - 500$', '...'),
-  createData('Fusion Maia Da Nang', 'Da Nang', 'Sea Resort', '230$ - 700$', '...'),
-  createData('Vinpearl Luxury Da Nang', 'Da Nang', 'Sea Resort', '1000$ - 3000$', '...'),
-  createData(
-    'InterContinental Danang Sun Peninsula Resort',
-    'Da Nang',
-    'Sea Resort',
-    '900$ - 2000$',
-    '...'
-  ),
-];
-
 interface ListResortAllProps {
   resorts?: any;
 }
+const ListResortAll: React.FC<ListResortAllProps> = ({ resorts: initialResorts }) => {
+  const [resorts, setResorts] = React.useState<any>(initialResorts);
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const pageSize = 10;
+  const totalPages = Math.ceil(resorts?.totalElements / pageSize);
 
-const ListResortAll: React.FC<ListResortAllProps> = ({ resorts }) => {
+  const onPageChange = async (newPage: any) => {
+    try {
+      const newResortsData = await GetListResort(newPage);
+
+      setResorts({ content: newResortsData.content, totalElements: newResortsData.totalElements });
+
+      setCurrentPage(newPage);
+    } catch (error) {
+      console.error('Error fetching list of resorts:', error);
+    }
+  };
   return (
     <>
-      <div className="mt-10">
+      <div className="">
         Dashboard {'>'} <span className="text-common">List resort</span>
       </div>
       <SelectRouterStaff />
@@ -127,7 +115,7 @@ const ListResortAll: React.FC<ListResortAllProps> = ({ resorts }) => {
             {resorts?.content.map((row: any, index: number) => (
               <StyledTableRow key={index}>
                 <StyledTableCell className="!py-5 !text-common" component="th" scope="row">
-                  <Link href="/staff/staffdetailresort" className="hover:underline">
+                  <Link href={`/staff/staffdetailresort/${row.id}`} className="hover:underline">
                     {row.resortName}
                   </Link>
                 </StyledTableCell>
@@ -147,13 +135,21 @@ const ListResortAll: React.FC<ListResortAllProps> = ({ resorts }) => {
                 </StyledTableCell> */}
 
                 <StyledTableCell className="!py-5 !text-green-500 " align="right">
-                  <DropdownDeleteResort />
+                  <DropdownStatusResort />
                 </StyledTableCell>
               </StyledTableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+      <div className="flex py-5 overflow-x-auto sm:justify-center">
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={onPageChange}
+          showIcons
+        />
+      </div>
     </>
   );
 };

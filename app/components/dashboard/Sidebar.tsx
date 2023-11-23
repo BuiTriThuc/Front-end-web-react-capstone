@@ -73,12 +73,12 @@ const Sidebar = () => {
       icon: PiNotepadBold,
       current: pathName?.includes('/dashboard/ownerBooking') ? true : false,
     },
-    {
-      name: 'Invoices',
-      href: '/dashboard/invoices',
-      icon: LiaFileInvoiceDollarSolid,
-      current: pathName?.includes('/dashboard/invoices') ? true : false,
-    },
+    // {
+    //   name: 'Invoices',
+    //   href: '/dashboard/invoices',
+    //   icon: LiaFileInvoiceDollarSolid,
+    //   current: pathName?.includes('/dashboard/invoices') ? true : false,
+    // },
     {
       name: 'Reviews',
       href: '/dashboard/review',
@@ -86,27 +86,29 @@ const Sidebar = () => {
       current: pathName?.includes('/dashboard/review') ? true : false,
     },
   ];
-  const sidebarExchange = [
-    {
-      name: 'My Exchange',
-      href: '/dashboard/myExchange',
-      icon: MdOutlineSwapHorizontalCircle,
-      current: pathName?.includes('/dashboard/myExchange') ? true : false,
-    },
-    {
-      name: 'Invoices Exchange',
-      href: '/dashboard/invoiceExchange',
-      icon: LiaFileInvoiceDollarSolid,
-      current: pathName?.includes('/dashboard/invoiceExchange') ? true : false,
-    },
-    {
-      name: 'Reviews Exchange',
-      href: '/dashboard/reviewExchange',
-      icon: AiOutlineStar,
-      current: pathName?.includes('/dashboard/reviewExchange') ? true : false,
-    },
-  ];
 
+  // const sidebarExchange = [
+  //   {
+  //     name: 'My Exchange',
+  //     href: '/dashboard/myExchange',
+  //     icon: MdOutlineSwapHorizontalCircle,
+  //     current: pathName?.includes('/dashboard/myExchange') ? true : false,
+  //   },
+  //   {
+  //     name: 'Invoices Exchange',
+  //     href: '/dashboard/invoiceExchange',
+  //     icon: LiaFileInvoiceDollarSolid,
+  //     current: pathName?.includes('/dashboard/invoiceExchange') ? true : false,
+  //   },
+  //   {
+  //     name: 'Reviews Exchange',
+  //     href: '/dashboard/reviewExchange',
+  //     icon: AiOutlineStar,
+  //     current: pathName?.includes('/dashboard/reviewExchange') ? true : false,
+  //   },
+  // ];
+
+  //
   const sidebarMessages = [
     {
       name: 'Chats',
@@ -114,12 +116,12 @@ const Sidebar = () => {
       icon: BiMessageDetail,
       current: pathName === '/chat',
     },
-    {
-      name: 'Notifications',
-      href: '/dashboard/invoiceExchange',
-      icon: BiSolidNotification,
-      current: pathName === '/notification',
-    }
+    // {
+    //   name: 'Notifications',
+    //   href: '/dashboard/invoiceExchange',
+    //   icon: BiSolidNotification,
+    //   current: pathName === '/notification',
+    // }
   ];
 
   return (
@@ -210,7 +212,7 @@ const Sidebar = () => {
               </li>
             </ul>
           </div>
-          <div className="flex h-16 shrink-0 items-center">
+          {/* <div className="flex h-16 shrink-0 items-center">
             <div className="text-3xl font-bold text-gray-700">Exchange</div>
           </div>
           <div className="flex flex-1 flex-col">
@@ -237,6 +239,9 @@ const Sidebar = () => {
               </li>
             </ul>
           </div>
+          </div> */}
+
+
           <div className="flex h-16 shrink-0 items-center">
             <h1 className="text-3xl font-bold text-gray-700">Messages</h1>
           </div>

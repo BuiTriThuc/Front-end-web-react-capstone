@@ -1,8 +1,6 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import React, { ChangeEvent, useState } from 'react';
-import InputMini from '../input/InputMini';
-import UploadAvtStaff from './UploadAvtStaff';
 import { DatePicker, Image } from 'antd';
 import dayjs from 'dayjs';
 import { BiBlock } from 'react-icons/bi';
@@ -18,7 +16,7 @@ export default function CreateStaffAccount() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [file, setFile] = useState<any>(null);
-  const [previewImage, setPreviewImage] = useState<any>(null); // State for storing the preview image
+  const [previewImage, setPreviewImage] = useState<any>(null);
   const router = useRouter();
   const dateFormat = 'YYYY/MM/DD';
   const axiosAuthClient = useAxiosAuthClient();
@@ -29,7 +27,6 @@ export default function CreateStaffAccount() {
       if (newFile) {
         setFile(newFile);
 
-        // Create a preview image URL
         const previewURL = URL.createObjectURL(newFile);
         setPreviewImage(previewURL);
       }
@@ -89,6 +86,7 @@ export default function CreateStaffAccount() {
         .then(() => {
           toast.success('Create staff success');
           reset();
+          router.push('/admin/liststaff');
         })
         .catch((response) => {
           toast.error(response.response.data.error);
@@ -196,7 +194,6 @@ export default function CreateStaffAccount() {
           <Input id="fullName" label="Full name" register={register} errors={errors} required />
           <Input id="phone" label="Phone Number" register={register} errors={errors} required />
         </div>
-        S
       </div>
       <div className="flex flex-row justify-end w-full py-3">
         <button

@@ -1,100 +1,48 @@
 'use client';
 
-import React, { Fragment, useEffect, useState } from 'react';
-import { AiOutlinePlusCircle } from 'react-icons/ai';
+import { Checkbox, Label } from 'flowbite-react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 
 interface InputCreatePropertyTypeProps {
   propertyTypesResort?: any;
   handlePropertiesChange: (value: any[]) => void;
 }
 
-interface PropertyTypeProps {
-  propertyTypesResort?: any;
-  onPropertyValueChange: (value: string) => void;
-}
-
 const InputCreatePropertyType: React.FC<InputCreatePropertyTypeProps> = ({
   propertyTypesResort,
   handlePropertiesChange,
 }) => {
-  const [quantityPropertyType, setQuantityPropertyType] = useState(1);
-  const [propertyValues, setPropertyValues] = useState<string[]>([]);
-  const handlePropertyValueChange = (value: string) => {
-    // Update the array of property values when a value is selected
-    if (!propertyValues.includes(value)) {
-      // Add the value to propertyValues
-      setPropertyValues((prevValues) => [...prevValues, value]);
+  const [propertyTypeValue, setPropertyTypeValue] = useState<any>([]);
+
+  const handleChangeProperties = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      setPropertyTypeValue((prev: any) => [...prev, e.target.value]);
+    } else {
+      setPropertyTypeValue((prev: any) => prev.filter((item: any) => item !== e.target.value));
     }
-    // Now, call handlePropertiesChange with the updated propertyValues
   };
 
   useEffect(() => {
-    handlePropertiesChange(propertyValues);
-    console.log('Check value', propertyValues);
-  }, [propertyValues]);
-
-  const [propertyTypes, setPropertyTypes] = useState([
-    <PropertyType
-      key={0}
-      propertyTypesResort={propertyTypesResort}
-      onPropertyValueChange={handlePropertyValueChange}
-    />,
-  ]);
-
-  const handleAddPropertyType = () => {
-    setQuantityPropertyType((value) => value + 1);
-    setPropertyTypes((prevPropertyTypes) => [
-      ...prevPropertyTypes,
-      <PropertyType
-        key={quantityPropertyType}
-        propertyTypesResort={propertyTypesResort}
-        onPropertyValueChange={handlePropertyValueChange}
-      />,
-    ]);
-  };
+    handlePropertiesChange(propertyTypeValue);
+  }, [propertyTypeValue]);
 
   return (
-    <div className="flex flex-row items-start">
-      <Fragment>
-        <div className="w-[198px] text-gray-700">Property Types</div>
-        <div className="flex flex-col">
-          {propertyTypes.map((propertyType, index) => (
-            <Fragment key={index}>{propertyType}</Fragment>
-          ))}
-        </div>
-      </Fragment>
-      <button onClick={handleAddPropertyType}>
-        <AiOutlinePlusCircle size={30} />
-      </button>
-    </div>
-  );
-};
-
-const PropertyType: React.FC<PropertyTypeProps> = ({
-  propertyTypesResort,
-  onPropertyValueChange,
-}) => {
-  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    // Get the selected value from the <select>
-    const selectedValue = event.target.value;
-
-    // Call the callback function to update the value in the parent component
-    onPropertyValueChange(selectedValue);
-  };
-
-  return (
-    <Fragment>
-      <div className="flex flex-row mb-2">
-        <select id="amenities" className="rounded-md" onChange={handleSelectChange}>
-          <option value="">-</option>
-          {propertyTypesResort?.map((item: any) => (
-            <option key={item.id} value={item.id}>
-              {item.propertyTypeName}
-            </option>
-          ))}
-        </select>
+    <div className="flex flex-row gap-5">
+      <div>Property type</div>
+      <div className="grid md:grid-cols-3 grid-cols-1 gap-6 p-3 border border-slate-300 rounded-md">
+        {propertyTypesResort.map((item: any, index: number) => (
+          <div key={item.id} className="flex flex-row items-center gap-2">
+            <Checkbox
+              onChange={handleChangeProperties}
+              id="promotion"
+              color={'#5C98F2'}
+              value={item.id}
+            />
+            <Label htmlFor="promotion">{item.propertyTypeName}</Label>
+          </div>
+        ))}
       </div>
-    </Fragment>
+    </div>
   );
 };
 

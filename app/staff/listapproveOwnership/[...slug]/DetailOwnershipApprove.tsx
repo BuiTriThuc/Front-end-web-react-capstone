@@ -9,6 +9,7 @@ import useAxiosAuthClient from '@/app/hooks/useAxiosAuthClient';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import { Image } from 'antd';
+import { useRouter } from 'next/navigation';
 
 interface DetailOwnershipApproveProps {
   approveDetail: any;
@@ -41,11 +42,14 @@ const DetailOwnershipApprove: React.FC<DetailOwnershipApproveProps> = ({
 }) => {
   const [detail, setDetail] = useState(approveDetail);
   const axiosAuthClient = useAxiosAuthClient();
+  const router = useRouter();
+
   const handleOnChangeStatus = (propertyId: any, userId: any, roomId: any, value: any) => {
     const body = value;
     const config = {
       headers: { 'Content-type': 'application/json' },
     };
+
     axiosAuthClient
       .put(
         `https://holiday-swap.click/api/co-owners/status?propertyId=${propertyId}&userId=${userId}&roomId=${roomId}&coOwnerStatus=${value}`,
@@ -61,6 +65,9 @@ const DetailOwnershipApprove: React.FC<DetailOwnershipApproveProps> = ({
         if (newDetail) {
           setDetail(newDetail.data);
         }
+
+        // Redirect to /staff/listapproveOwnership after successful update
+        router.push('/staff/listapproveOwnership');
       })
       .catch((response) => {
         toast.error(response.response.data.message);
@@ -68,7 +75,7 @@ const DetailOwnershipApprove: React.FC<DetailOwnershipApproveProps> = ({
   };
   return (
     <div>
-      <div className="mt-10">
+      <div>
         <div>
           Staff {'> '}
           <span>
@@ -79,7 +86,7 @@ const DetailOwnershipApprove: React.FC<DetailOwnershipApproveProps> = ({
       <Image.PreviewGroup>
         <div className="grid grid-cols-2 mt-10 gap-5">
           <div className="w-full">
-            <div className="flex flex-row justify-between gap-4">
+            <div className="flex flex-row gap-3">
               {detail.contractImages.length === 1 ? (
                 <Fragment>
                   {detail.contractImages.map((item: any, index: number) => (
@@ -111,8 +118,8 @@ const DetailOwnershipApprove: React.FC<DetailOwnershipApproveProps> = ({
           <div className="w-full sticky">
             <div className="flex flex-col gap-5 sticky top-36 w-full p-6 rounded-lg bg-gray-300">
               <div className="grid grid-cols-2 ">
-                <div className="text-black">
-                  Property<span className="text-slate-600">{propertyDetail?.propertyName}</span>
+                <div className="text-black mb-5">
+                  Property: <span className="text-slate-600">{propertyDetail?.propertyName}</span>
                 </div>
                 <div className="text-black">
                   User<span className="text-slate-600">{userDetail?.username}</span>
@@ -171,14 +178,22 @@ const DetailOwnershipApprove: React.FC<DetailOwnershipApproveProps> = ({
                   <span
                     className={`${
                       detail.status === 'PENDING' ? ' text-orange-600' : 'text-green-600'
-                    }`}
+                    } ${detail.status === 'REJECTED' ? ' text-rose-600' : ''}`}
                   >
-                    {detail.status === 'PENDING' ? 'PENDING' : 'ACCEPTED'}
+                    {(() => {
+                      if (detail.status === 'ACCEPTED') {
+                        return 'ACCEPTED';
+                      } else if (detail.status === 'PENDING') {
+                        return 'PENDING';
+                      } else if (detail.status === 'REJECTED') {
+                        return 'REJECTED';
+                      }
+                    })()}
                   </span>
                 </div>
               </div>
 
-              {detail.status !== 'ACCEPTED' && (
+              {detail.status !== 'ACCEPTED' && detail.status !== 'REJECTED' && (
                 <div className="flex flex-end justify-end items-center gap-5">
                   <button
                     onClick={() =>

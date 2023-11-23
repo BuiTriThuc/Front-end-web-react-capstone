@@ -5,7 +5,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { useRouter } from 'next/navigation';
 
-export default function DropdownDeleteResort() {
+export default function DropdownStatusResort() {
   const route = useRouter();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -39,6 +39,7 @@ export default function DropdownDeleteResort() {
       >
         <MenuItem onClick={handleClose}>Active</MenuItem>
         <MenuItem onClick={handleClose}>In-active</MenuItem>
+        <MenuItem onClick={handleClose}>Delete</MenuItem>
       </Menu>
     </div>
   );

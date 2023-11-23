@@ -9,6 +9,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Link from 'next/link';
+import DropdownStatusResort from './DropdownStatusResort';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -50,17 +51,19 @@ const rows = [
   ),
   createData('Amanoi Resort', 'Ninh Thuan', 'Moutaint Resort', '890$ - 2000$', '...'),
 ];
-
-export default function ListResortDashboard() {
+interface ListResortAllProps {
+  resorts?: any;
+}
+const ListResortDashboard: React.FC<ListResortAllProps> = ({ resorts }) => {
   return (
     <div className="hidden md:block md:w-auto md:h-auto md:py-10">
-      <div className="flex flex-row justify-between items-center mt-10">
+      <div className="flex flex-row justify-between items-center mt-10 mb-4">
         <div className="text-common text-[20px] font-bold ">List Resort</div>
-        <Link className="text-gray-400" href="#">
+        <Link className="text-gray-400" href="/staff/listresort">
           View All List Resort
         </Link>
       </div>
-      <TableContainer className="mt-4" component={Paper}>
+      <TableContainer component={Paper}>
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead>
             <TableRow>
@@ -69,47 +72,62 @@ export default function ListResortDashboard() {
               </StyledTableCell>
               <StyledTableCell
                 className="!bg-white !text-black !text-[17px] !font-semibold"
-                align="right"
+                align="left"
               >
                 Adress
               </StyledTableCell>
               <StyledTableCell
                 className="!bg-white !text-black !text-[17px] !font-semibold"
-                align="right"
+                align="left"
               >
-                Type
+                Property Type
               </StyledTableCell>
+              <StyledTableCell
+                className="!bg-white !text-black !text-[17px] !font-semibold"
+                align="left"
+              >
+                Status
+              </StyledTableCell>
+              {/* <StyledTableCell
+                className="!bg-white !text-black !text-[17px] !font-semibold"
+                align="left"
+              >
+                Amenity Type{' '}
+              </StyledTableCell> */}
+
               <StyledTableCell
                 className="!bg-white !text-black !text-[17px] !font-semibold"
                 align="right"
               >
-                Price{' '}
-              </StyledTableCell>
-              <StyledTableCell
-                className="!bg-white !text-black !text-[17px] !font-semibold"
-                align="right"
-              >
-                rules{' '}
+                Action{' '}
               </StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
-              <StyledTableRow key={row.resortname}>
+            {resorts?.content.slice(0, 3).map((row: any, index: number) => (
+              <StyledTableRow key={index}>
                 <StyledTableCell className="!py-5 !text-common" component="th" scope="row">
-                  <Link href="#">{row.resortname}</Link>
+                  <Link href={`/staff/staffdetailresort/${row.id}`} className="hover:underline">
+                    {row.resortName}
+                  </Link>
                 </StyledTableCell>
-                <StyledTableCell className="!py-5 !text-common" align="right">
-                  {row.address}
+                <StyledTableCell>{row.addressLine}</StyledTableCell>
+                <StyledTableCell className="!py-5 " align="left">
+                  {row.propertyTypes.map((item: any, index: number) => (
+                    <div key={index}>{item.propertyTypeName}</div>
+                  ))}
                 </StyledTableCell>
-                <StyledTableCell className="!py-5 " align="right">
-                  {row.meter}
+                <StyledTableCell className="!py-5 " align="left">
+                  Active
                 </StyledTableCell>
+                {/* <StyledTableCell className="!py-5 " align="left">
+                  {row?.resortAmenityTypes?.map((item: any, index: number) => (
+                    <div key={index}>{item.resortAmenityTypeName}</div>
+                  ))}
+                </StyledTableCell> */}
+
                 <StyledTableCell className="!py-5 !text-green-500 " align="right">
-                  {row.bedroom}
-                </StyledTableCell>
-                <StyledTableCell className="!py-5 !text-green-500 " align="right">
-                  {row.rules}
+                  <DropdownStatusResort />
                 </StyledTableCell>
               </StyledTableRow>
             ))}
@@ -118,4 +136,5 @@ export default function ListResortDashboard() {
       </TableContainer>
     </div>
   );
-}
+};
+export default ListResortDashboard;

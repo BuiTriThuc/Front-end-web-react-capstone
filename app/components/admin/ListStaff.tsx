@@ -72,7 +72,7 @@ const ListStaff: React.FC<ListStaffProps> = ({ listUser }) => {
           }&sortProps=id&sortDirection=desc`
         );
         setUserList(response.data);
-        setPageCount(response.data.totalPages); // Assuming 10 items per page
+        setPageCount(response.data.totalPages);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -122,7 +122,7 @@ const ListStaff: React.FC<ListStaffProps> = ({ listUser }) => {
           <Table.HeadCell>Email & Username</Table.HeadCell>
           <Table.HeadCell>Full Name</Table.HeadCell>
           <Table.HeadCell>Gender</Table.HeadCell>
-          <Table.HeadCell>Date of birth</Table.HeadCell>
+          {/* <Table.HeadCell>Date of birth</Table.HeadCell> */}
           <Table.HeadCell>Phone</Table.HeadCell>
           <Table.HeadCell>Role</Table.HeadCell>
           <Table.HeadCell>Status</Table.HeadCell>
@@ -149,7 +149,7 @@ const ListStaff: React.FC<ListStaffProps> = ({ listUser }) => {
                 </Table.Cell>
                 <Table.Cell>{item.fullName}</Table.Cell>
                 <Table.Cell>{item.gender}</Table.Cell>
-                <Table.Cell>{format(new Date(item.dob), 'dd-MM-yyyy')}</Table.Cell>
+                {/* <Table.Cell>{format(new Date(item.dob), 'dd-MM-yyyy')}</Table.Cell> */}
                 <Table.Cell>{item.phone}</Table.Cell>
                 <Table.Cell>{item.role.name}</Table.Cell>
                 <Table.Cell>

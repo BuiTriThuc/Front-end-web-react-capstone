@@ -8,7 +8,7 @@ export default async function MyBooking() {
   const historyBooking = await GetBookingHistory();
   return requireAuth(
     <div>
-      <div className="mt-10">
+      <div className="">
         Dashboard {'>'} <span className="text-common">My Booking</span>
       </div>
       <div>

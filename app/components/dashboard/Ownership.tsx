@@ -74,7 +74,7 @@ const Ownership: React.FC<OwnershipProps> = ({ ownershipUser, resort, currentUse
 
   return (
     <Fragment>
-      <div className="mt-10">
+      <div className="">
         Dashboard {'>'} <span className="text-common">Ownership</span>
       </div>
       <div className="py-6 flex flex-row w-full justify-between">

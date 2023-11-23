@@ -110,7 +110,7 @@ const ListApproveOwnership: React.FC<OwnershipProps> = ({ ownershipStaff }) => {
 
   return (
     <div>
-      <div className="mt-8 mb-10">
+      <div className=" mb-10">
         <div>
           Staff {'> '}
           <span className="text-common">List Approve Ownership</span>
@@ -138,19 +138,42 @@ const ListApproveOwnership: React.FC<OwnershipProps> = ({ ownershipStaff }) => {
                   <Table.Cell>{item.id.propertyId}</Table.Cell>
                   <Table.Cell>{item.id.roomId}</Table.Cell>
                   <Table.Cell>{item.id.userId}</Table.Cell>
-                  <Table.Cell>{format(new Date(item.startTime), 'dd-MM-yyyy')}</Table.Cell>
-                  <Table.Cell>{format(new Date(item.endTime), 'dd-MM-yyyy')}</Table.Cell>
-                  <Table.Cell>{item.type === 'DEEDED' ? 'DEEDED' : 'NOT-DEEDED'}</Table.Cell>
                   <Table.Cell>
-                    {item.status === 'ACCEPTED' ? (
-                      <div className="py-2 px-1 text-sm text-center  bg-slate-200 rounded-md text-green-500">
-                        ACCEPTED
-                      </div>
-                    ) : (
-                      <div className="py-2 px-1 text-center text-sm bg-slate-200 rounded-md text-rose-600">
-                        NOT-ACCEPTED
-                      </div>
-                    )}
+                    {item.startTime === null
+                      ? 'Owner forever'
+                      : `${format(new Date(item.startTime), 'dd-MM-yyyy')}`}
+                  </Table.Cell>
+                  <Table.Cell>
+                    {item.endTime === null
+                      ? 'Owner forever'
+                      : `${format(new Date(item.endTime), 'dd-MM-yyyy')}`}
+                  </Table.Cell>
+                  <Table.Cell>
+                    {item.type === 'DEEDED' ? 'Owner forever' : 'Owner a previod time'}
+                  </Table.Cell>
+                  <Table.Cell>
+                    {(() => {
+                      if (item.status === 'ACCEPTED') {
+                        return (
+                          <div className="py-2 px-1 text-sm text-center  bg-slate-200 rounded-md text-green-500">
+                            ACCEPTED
+                          </div>
+                        );
+                      } else if (item.status === 'PENDING') {
+                        return (
+                          <div className="py-2 px-1 text-center text-sm bg-slate-200 rounded-md text-orange-600">
+                            PENDING
+                          </div>
+                        );
+                      } else if (item.status === 'REJECTED') {
+                        return (
+                          <div className="py-2 px-1 text-center text-sm bg-slate-200 rounded-md text-rose-600">
+                            REJECTED
+                          </div>
+                        );
+                      }
+                    })()}
+                  
                   </Table.Cell>
                   <Table.Cell>
                     <span

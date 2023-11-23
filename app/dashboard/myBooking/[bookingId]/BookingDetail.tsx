@@ -13,7 +13,12 @@ interface BookingDetailProps {
   currentUser: any;
 }
 
-const BookingDetail: React.FC<BookingDetailProps> = ({ bookingDetail, ownerUser, ownerResort, currentUser }) => {
+const BookingDetail: React.FC<BookingDetailProps> = ({
+  bookingDetail,
+  ownerUser,
+  ownerResort,
+  currentUser,
+}) => {
   const calculateNightDifference = (startDate: any, endDate: any) => {
     const start = new Date(startDate);
     const end = new Date(endDate);
@@ -58,7 +63,12 @@ const BookingDetail: React.FC<BookingDetailProps> = ({ bookingDetail, ownerUser,
 
         {/* Image apartment */}
         <div className="py-3 w-full h-80 relative rounded-lg">
-          <Image src="/images/resort1.jpg" fill alt="resort" className="absolute rounded-lg" />
+          <Image
+            src={bookingDetail?.propertyImage}
+            fill
+            alt="resort"
+            className="absolute rounded-lg"
+          />
         </div>
 
         {/* Information apartment */}
@@ -67,15 +77,19 @@ const BookingDetail: React.FC<BookingDetailProps> = ({ bookingDetail, ownerUser,
           <div className="text-slate-400">Description</div>
         </div>
 
-        <div className="py-3">
-          <button
-            onClick={createReviewModal.onOpen}
-            type="button"
-            className="p-3 rounded-md bg-common hover:bg-hover text-white text-lg"
-          >
-            Review
-          </button>
-        </div>
+        {bookingDetail?.rating === true && (
+          <div className="py-3">
+            <button
+              onClick={() =>
+                createReviewModal.onOpen(bookingDetail?.availableTimeId, currentUser?.userId, bookingDetail?.id)
+              }
+              type="button"
+              className="p-3 rounded-md bg-common hover:bg-hover text-white text-lg"
+            >
+              Review
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="w-full h-full py-5">

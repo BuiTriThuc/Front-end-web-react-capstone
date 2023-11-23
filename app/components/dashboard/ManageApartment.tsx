@@ -1,6 +1,6 @@
 'use client';
 import { Image } from 'antd';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, Fragment } from 'react';
 import { AiOutlineCloseCircle } from 'react-icons/ai';
 import { FiEdit } from 'react-icons/fi';
 import EditPublicTime from '../managementApartment/EditPublicTime';
@@ -62,96 +62,105 @@ const ManageApartment: React.FC<ManageApartmentProps> = ({ detailCoOwner, proper
     <div>
       <Image.PreviewGroup>
         <div className="py-3">
-          <div className=" flex gap-3">
-            <div className="image-large-container">
-              {images.length > 0 && (
-                <div className="image-wrapper flex flex-row">
-                  <Image
-                    src={images[0].src}
-                    alt={images[0].alt}
-                    height={318}
-                    width={700}
-                    className=" rounded-xl relative"
-                  />
-
-                  <button
-                    onClick={() => handleDeleteImage(0)}
-                    className="delete-button absolute py-3 px-3"
-                  >
-                    <AiOutlineCloseCircle size={20} />
-                  </button>
+          <div className="flex flex-row gap-3 w-full">
+            {/* <div className="w-[60%]  gap-2 py-4 md:grid md:grid-cols-1  md:gap-2 md:py-4">
+              <div className="relative hidden md:block md:relative lg:block lg:relative xl:block xl:relative">
+                <div className="hidden md:grid md:grid-cols-1 md:gap-2  lg:grid lg:grid-cols-2 lg:gap-2  xl:grid xl:grid-cols-2 xl:gap-2 ">
+                  {detailCoOwner.contractImages.slice(0, 5).map((item: any, index: number) => (
+                    <div
+                      key={item.id}
+                      className={`w-full  relative overflow-hidden  md:block ${
+                        index === 1 ? '' : ''
+                      } ${index === 3 ? '' : ''}`}
+                    >
+                      <Image
+                        key={item.id}
+                        alt="image"
+                        src={item.link}
+                        className="object-cover w-full cursor-pointer"
+                      />
+                    </div>
+                  ))}
                 </div>
-              )}
+              </div>
+            </div> */}
+            <div className="w-[60%]">
+              <div className="flex flex-row gap-3">
+                {detail.contractImages.length === 1 ? (
+                  <Fragment>
+                    {detail.contractImages.map((item: any, index: number) => (
+                      <Image
+                        key={item.id}
+                        src={item.link}
+                        width="100%"
+                        height={500}
+                        alt="contract image"
+                      />
+                    ))}
+                  </Fragment>
+                ) : (
+                  <Fragment>
+                    {detail.contractImages.map((item: any, index: number) => (
+                      <Image
+                        key={item.id}
+                        src={item.link}
+                        width={200}
+                        height={200}
+                        alt="contract image"
+                      />
+                    ))}
+                  </Fragment>
+                )}
+                {}
+              </div>
             </div>
-            <div className="border border-gray-500 w-full rounded-md px-5">
-              <div className="py-2">
-                <div className="flex flex-row items-center justify-between gap-3 mb-3 mt-3">
-                  <div className="underline text-[20px] ">{propertyDetail?.propertyName}</div>
-                  <div>
-                    <FiEdit size={20} />
-                  </div>
-                </div>
-                <div className="flex flex-row items-center gap-2">
-                  <div className="underline">Status:</div>
-                  <div className="flex flex-row items-center w-full justify-between">
-                    <div className="underline text-common">{detail.status}</div>
+            <div className="w-[40%]">
+              <div className="border border-gray-500  rounded-md px-5">
+                <div className="py-2">
+                  <div className="flex flex-row items-center justify-between gap-3 mb-3 mt-3">
+                    <div className="underline text-[20px] ">{propertyDetail?.propertyName}</div>
                     <div>
                       <FiEdit size={20} />
                     </div>
                   </div>
-                </div>
-                <div className="flex flex-row items-center w-full justify-between py-4">
-                  <div>
-                    Resort: <span className="text-common">Phu Quoc Resort VIP</span>
+                  <div className="flex flex-row items-center gap-2">
+                    <div className="underline">Status:</div>
+                    <div className="flex flex-row items-center w-full justify-between">
+                      <div className="underline text-common">{detail.status}</div>
+                      <div>
+                        <FiEdit size={20} />
+                      </div>
+                    </div>
                   </div>
-                  <BiBlock />
-                </div>
-                <div className="flex flex-row items-center w-full justify-between ">
-                  <div>Pbulic time:</div>
-                  <FiEdit size={20} />
-                </div>
-                <div className="flex flex-row items-center w-full justify-between py-4">
-                  <div>
-                    Apartment ID: <span className="text-common">{detail.id.roomId}</span>
+                  <div className="flex flex-row items-center w-full justify-between py-4">
+                    <div>
+                      Resort: <span className="text-common">Phu Quoc Resort VIP</span>
+                    </div>
+                    <BiBlock />
                   </div>
-                  <BiBlock />
-                </div>
-                <div className="flex flex-row items-center w-full justify-center mt-4">
-                  <button
-                    onClick={() => createModalPublicTime.onOpen(detail)}
-                    className="px-5 py-2 bg-common text-white rounded-md"
-                  >
-                    Create public time
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="image-small-container flex flex-wrap gap-3 mt-3">
-            {images.slice(1, images.length).map((image, index) => (
-              <div key={index} className="image-container">
-                <div className="image-wrapper flex flex-row">
-                  <div>
-                    <Image
-                      src={image.src}
-                      alt={image.alt}
-                      height={150}
-                      width={195}
-                      className=" rounded-xl relative"
-                    />
+                  <div className="flex flex-row items-center w-full justify-between ">
+                    <div>Pbulic time:</div>
+                    <FiEdit size={20} />
                   </div>
-                  <div className="absolute flex flex-row items-center justify-end">
+                  <div className="flex flex-row items-center w-full justify-between py-4">
+                    <div>
+                      Apartment ID: <span className="text-common">{detail.id.roomId}</span>
+                    </div>
+                    <BiBlock />
+                  </div>
+                  <div className="flex flex-row items-center w-full justify-center mt-4">
                     <button
-                      onClick={() => handleDeleteImage(index + 1)}
-                      className="delete-button py-3 px-3 left-0"
+                      onClick={() => createModalPublicTime.onOpen(detail)}
+                      className="px-5 py-2 my-3 bg-common text-white rounded-md"
                     >
-                      <AiOutlineCloseCircle size={20} />
+                      Create public time
                     </button>
                   </div>
                 </div>
               </div>
-            ))}
+            </div>
           </div>
+
           <div className="mt-4">
             <div className="relative rounded-md border-dashed border-2 border-gray-300 p-4">
               <input

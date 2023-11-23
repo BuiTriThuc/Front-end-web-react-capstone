@@ -1,9 +1,9 @@
-import axios from "axios";
+import axios from 'axios';
 
 export default async function GetPropertyType() {
   try {
     const propertyType = await axios.get(
-      `${process.env.API_URL}/property-types?pageNo=0&pageSize=20&sortBy=id`
+      `${process.env.API_URL}/property-types?pageNo=0&pageSize=9999&sortBy=id`
     );
 
     if (!propertyType) {

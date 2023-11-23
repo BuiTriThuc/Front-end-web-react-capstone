@@ -4,11 +4,7 @@ import React from 'react';
 
 export default function page() {
   return requireAuth(
-    <div>
-      <div>
-        <ListProperty />
-      </div>
-    </div>,
+    <ListProperty />,
     [3]
   );
 }

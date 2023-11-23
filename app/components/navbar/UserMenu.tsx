@@ -1,5 +1,6 @@
 'use client';
 
+import { signOut } from 'next-auth/react';
 import MenuItem from './MenuItem';
 import SignOutMiddle from '@/app/libs/signOut';
 import Image from 'next/image';
@@ -220,7 +221,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
                 }
               })()}
               <hr />
-              <MenuItem onClick={() => SignOutMiddle()} label='Logout' />
+              <MenuItem onClick={() => signOut()} label="Logout" />
             </Fragment>
           </div>
         </div>

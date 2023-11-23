@@ -179,7 +179,6 @@ export default function ModalCreateOwnership() {
       .then(() => {
         toast.success('Create ownership success!');
         createOwnershipModal.onClose();
-
         reset();
       })
       .catch((response) => {

@@ -1,11 +1,20 @@
+import GetResortById from '@/app/actions/getResortById';
 import UploadImageResortEdit from '@/app/components/staff/UploadImageResortEdit';
 import requireAuth from '@/app/libs/requireAuth';
 import React from 'react';
+import InputAmenitiesType from './InputAmenitiesType';
 
-export default function StaffEditResort() {
+interface IParams {
+  resortId: string;
+}
+
+export default async function StaffEditResort({ params }: { params: IParams }) {
+  const resortDetail = await GetResortById(params);
+  console.log(resortDetail);
+
   return requireAuth(
     <div>
-      <div className="mt-10">
+      <div className="">
         Dashboard {'>'} <span className="text-common">Update resort</span>
       </div>
       <div className=" w-[600px] py-10">
@@ -17,11 +26,11 @@ export default function StaffEditResort() {
       </div>
       <div className="w-[700px]">
         <div className=" flex flex-row mb-10">
-          <div className="w-[277px] text-gray-700">Resort Name*</div>
+          <div className="w-[277px] text-gray-700">Resort Name *</div>
           <input
             type="text"
             placeholder="Thuc"
-            value="JW Marriott Phu Quoc Emerald Bay Resort & Spa"
+            value={resortDetail.resortName}
             className="text-gray-800 px-1 w-full bg-[#F8F8F8] border-b border-gray-500 focus:outline-none focus:border-t-transparent focus:border-l-transparent focus:border-r-transparent"
           />
         </div>
@@ -33,6 +42,10 @@ export default function StaffEditResort() {
             <option value="">Moutaint Resort</option>
             <option value="">Sea Resort</option>
           </select>
+          {/* <InputAmenitiesType
+            amenities={amenitiesArray}
+            handleAmenitiesChange={handleAmenitiesChange}
+          /> */}
         </div>
 
         <div className="flex flex-row items-center mb-10">
@@ -53,8 +66,7 @@ export default function StaffEditResort() {
             id=""
             cols={50}
             rows={10}
-            value="Leave your guidebooks at home and dive into the local cultures that make each destination so special. We’ll connect you with our exclusive experiences. Each trip is carefully crafted to let enjoy your vacation.
-A wonderful serenity has taken possession of my entire soul, like these sweet mornings of spring which I enjoy with my whole heart. I am alone, and feel the charm of existence in this spot, which was created for the bliss of souls like mine. I am so happy, my dear friend, so absorbed in the exquisite sense of mere tranquil existence, that I neglect my talents."
+            value={resortDetail.resortDescription}
           ></textarea>
         </div>
         <div>

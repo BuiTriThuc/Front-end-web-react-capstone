@@ -113,7 +113,7 @@ const ListMembershipAll: React.FC<ListMembershipAllProps> = ({ users }) => {
   const [currentPage, setCurrentPage] = React.useState(1);
   const itemsPerPage = 7;
 
-  const pageCount = Math.ceil(users?.content?.length / itemsPerPage);
+  const pageCount = Math.floor(users?.content?.length / itemsPerPage);
 
   const handlePageChange = (selectedPage: { selected: number }) => {
     setCurrentPage(selectedPage.selected);
@@ -127,7 +127,7 @@ const ListMembershipAll: React.FC<ListMembershipAllProps> = ({ users }) => {
 
   return (
     <>
-      <div className="mt-10">
+      <div className="">
         Staff {'>'} <span className="text-common">List Membership</span>
       </div>
       <SelectRouterStaff />
@@ -188,7 +188,7 @@ const ListMembershipAll: React.FC<ListMembershipAllProps> = ({ users }) => {
                       className="w-10 h-10 rounded-full mr-2"
                       width={50}
                       height={50}
-                      src={row.avatar || '/images/placeholder.png'}
+                      src={row.avatar || '/images/placeholder.jpg'}
                       alt=""
                     />
                     <Link href="/staff/editmembership" className="hover:underline">

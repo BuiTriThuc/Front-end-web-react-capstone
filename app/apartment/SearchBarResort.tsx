@@ -1,12 +1,10 @@
 'use client';
 
 import React, { Fragment, useState } from 'react';
-import SearchBanner from '../components/banner/SearchBanner';
 import { BiSearch } from 'react-icons/bi';
 import { AiFillCalendar, AiFillCaretDown, AiOutlinePlusCircle } from 'react-icons/ai';
 import { GrSubtractCircle } from 'react-icons/gr';
 import CalendarAparment from './CalendarAparment';
-import dayjs from 'dayjs';
 import { format } from 'date-fns';
 
 const initialDateRange = {

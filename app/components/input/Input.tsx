@@ -9,6 +9,7 @@ interface InputProps {
   id: string;
   label: string;
   tooltipContent?: string;
+  value?: any;
   onChange?: (value: any) => void;
   type?: string;
   placeholder?: string;
@@ -27,6 +28,7 @@ const Input: React.FC<InputProps> = ({
   disabled,
   tooltipContent,
   formatPrice,
+  value,
   required,
   register,
   onChange,
@@ -54,6 +56,7 @@ const Input: React.FC<InputProps> = ({
         {...register(id, { required })}
         placeholder={placeholder}
         type={type}
+        value={value}
         onChange={onChange}
         className={`peer p-4 pt-6 font-light bg-white border-2 rounded-md outline-none transition disabled:opacity-70 disabled:cursor-not-allowed focus:ring-0
         ${errors[id] ? 'border-red-400' : 'border-gray-400'} ${

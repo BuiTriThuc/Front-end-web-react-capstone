@@ -16,8 +16,10 @@ const DashBoardAdmin: React.FC<DashboardAdminProps> = ({ listUser }) => {
     <div>
       <SelectRouterAdmin />
       <div className="bg-gray-200 w-auto h-auto rounded-lg px-20 pt-14">
-        <div className="grid grid-cols-1 md:grid-cols-2">
+        <div className="grid grid-cols-1 md:grid-cols-1">
           <ChartUser listUser={listUser} />
+        </div>
+        <div className="grid grid-cols-2">
           <ChartBooking />
         </div>
         <div className="grid grid-cols-1">

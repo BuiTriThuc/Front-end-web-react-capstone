@@ -27,9 +27,7 @@ export default function ApproveDetailResort() {
                 </div>
                 <div className="text-gray-500">Phu Quoc</div>
               </div>
-              <div>
-                <DropDownEditResort />
-              </div>
+              <div>{/* <DropDownEditResort /> */}</div>
             </div>
             <div className="flex flex-row items-center">
               <AiTwotoneStar color="#FFA11A" />
@@ -113,7 +111,7 @@ export default function ApproveDetailResort() {
             <div className="pr-[30px]">
               <div className="pb-[10px]">
                 Leave your guidebooks at home and dive into the local cultures that make each
-                destination so special. We’ll connect you with our exclusive experiences. Each trip
+                destination so special. Well connect you with our exclusive experiences. Each trip
                 is carefully crafted to let enjoy your vacation.
               </div>
               <div>
