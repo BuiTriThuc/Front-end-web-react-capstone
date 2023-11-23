@@ -19,10 +19,6 @@ interface Pageable {
   sortDirection: string;
   sortBy: string;
 }
-interface ApiParam {
-  searchName: string;
-  pageable: Pageable;
-}
 interface ListPropertyTypeProps {
   propertyViews?: any;
 }
@@ -58,9 +54,13 @@ const ListPropertyType: React.FC<ListPropertyTypeProps> = () => {
     }
     setTotalPages(responsePropertyType.totalPages);
   };
+  const handleEditClick = (item: IPropertyType) => {
+    editPropertyTypeModal.item = item;
+    editPropertyTypeModal.onOpen();
+  };
   useEffect(() => {
-    fetchPropertyType();
-  }, [JSON.stringify(pageable), JSON.stringify(searchName)]);
+    fetchPropertyType(editPropertyTypeModal.item.id);
+  }, [JSON.stringify(pageable), JSON.stringify(searchName), editPropertyTypeModal.isSuccess]);
 
   return (
     <Fragment>
@@ -92,7 +92,7 @@ const ListPropertyType: React.FC<ListPropertyTypeProps> = () => {
                 <Table.Cell>
                   <div className="flex">
                     <div
-                      onClick={editPropertyTypeModal.onOpen}
+                      onClick={() => handleEditClick(item)}
                       className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
                     >
                       Edit

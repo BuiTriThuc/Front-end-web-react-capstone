@@ -1,26 +1,36 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Modal from './Modal';
 import Input from '../input/Input';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { Textarea, Label } from 'flowbite-react';
 import useEditPropertyTypeModal from '@/app/hooks/useEditPropertyTypeModal';
 import UpdatePropertyTypeStaff from '@/app/actions/UpdatePropertyTypeStaff';
-
 export default function ModalEditPropertyType() {
   const [isLoading, setIsLoading] = useState(false);
   const editPropertyTypeModal = useEditPropertyTypeModal();
   const {
     register,
+    setValue,
     handleSubmit,
+    watch,
     formState: { errors },
-  } = useForm<FieldValues>();
+  } = useForm<FieldValues>({});
+  useEffect(() => {
+    setValue('propertyTypeName', editPropertyTypeModal.item.propertyTypeName);
+    setValue('propertyTypeDescription', editPropertyTypeModal.item.propertyTypeDescription);
+  }, [editPropertyTypeModal.isOpen]);
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    UpdatePropertyTypeStaff(1, {
-      propertyTypeName: 'string',
-      propertyTypeDescription: 'string',
-    });
+    UpdatePropertyTypeStaff(editPropertyTypeModal.item.id, {
+      propertyTypeName: data.propertyTypeName,
+      propertyTypeDescription: data.propertyTypeDescription,
+    })
+      .then((rs) => {
+        editPropertyTypeModal.isSuccess = !editPropertyTypeModal.isSuccess;
+        editPropertyTypeModal.onClose();
+      })
+      .catch((err) => {});
   };
   const bodyContent = (
     <div className="flex flex-col gap-4">
@@ -30,6 +40,7 @@ export default function ModalEditPropertyType() {
         errors={errors}
         register={register}
         placeholder="Input Property Type Name"
+        {...register('propertyTypeName')}
       />
       <div className="w-full">
         <div className="mb-2 block">

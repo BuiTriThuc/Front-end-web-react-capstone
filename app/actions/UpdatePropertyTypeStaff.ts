@@ -20,14 +20,7 @@ const UpdatePropertyTypeStaff = async (id: number, modelUpdate: ModelUpdate): Pr
 
   try {
     const response = await axios.request(config);
-
-    console.log(response.data);
-
-    if (!response.data) {
-      return null;
-    }
-
-    return response.data;
+    return response;
   } catch (error) {
     console.log(error);
     throw error;
