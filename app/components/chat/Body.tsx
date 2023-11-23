@@ -39,6 +39,7 @@ function Body({ initialMessages, users, currentUser }: Props) {
   useEffect(() => {
     bottomRef?.current?.scrollIntoView();
   }, [conversationId]);
+
   useEffect(() => {
     if (accessToken) {
       const updatedClient = new Client({
@@ -46,7 +47,7 @@ function Body({ initialMessages, users, currentUser }: Props) {
         connectHeaders: {
           ['Authorization']: `${accessToken}`,
         },
-        reconnectDelay: 5000,
+        reconnectDelay: 2000,
         heartbeatIncoming: 4000,
         heartbeatOutgoing: 4000,
       });
@@ -54,6 +55,7 @@ function Body({ initialMessages, users, currentUser }: Props) {
     }
 
   }, [accessToken]);
+
   useEffect(() => {
     if (client) {
       try {
@@ -76,6 +78,9 @@ function Body({ initialMessages, users, currentUser }: Props) {
         });
       };
     }
+    return () => {
+      client?.deactivate();
+    };
   }, [accessToken, client, conversationId, initialMessages]);
 
 

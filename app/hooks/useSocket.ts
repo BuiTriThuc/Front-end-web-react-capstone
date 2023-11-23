@@ -25,9 +25,9 @@ export const useSocket = () => {
         connectHeaders: {
           ['Authorization']: `${accessToken}`,
         },
-        reconnectDelay: 5000,
-        heartbeatIncoming: 4000,
-        heartbeatOutgoing: 4000,
+        reconnectDelay: 2000,
+        heartbeatIncoming: 5000,
+        heartbeatOutgoing: 5000,
       });
       setClient(updatedClient);
     }
@@ -44,10 +44,10 @@ export const useSocket = () => {
 
   const connect = useCallback(() => {
     if (client) {
-      try{
+      try {
         client.activate();
         console.log('client', 'SOCKET CONNECTED...');
-      }catch (e:any){
+      } catch (e: any) {
         console.log('e', e);
       }
       client.onConnect = () => {
@@ -72,50 +72,55 @@ export const useSocket = () => {
 
   const subscribeNotifications = useCallback(async (currentUser?: Object | any | null) => {
     if (client) {
-      client.onConnect = () => {
-        client.subscribe(`/topic/notification-${currentUser?.userId}`, (message: Message) => {
-          const newMessage =  JSON.parse(message.body) as NotificationResponse;
-          const updatedNotifications = [...notifications, newMessage];
-          console.log('RECEIVED MESSAGE FROM NOTIFICATION...');
-          console.log(notifications);
-          console.log(newMessage);
-          console.log(updatedNotifications);
-          dispatch(addNotification(newMessage));
-        }, {
-          ['Authorization']: `${accessToken}`,
-        });
-      };
+      client.subscribe(`/topic/notification-${currentUser?.userId}`, (message: Message) => {
+        const newMessage = JSON.parse(message.body) as NotificationResponse;
+        const updatedNotifications = [...notifications, newMessage];
+        console.log('RECEIVED MESSAGE FROM NOTIFICATION...');
+        console.log(notifications);
+        console.log(newMessage);
+        console.log(updatedNotifications);
+        dispatch(addNotification(newMessage));
+      }, {
+        ['Authorization']: `${accessToken}`,
+      });
     }
   }, [accessToken, client, dispatch, notifications]);
 
   const subscribeConversation = useCallback(async (conversationIds?: string[]) => {
     if (client) {
-      client.onConnect = () => {
-        conversationIds?.forEach((conversationId: string) => {
-          client.subscribe(`/topic/${conversationId}`, (message) => {
-            console.log('RECEIVED MESSAGE FROM CONVERSATION', conversationId);
-            const newMessage =  JSON.parse(message.body) as ConversationMessage;
-            const updatedConversations = conversations?.map((conversation: Conversation) => {
-              if (conversation.conversationId.toString() === conversationId) {
-                return {
-                  ...conversation,
-                  message: newMessage,
-                };
-              }
-              return conversation;
-            });
-            dispatch(fetchConversations(updatedConversations));
-          }, {
-            ['Authorization']: `${accessToken}`,
+      conversationIds?.forEach((conversationId: string) => {
+        client.subscribe(`/topic/${conversationId}`, (message) => {
+          console.log('RECEIVED MESSAGE FROM CONVERSATION', conversationId);
+          const newMessage = JSON.parse(message.body) as ConversationMessage;
+          const updatedConversations = conversations?.map((conversation: Conversation) => {
+            if (conversation.conversationId.toString() === conversationId) {
+              return {
+                ...conversation,
+                message: newMessage,
+              };
+            }
+            return conversation;
           });
+          dispatch(fetchConversations(updatedConversations));
+        }, {
+          ['Authorization']: `${accessToken}`,
         });
-      };
+      });
     }
   }, [accessToken, client, conversations, dispatch]);
+
+  const subscribeHandler = useCallback(async (currentUser?: Object | any | null, conversationIds?: string[]) => {
+    if (client) {
+      client.onConnect = () => {
+        currentUser?.userId && subscribeNotifications(currentUser);
+        conversationIds && conversationIds?.length > 0 && subscribeConversation(conversationIds);
+      };
+    }
+  }, [client, subscribeConversation, subscribeNotifications]);
 
   useEffect(() => {
     connect();
   }, [connect]);
 
-  return { wsState, subscribeNotifications, connect, killConnection, subscribeConversation };
+  return { wsState, subscribeNotifications, connect, killConnection, subscribeConversation, subscribeHandler };
 };

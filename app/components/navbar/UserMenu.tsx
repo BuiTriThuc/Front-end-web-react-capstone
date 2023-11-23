@@ -47,21 +47,11 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
 
   useEffect(() => {
     setNotificationsList(notifications);
-    console.log('notificationsList', notificationsList);
   }, [notifications, notificationsList]);
-
-  useEffect(() => {
-    console.log('SUBSCRIBE NOTIFICATIONS...');
-    socket.subscribeNotifications(currentUser)
-      .catch((err) => {
-        console.log('ERROR IN SUBSCRIBE NOTIFICATION', err);
-      });
-  }, [currentUser, socket]);
 
   const toggleOpen = useToggle(setIsOpen, [setIsNotificationOpen, setIsMessageOpen]);
   const toggleNotificationOpen = useToggle(setIsNotificationOpen, [setIsOpen, setIsMessageOpen]);
   const toggleMessageOpen = useToggle(setIsMessageOpen, [setIsOpen, setIsNotificationOpen]);
-
 
   const handleRouter = (route: string) => {
     router.push(route);
@@ -72,8 +62,8 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
     console.log('FETCH NOTIFICATIONS...');
     NotificationApis.getAll().then((res) => {
       dispatch(fetchNotifications(res));
-      console.log("NOTIFICATION RESPONSE", res);
     });
+    console.log('FETCH CONVERSATIONS...');
     ConversationApis.getCurrentUserConversation().then((res) => {
       dispatch(fetchConversations(res));
       dispatch(setConversationLoaded(true));
@@ -81,19 +71,12 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
   }, [dispatch]);
 
   useEffect(() => {
-    console.log("NOTIFICATION STATE", notifications);
-  }, [notifications]);
-
-  useEffect(() => {
-    if(conversations && conversations.length > 0) {
-      console.log('SUBSCRIBE CONVERSATION IN USER MENU');
       const conversationIds = conversations?.map((item: Conversation) => item.conversationId.toString()) || [];
-      socket.subscribeConversation(conversationIds)
+      socket.subscribeHandler(currentUser, conversationIds)
         .catch((err) => {
-          console.log('ERROR IN SUBSCRIBE CONVERSATION', err);
+          console.log('ERROR IN SUBSCRIBE TO STOMP...', err);
         });
-    }
-  }, [conversations, conversationsLoaded, currentUser, dispatch, socket]);
+  }, [conversations, currentUser, dispatch, socket]);
 
 
 
