@@ -29,13 +29,9 @@ const GetPropertyTypeStaff = async (apiParam: ApiParam): Promise<any> => {
 
   try {
     const response = await axios.request(config);
-
-    console.log(response.data);
-
     if (!response.data) {
       return null;
     }
-
     return response.data;
   } catch (error) {
     console.log(error);

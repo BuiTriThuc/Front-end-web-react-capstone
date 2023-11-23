@@ -1,10 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
-import { Table } from 'flowbite-react';
 import { useRouter } from 'next/navigation';
 import React, { Fragment, useEffect, useState } from 'react';
-import { Pagination } from 'flowbite-react';
+import { Button, Label, Pagination, Table, TextInput } from 'flowbite-react';
 import GetPropertyTypeStaff from '@/app/actions/getPropertyTypeStaff';
 import useEditPropertyTypeModal from '@/app/hooks/useEditPropertyTypeModal';
 import useDeletePropertyTypeModal from '@/app/hooks/useDeletePropertyTypeModal';
@@ -73,16 +72,34 @@ const ListPropertyType: React.FC<ListPropertyTypeProps> = () => {
     deletePropertyTypeModal.isSuccess,
   ]);
 
+  function handleSearchNameSubmit(e: React.FormEvent<HTMLFormElement>): void {
+    e.preventDefault();
+    setSeachName(e.currentTarget.searchName.value);
+  }
+
   return (
     <Fragment>
       <div className="">
         <span className="hover:underline" onClick={() => router.push('/staff')}>
           Dashboard
-        </span>{' '}
+        </span>
         {'>'} <span className="text-common">List property view</span>
       </div>
 
       <div className="py-10">
+        <div className="my-2  ">
+          <form onSubmit={(e) => handleSearchNameSubmit(e)}>
+            <Label
+              htmlFor="searchName"
+              value="Search Name: "
+              className="mx-1 inline-block align-middle"
+            />
+            <div className="flex">
+              <TextInput name="searchName" type="text" className="mx-1" />
+              <Button type="submit">Submit</Button>
+            </div>
+          </form>
+        </div>
         <Table>
           <Table.Head>
             <Table.HeadCell>No</Table.HeadCell>
