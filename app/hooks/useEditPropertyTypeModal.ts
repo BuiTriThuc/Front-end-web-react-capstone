@@ -2,8 +2,10 @@ import { create } from 'zustand';
 
 interface EditPropertyTypeModalStore {
   isOpen: boolean;
+  id?: number;
   onOpen: () => void;
   onClose: () => void;
+  callBack?: () => void;
 }
 
 const useEditPropertyTypeModal = create<EditPropertyTypeModalStore>((set) => ({
