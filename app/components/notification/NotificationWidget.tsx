@@ -43,7 +43,6 @@ export default function NotificationWidget() {
 
   useEffect(() => {
     setNotificationsList(notification);
-    console.log("notificationsList",notificationsList);
   }, [notification, notificationsList]);
 
 

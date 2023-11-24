@@ -28,7 +28,6 @@ export default function ChatWidget({ currentUser }: Props) {
 
   useEffect(() => {
     setConversationsList(conversations);
-    console.log("conversationList",conversationsList);
   }, [conversations, conversationsList]);
 
 

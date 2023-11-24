@@ -24,7 +24,7 @@ export const conversationSlice = createSlice({
       state.loading = action.payload;
     },
     setConversationLoaded: (state, action) => {
-      state.loading = action.payload;
+      state.loaded = action.payload;
     },
     fetchConversations: (state, action) => {
       state.data = action.payload;
