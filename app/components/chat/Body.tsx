@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import { find } from "lodash";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import MessageBox from "./MessageBox";
 import { Message } from '@/app/actions/ConversationApis';
@@ -13,6 +13,7 @@ import { useSession } from 'next-auth/react';
 import { accessToken } from 'mapbox-gl';
 import { NotificationResponse } from '@/app/components/notification/types';
 import { fetchNotifications } from '@/app/redux/slices/pushNotificationSlice';
+import { Skeleton } from 'antd';
 
 // export type FullMessageType = Message & {
 //   sender: User;
@@ -29,7 +30,7 @@ type Props = {
 function Body({ initialMessages, users, currentUser }: Props) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const [messages, setMessages] = useState(initialMessages);
-
+  const [loading, setLoading] = useState(true);
   const { conversationId } = useConversation();
   const [client, setClient] = useState<Client | null>(null);
   const [wsState, setWsState] = useState<'connected' | 'disconnected'>();
@@ -37,10 +38,13 @@ function Body({ initialMessages, users, currentUser }: Props) {
   const accessToken = session?.user?.access_token;
 
   useEffect(() => {
-    bottomRef?.current?.scrollIntoView();
-  }, [conversationId]);
+    if(!loading){
+      bottomRef?.current?.scrollIntoView();
+    }
+  }, [conversationId, loading]);
 
   useEffect(() => {
+    setLoading(true);
     if (accessToken) {
       const updatedClient = new Client({
         brokerURL: 'wss:///api.holiday-swap.click/websocket',
@@ -58,13 +62,6 @@ function Body({ initialMessages, users, currentUser }: Props) {
 
   useEffect(() => {
     if (client) {
-      try {
-        client.activate();
-        console.log('client', 'SOCKET CONNECTED...');
-        console.log('client', 'Conversation...');
-      } catch (e: any) {
-        console.log('e', e);
-      }
       client.onConnect = () => {
         client.subscribe(`/topic/${conversationId}`, (message) => {
           const newMessage =  JSON.parse(message.body) as Message;
@@ -77,8 +74,11 @@ function Body({ initialMessages, users, currentUser }: Props) {
           ['Authorization']: `${accessToken}`,
         });
       };
+      client.activate();
+      setLoading(false);
     }
     return () => {
+      setLoading(true);
       client?.deactivate();
     };
   }, [accessToken, client, conversationId, initialMessages]);
@@ -128,20 +128,27 @@ function Body({ initialMessages, users, currentUser }: Props) {
   //     pusherClient.unbind("message:update", updateMessageHandler);
   //   };
   // }, [conversationId]);
-
   return (
-    <div className="flex-1 overflow-y-auto dark:bg-black">
-      {messages.map((message, index) => (
-        <MessageBox
-          isLast={index === messages.length - 1}
-          key={message.messageId}
-          data={message}
-          users={users}
-          currentUser={currentUser}
-        />
-      ))}
-      <div className="pt-24" ref={bottomRef} />
-    </div>
+    <>
+      {loading ? (
+        <div className="flex-1 overflow-y-auto dark:bg-black">
+          <Skeleton />
+        </div>
+      ) : (
+        <div className="flex-1 overflow-y-auto dark:bg-black">
+          {messages.map((message, index) => (
+            <MessageBox
+              isLast={index === messages.length - 1}
+              key={message.messageId}
+              data={message}
+              users={users}
+              currentUser={currentUser}
+            />
+          ))}
+          <div className="pt-24" ref={bottomRef} />
+        </div>
+      )}
+    </>
   );
 }
 

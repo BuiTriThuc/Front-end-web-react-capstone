@@ -99,6 +99,7 @@ export const useSocket = () => {
 
   const subscribeHandler = useCallback(async (currentUser?: Object | any | null, conversationIds?: string[]) => {
     if (client) {
+      client.deactivate();
       client.onConnect = () => {
         currentUser?.userId && subscribeNotifications(currentUser);
         conversationIds && conversationIds?.length > 0 && subscribeConversation(conversationIds);

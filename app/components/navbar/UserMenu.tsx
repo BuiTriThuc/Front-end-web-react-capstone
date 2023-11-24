@@ -15,6 +15,7 @@ import ChatWidget from '@/app/components/notification/ChatWidget';
 import Divider from '@mui/material/Divider';
 import ConversationApis, { Conversation } from '@/app/actions/ConversationApis';
 import { fetchConversations, setConversationLoaded } from '@/app/redux/slices/conversationSlice';
+import { usePathname } from 'next/navigation';
 
 interface UserMenuProps {
   currentUser?: Object | any | null;
@@ -44,6 +45,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
     useState(notifications ?? []);
   const [conversationsList, setConversationsList] =
     useState(conversations ?? []);
+  const pathName = usePathname();
 
   useEffect(() => {
     setNotificationsList(notifications);
@@ -57,6 +59,11 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
     router.push(route);
     setIsOpen(false);
   };
+
+  useEffect(() => {
+    pathName && pathName.includes('/chat') && setIsMessageOpen(false);
+  }, [pathName]);
+
 
   useEffect(() => {
     console.log('FETCH NOTIFICATIONS...');
@@ -73,10 +80,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
 
   useEffect(() => {
     if (conversationsLoaded) {
-
       const conversationIds = conversations?.map((item: Conversation) => item.conversationId.toString()) || [];
-      console.log('SUBSCRIBE TO STOMP...', conversationIds);
-
       socket.subscribeHandler(currentUser, conversationIds);
     }
   }, [conversations, socket]);
