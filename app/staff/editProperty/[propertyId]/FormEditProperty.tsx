@@ -173,11 +173,11 @@ const FormEditProperty: React.FC<FormDetailPropertyProps> = ({ propertyId }) => 
         console.log(error);
       });
   };
-  const fetchPropertyType = () => {
+  const  fetchPropertyType  = () => {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: 'https://holiday-swap.click/api/v1/property-types/list',
+      url: `https://holiday-swap.click/api/v1/property-types/listPropertyTypeInResort/${propertyDetail?.resortId}`,
       headers: {},
     };
 
@@ -212,8 +212,8 @@ const FormEditProperty: React.FC<FormDetailPropertyProps> = ({ propertyId }) => 
   useEffect(() => {
     fetchPropertyDetail();
     fetchPropertyView();
-    fetchPropertyType();
     fetchInRoomAmenityType();
+    fetchPropertyType();
   }, []);
 
   function handleRemove(file: UploadFile<any>): boolean | void | Promise<boolean | void> {

@@ -15,6 +15,7 @@ import InputInRoomAmenities from './InputInRoomAmenities';
 import SelectRouterStaff from '@/app/components/staff/SelectRouterStaff';
 import { Select } from 'antd';
 import HeadingDashboard from '@/app/components/HeadingDashboard';
+import axios from 'axios';
 
 enum STEPS {
   BEDS = 0,
@@ -35,6 +36,8 @@ const CreateProperty: React.FC<CreatePropertyProps> = ({
   listResort,
 }) => {
   const router = useRouter();
+
+  const [propertyTypesInput, setPropertyTypesInput] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const axiosAuthClient = useAxiosAuthClient();
   const [step, setStep] = useState(STEPS.BEDS);
@@ -90,8 +93,26 @@ const CreateProperty: React.FC<CreatePropertyProps> = ({
 
   const handelChangeResortId = (value: any) => {
     setCustomeValue('resortId', value);
+    fetchPropertyType(value);
   };
+  const fetchPropertyType = (resortId: number) => {
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: `https://holiday-swap.click/api/v1/property-types/listPropertyTypeInResort/${resortId}`,
+      headers: {},
+    };
 
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(response.data);
+        setPropertyTypesInput(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   useEffect(() => {
     // Calculate totalGuests whenever relevant form fields change
     setTotalGuests(
@@ -282,7 +303,7 @@ const CreateProperty: React.FC<CreatePropertyProps> = ({
                   (option?.children ?? '').toLowerCase().includes(input.toLowerCase())
                 }
               >
-                {propertyTypes.map((item: any, index: any) => (
+                {propertyTypesInput.map((item: any, index: any) => (
                   <Select.Option value={item.id} key={item.id}>
                     {item.propertyTypeName}
                   </Select.Option>
