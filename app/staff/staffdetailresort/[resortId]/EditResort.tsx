@@ -72,10 +72,10 @@ const EditResort: React.FC<EditResortProps> = ({ resortDetail }) => {
         <div className=" w-full h-80  relative md:w-full md:rounded-l-xl md:h-96 md:relative md:overflow-hidden lg:w-full lg:h-auto lg:rounded-l-xl lg:relative lg:overflow-hidden xl:h-auto xl:w-full xl:rounded-l-xl xl:relative xl:overflow-hidden ">
           <Image
             onClick={showDrawer}
-            key={resortDetail.resortImages[0].id}
+            key={resortDetail.resortImages[0]?.id}
             alt="image"
             fill
-            src={resortDetail.resortImages[0].link}
+            src={resortDetail?.resortImages[0]?.link}
             className="w-[100%] md:object-cover md:h-full md:cursor-pointer lg:object-cover lg:h-full lg:cursor-pointer xl:object-cover xl:h-full xl:cursor-pointer"
           />
           <Link

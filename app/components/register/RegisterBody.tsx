@@ -29,6 +29,7 @@ import { useRouter } from 'next/navigation';
 import dayjs from 'dayjs';
 import { DatePicker } from 'antd';
 import StepCreateApartmentRegister from './StepCreateApartmentRegister';
+import useCreateApartmentRegister from '@/app/hooks/useCreateApartmentRegister';
 
 enum STEPS {
   INFO = 0,
@@ -407,6 +408,7 @@ const RegisterBody: React.FC<RegisterBodyProps> = ({ listResort }) => {
   const [step, setStep] = useState(STEPS.INFO);
   const [isLoading, setIsLoading] = useState(false);
   const [date, setDate] = useState(new Date());
+  const createApartmentRegister = useCreateApartmentRegister();
   const axiosAuthClient = useAxiosAuthClient();
   const loginModal = useLoginModal();
   const router = useRouter();
@@ -429,7 +431,7 @@ const RegisterBody: React.FC<RegisterBodyProps> = ({ listResort }) => {
       email: '',
       phone: '',
       gender: '',
-      role: { roleId: 2 },
+      role: { roleId: 4 },
       dob: date,
     },
   });
@@ -461,9 +463,11 @@ const RegisterBody: React.FC<RegisterBodyProps> = ({ listResort }) => {
       setIsLoading(true);
       axios
         .post('https://holiday-swap.click/api/v1/auth/register', data)
-        .then(() => {
+        .then((response) => {
           toast.success('Register Success');
+          createApartmentRegister.onSetUser(response.data);
           onNext();
+
           // loginModal.onOpen();
         })
         .catch((response) => {

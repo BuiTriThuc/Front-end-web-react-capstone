@@ -3,8 +3,10 @@ import axios from 'axios';
 export default async function GetListResort(pageNo: string, config: any = {}) {
   try {
     const { resortName } = config;
+    const { status } = config;
+    const { pageSize } = config;
 
-    let apiUrl = `https://holiday-swap.click/api/v1/resorts?pageNo=${pageNo}&pageSize=10`;
+    let apiUrl = `https://holiday-swap.click/api/v1/resorts?pageNo=${pageNo}&resortStatus=ACTIVE&pageSize=99999`;
 
     if (resortName) {
       apiUrl += `&nameResort=${resortName}`;

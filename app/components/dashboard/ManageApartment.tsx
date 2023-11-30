@@ -158,7 +158,7 @@ const ManageApartment: React.FC<ManageApartmentProps> = ({
                         </div>
 
                         {item.availableTimes.map((available: any, innerIndex: number) => {
-                          if (available.deleted && available.deleted === true) {
+                          if (available.deleted === false) {
                             return (
                               <Fragment key={innerIndex}>
                                 {isOpenTimePublicArr[index] && (

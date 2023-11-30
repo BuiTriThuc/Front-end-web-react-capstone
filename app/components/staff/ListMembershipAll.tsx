@@ -177,7 +177,7 @@ const ListMembershipAll: React.FC<ListMembershipAllProps> = ({ users }) => {
       .then(async () => {
         toast.success('Update status success');
         const newList = await axios.get(
-          `https://holiday-swap.click/api/v1/users/search?roleIds=2&limit=10&offset=${
+          `https://holiday-swap.click/api/v1/users/search?status=ACTIVE&status=BLOCKED&roleIds=2&limit=10&offset=${
             currentPage - 1
           }&sortProps=id&sortDirection=desc`
         );

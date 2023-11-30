@@ -26,12 +26,12 @@ import HeadingDashboard from '@/app/components/HeadingDashboard';
 mapboxgl.accessToken =
   'pk.eyJ1IjoiaHVuZ3BkMTcwNTAxIiwiYSI6ImNsbmMycGJldjBoNWUyeXBnZXM3aXhhYXEifQ.H-6U4cHRC5mRfJKH4GI0qQ';
 
-interface CreateResortProps {
+export interface CreateResortProps {
   amenitiesArray?: any;
   propertyTypesArray?: any;
 }
 
-interface Context {
+export interface Context {
   id: string;
   mapbox_id: string;
   wikidata?: string;
@@ -42,18 +42,18 @@ interface Context {
   language: string;
 }
 
-interface Geometry {
+export interface Geometry {
   coordinates: number[];
   type?: string | undefined;
 }
 
-interface Properties {
+export interface Properties {
   foursquare: string;
   landmark: boolean;
   category: string;
 }
 
-interface Place {
+export interface Place {
   id: string;
   type: string;
   place_type: string[];
@@ -68,24 +68,24 @@ interface Place {
   context: Context[];
 }
 
-interface District {
+export interface District {
   code: string;
   name: string;
   type: string;
 }
 
-interface StateOrProvince {
+export interface StateOrProvince {
   code: string;
   name: string;
   type: string;
 }
 
-interface Country {
+export interface Country {
   name: string;
   code: string;
 }
 
-interface Location {
+export interface Location {
   addressLine: string;
   latitude: number;
   longitude: number;
@@ -98,7 +98,7 @@ interface Location {
   country: Country;
 }
 
-function mapPlaceToLocation(place: Place): Location {
+export function mapPlaceToLocation(place: Place): Location {
   return {
     addressLine:
       place.place_name
@@ -129,8 +129,8 @@ function mapPlaceToLocation(place: Place): Location {
   };
 }
 
-type ContextType = 'country.' | 'postcode.';
-const createContextHandler =
+export type ContextType = 'country.' | 'postcode.';
+export const createContextHandler =
   (type: ContextType) => (e: React.ChangeEvent<HTMLInputElement>, prevState: Place | undefined) => {
     let updatedContext = [...(prevState?.context || [])];
     let contextIndex = updatedContext.findIndex((ctx) => ctx?.id?.startsWith(type)) ?? -1;
@@ -141,7 +141,7 @@ const createContextHandler =
     } as Place;
   };
 
-const createContextHandlerAdministrationLevel =
+export const createContextHandlerAdministrationLevel =
   (indexLevel: number) =>
   (e: React.ChangeEvent<HTMLInputElement>, prevState: Place | undefined) => {
     let updatedContext = [...(prevState?.context || [])];
@@ -257,7 +257,7 @@ const CreateResort: React.FC<CreateResortProps> = ({ amenitiesArray, propertyTyp
       reverseGeocode: true,
       marker: false,
     });
-
+    geocoder.setCountries('VN');//ISO 3166-1 alpha-2 country codes, separated by commas
     mapboxglMap.addControl(geocoder, 'top-left');
     geocoder.on('result', (e: any) => {
       setLocation(e.result as Place);

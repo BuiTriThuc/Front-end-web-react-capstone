@@ -3,7 +3,7 @@ import CreateProperty from './CreateProperty';
 import GetPropertyView from '@/app/actions/getPropertyView';
 import GetInRoomAmenities from '@/app/actions/getInRoomAmenities';
 import requireAuth from '@/app/libs/requireAuth';
-import GetListResort from '@/app/actions/getListResort';
+import GetListResort from '@/app/actions/getListResortForCreate';
 
 export const metadata = {
   title: 'Create Property',

@@ -17,8 +17,8 @@ const CardListResort: React.FC<CardListResortProps> = ({ data }) => {
   const newDateRange = useNewDateRange();
 
   const handleRedirectApartmentDetail = (url: string) => {
-    route.push(url);
     newDateRange.setNew();
+    route.push(url);
   };
   return (
     <div className="flex flex-col cursor-pointer ">

@@ -34,6 +34,8 @@ const ApartmentDetail: React.FC<ApartmentDetailProps> = ({ apartment, currentUse
   const roomId = params?.get('roomId');
   const newDateRange = useNewDateRange();
   const isNew = newDateRange.isNew;
+  const isReload = newDateRange.isReload;
+  const isBack = newDateRange.isBack;
 
   const [dateRange, setDateRange] = useState(initialDateRange);
   const [initialDateRangeValue, setInitialDateRangeValue] = useState(initialDateRange);
@@ -94,14 +96,6 @@ const ApartmentDetail: React.FC<ApartmentDetailProps> = ({ apartment, currentUse
   } = useGuest();
 
   useEffect(() => {
-    if (window.performance) {
-      if (performance.navigation.type == 1) {
-        newDateRange.setNew();
-      }
-    }
-  }, []);
-
-  useEffect(() => {
     if (initialDateRangeValue) {
       setDateRangeDefaultContext(initialDateRangeValue);
     }
@@ -114,10 +108,49 @@ const ApartmentDetail: React.FC<ApartmentDetailProps> = ({ apartment, currentUse
       setTotalGuestContext(1);
       setChildrenGuestContext(0);
       setAllowTotalGuestContext(apartmentAllowGuest);
+    } else if (isReload === true && isBack === false) {
+      setDateRangeContext(initialDateRangeValue);
+      setAdultGuestContext(1);
+      setTotalGuestContext(1);
+      setChildrenGuestContext(0);
+      setAllowTotalGuestContext(apartmentAllowGuest);
+    } else if (isReload === true && isBack === true) {
+      setDateRangeContext(dateRangeContext);
+      // newDateRange.setBackReset();
     } else {
       setDateRangeContext(dateRangeContext);
     }
-  }, [dateRangeDefaultContext, dateRangeContext, initialDateRangeValue, isNew]);
+
+    // if (isReload === true) {
+    //   setDateRangeContext(initialDateRangeValue);
+    //   setAdultGuestContext(1);
+    //   setTotalGuestContext(1);
+    //   setChildrenGuestContext(0);
+    //   setAllowTotalGuestContext(apartmentAllowGuest);
+    // } else {
+    //   setDateRangeContext(dateRangeContext);
+    // }
+  }, [dateRangeDefaultContext, dateRangeContext, initialDateRangeValue, isNew, isReload, isBack]);
+
+  useEffect(() => {
+    if (isNew === true && JSON.stringify(dateRangeContext) === JSON.stringify(initialDateRange)) {
+      newDateRange.setNewReset();
+    }
+
+    if (
+      isReload === true &&
+      JSON.stringify(dateRangeContext) === JSON.stringify(initialDateRange)
+    ) {
+      newDateRange.setIsReloadReset();
+    }
+  }, [isNew, dateRangeContext, initialDateRange, newDateRange]);
+
+  useEffect(() => {
+    // Check if the page is reloaded (F5)
+    if (performance.navigation.type === 1) {
+      newDateRange.setIsReload();
+    }
+  }, []);
 
   useEffect(() => {
     if (JSON.stringify(dateRangeContext) === JSON.stringify(initialDateRangeValue)) {

@@ -11,6 +11,7 @@ import { FieldValues, SubmitHandler, UseFormRegister, useForm } from 'react-hook
 import useAxiosAuthClient from '@/app/hooks/useAxiosAuthClient';
 import InputComponent from '../input/Input';
 import UploadContractApartment from './UploadContractApartment';
+import useCreateApartmentRegister from '@/app/hooks/useCreateApartmentRegister';
 
 export const type = [
   {
@@ -280,6 +281,8 @@ const StepCreateApartmentRegister: React.FC<StepCreateApartmentRegisterProps> = 
   const router = useRouter();
   const [ownershipType, setOwnershipType] = useState(''); // Thêm state để lưu lựa chọn của người dùng
   const [isLoading, setIsLoading] = useState(false);
+  const createApartmentRegister = useCreateApartmentRegister();
+  const user = createApartmentRegister.user;
   const [file, setFile] = useState<any[]>([]);
   const [resortId, setResortId] = useState<any>();
   const [properties, setProperties] = useState<any[]>([]);
@@ -386,46 +389,48 @@ const StepCreateApartmentRegister: React.FC<StepCreateApartmentRegisterProps> = 
   }, [propertyValue, file]);
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    setIsLoading(true);
-    const formData = new FormData();
+    if (user !== null) {
+      setIsLoading(true);
+      const formData = new FormData();
 
-    const coOwnerId = {
-      propertyId: data.propertyId as number,
-      // userId: currentUser.userId as number,
-      roomId: data.roomId,
-    };
-    const coOwner = {
-      endTime: typeValue === 'DEEDED' ? null : endYear,
-      startTime: typeValue === 'DEEDED' ? null : startYear,
-      type: typeValue,
-      timeFrames: weekNumberValue?.map((element: any) => ({ weekNumber: element as number })),
-    };
-    const coOwnerIdBlob = new Blob([JSON.stringify(coOwnerId)], {
-      type: 'application/json',
-    });
-    const coOwnerBlob = new Blob([JSON.stringify(coOwner)], {
-      type: 'application/json',
-    });
-    formData.append('coOwnerId', coOwnerIdBlob);
-    formData.append('coOwner', coOwnerBlob);
-    file.forEach((element) => {
-      formData.append('contractImages', element);
-    });
-
-    axiosAuthClient
-      .post('https://holiday-swap.click/api/co-owners', formData)
-      .then(() => {
-        toast.success('Create ownership success!');
-        setOpenModal(false);
-        reset();
-      })
-      .catch((response) => {
-        toast.error(response.response.data.message);
-        setOpenModal(false);
-      })
-      .finally(() => {
-        setIsLoading(false);
+      const coOwnerId = {
+        propertyId: data.propertyId as number,
+        userId: user.userId,
+        roomId: data.roomId,
+      };
+      const coOwner = {
+        endTime: typeValue === 'DEEDED' ? null : endYear,
+        startTime: typeValue === 'DEEDED' ? null : startYear,
+        type: typeValue,
+        timeFrames: weekNumberValue?.map((element: any) => ({ weekNumber: element as number })),
+      };
+      const coOwnerIdBlob = new Blob([JSON.stringify(coOwnerId)], {
+        type: 'application/json',
       });
+      const coOwnerBlob = new Blob([JSON.stringify(coOwner)], {
+        type: 'application/json',
+      });
+      formData.append('coOwnerId', coOwnerIdBlob);
+      formData.append('coOwner', coOwnerBlob);
+      contractImage.forEach((element) => {
+        formData.append('contractImages', element);
+      });
+
+      axiosAuthClient
+        .post('https://holiday-swap.click/api/co-owners', formData)
+        .then(() => {
+          toast.success('Create ownership success!');
+          setOpenModal(false);
+          reset();
+        })
+        .catch((response) => {
+          toast.error(response.response.data.message);
+          setOpenModal(false);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
   };
 
   const next = () => {

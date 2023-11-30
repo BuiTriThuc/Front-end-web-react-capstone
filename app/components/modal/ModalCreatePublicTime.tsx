@@ -19,6 +19,8 @@ import isoWeek from 'dayjs/plugin/isoWeek';
 import weekday from 'dayjs/plugin/weekday';
 import ModalCreate from './ModalCreate';
 
+dayjs.extend(isoWeek);
+
 const initialDateRange = {
   startDate: new Date(),
   endDate: new Date(),
@@ -45,28 +47,35 @@ export default function ModalCreatePublicTime() {
 
   useEffect(() => {
     if (detailCoOwner) {
-      setTimeFramesId(detailCoOwner.timeFrames[0].id);
+      setTimeFramesId(detailCoOwner?.timeFrames[0]?.id);
     }
   }, [detailCoOwner]);
 
   const getWeekDates = (weekNumber: number, year: number) => {
-    const januaryFirst = new Date(year, 0, 1); // January is month 0 in JavaScript
-    const weekStart = startOfWeek(januaryFirst, { weekStartsOn: 1 }); // Assuming your week starts on Monday
+    // const januaryFirst = new Date(year, 0, 1); // January is month 0 in JavaScript
+    // const weekStart = startOfWeek(januaryFirst, { weekStartsOn: 1 }); // Assuming your week starts on Monday
 
-    // Calculate the number of days to add to reach the desired week
-    const daysToAdd = (weekNumber) * 7;
+    // // Calculate the number of days to add to reach the desired week
+    // const daysToAdd = (weekNumber - 1) * 7;
 
-    const startDate = new Date(weekStart);
-    startDate.setDate(weekStart.getDate() + daysToAdd);
+    // const startDate = new Date(weekStart);
+    // startDate.setDate(weekStart.getDate() + daysToAdd);
 
-    const endDate = new Date(startDate);
-    endDate.setDate(startDate.getDate() + 6); // A week is 7 days
+    // const endDate = new Date(startDate);
+    // endDate.setDate(startDate.getDate() + 6); // A week is 7 days
 
-    setDateRange({ ...dateRange, startDate: startDate, endDate: endDate });
+
+
+    const startDate = dayjs().year(year).isoWeek(weekNumber).startOf("isoWeek");
+    const endDate = dayjs().year(year).isoWeek(weekNumber).endOf("isoWeek");
+
+   
+
+     setDateRange({ ...dateRange, startDate: startDate.toDate(), endDate: endDate.toDate() });
     setPublicDateRange({
       ...publicDateRange,
-      startDate: startDate,
-      endDate: endDate,
+      startDate: startDate.toDate(),
+      endDate: endDate.toDate(),
     });
   };
 

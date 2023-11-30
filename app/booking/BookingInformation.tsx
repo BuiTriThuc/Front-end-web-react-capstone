@@ -14,6 +14,7 @@ import toast from 'react-hot-toast';
 import { useDateRange } from '../apartment/DateRangeContext';
 import { useGuest } from '../apartment/GuestContext';
 import { Button, Modal } from 'flowbite-react';
+import useNewDateRange from '../hooks/useNewDateRange';
 
 interface BookingInformationProps {
   totalGuest?: any;
@@ -35,6 +36,7 @@ const BookingInformation: React.FC<BookingInformationProps> = ({
   const router = useRouter();
   const [totalGuestValue, setTotalGuestValue] = useState(totalGuest);
   const [openModal, setOpenModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const valueDateJson = JSON.parse(dateRangeBooking);
   const dateRangeJson = JSON.parse(dateRange);
   const [dateRanges, setDateRanges] = useState({
@@ -53,6 +55,8 @@ const BookingInformation: React.FC<BookingInformationProps> = ({
 
   const editDateBookingModal = useEditDateBookingModal();
   const editGuestBookingModal = useEditGuestBookingModal();
+  const newDateRange = useNewDateRange();
+  const isNew = newDateRange.isNew;
   const isSave = editGuestBookingModal.isSave;
   const {
     register,
@@ -61,6 +65,7 @@ const BookingInformation: React.FC<BookingInformationProps> = ({
   } = useForm<FieldValues>();
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
+    setIsLoading(true);
     const bookingData = {
       availableTimeId: availableTimeId,
       userId: userId,
@@ -83,6 +88,9 @@ const BookingInformation: React.FC<BookingInformationProps> = ({
       })
       .catch((response) => {
         toast.error(response.response.data.message);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
@@ -109,7 +117,10 @@ const BookingInformation: React.FC<BookingInformationProps> = ({
       <div className="flex flex-col w-full">
         <div className="flex flex-row items-center">
           <div
-            onClick={() => router.back()}
+            onClick={() => {
+              newDateRange.setBack();
+              router.back();
+            }}
             className="p-3 rounded-full bg-transparent hover:bg-gray-300 cursor-pointer"
           >
             <FiChevronLeft size={20} />
@@ -124,7 +135,7 @@ const BookingInformation: React.FC<BookingInformationProps> = ({
             <div className="flex flex-col gap-2">
               <div className="text-base text-black font-semibold">Dates</div>
               <div className="text-gray-600">
-                {format(dateRangeContext.startDate, 'd MMM')} - {' '}
+                {format(dateRangeContext.startDate, 'd MMM')} -{' '}
                 {format(dateRangeContext.endDate, 'd MMM yyyy')}
               </div>
             </div>
@@ -248,7 +259,12 @@ const BookingInformation: React.FC<BookingInformationProps> = ({
           </div>
         </Modal.Body>
         <Modal.Footer className="flex justify-end">
-          <Button color="blue" className="font-bold text-lg" onClick={handleSubmit(onSubmit)}>
+          <Button
+            disabled={isLoading}
+            color="blue"
+            className="font-bold text-lg"
+            onClick={handleSubmit(onSubmit)}
+          >
             Booking
           </Button>
           <Button color="gray" className="text-lg" onClick={() => setOpenModal(false)}>
