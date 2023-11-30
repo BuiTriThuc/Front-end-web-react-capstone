@@ -162,6 +162,7 @@ export interface User {
   dob: number[];
   phone: string;
   status: string;
+  avatar?: string;
   role: {
     roleId: number;
     name: string;
@@ -253,6 +254,10 @@ export interface StayDataType {
   saleOff?: string | null;
   isAds: boolean | null;
   roomSize: string | null;
+  propertyView?: string | null;
+  resortName?: string | null;
+  ownerName?: string | null;
+  ownerAvatar?: string | null;
   map: {
     lat: number;
     lng: number;

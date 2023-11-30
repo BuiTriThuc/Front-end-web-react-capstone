@@ -105,7 +105,9 @@ const ConversationList: React.FC<ConversationListProps> = ({ initialItems, curre
         isOpen={isModelOpen}
         onClose={() => {
           setIsModelOpen(false);
-          setLatestElement();
+        }}
+        onSuccess={()=>{
+          fetchConversationData();
         }}
         users={users}
         currentUser={currentUser}

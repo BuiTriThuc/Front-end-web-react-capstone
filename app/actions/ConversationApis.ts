@@ -30,6 +30,8 @@ const ConversationApis = {
     conversationName,
     userIds,
   }),
+  getContactWithOwner: (ownerId: string):Promise<Conversation> => AxiosClient.get(`/conversation/current-user/contact/${ownerId}`),
+  createCurrentUserConversation: (ownerId: string): Promise<Conversation> => AxiosClient.post(`/conversation/current-user/contact/${ownerId}`),
 };
 
 export default ConversationApis;

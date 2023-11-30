@@ -39,6 +39,10 @@ function mapApartmentToStayCard(
         lat: apartmentForRent.resort.latitude,
         lng: apartmentForRent.resort.longitude,
       },
+      propertyView: apartmentForRent.property.propertyView.propertyViewName,
+      resortName: apartmentForRent.resort.resortName,
+      ownerName: apartmentForRent.user.username,
+      ownerAvatar: apartmentForRent.user?.avatar,
     } as unknown as StayDataType;
   });
 }
@@ -51,7 +55,7 @@ const MainMap: React.FC<MainMapProps> = ({ data }) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const params = useSelector((state: any) => state.apartmentForRent.searchParams);
-  const [coordinates, setCoordinates] = useState<Coords>({ lat: 10.200809, lng: 103.96685 });
+  const [coordinates, setCoordinates] = useState<Coords | undefined>({ lat: 10.200809, lng: 103.96685 });
   const [places, setPlaces] = useState<StayDataType[]>([]);
   const [Bounds, setBounds] = useState({ ne: { lat: 0, lng: 0 }, sw: { lat: 0, lng: 0 } });
   const [currentHoverID, setCurrentHoverID] = useState<string | number>(-1);
@@ -96,7 +100,7 @@ const MainMap: React.FC<MainMapProps> = ({ data }) => {
                   onMouseEnter={() => setCurrentHoverID(item.id)}
                   onMouseLeave={() => setCurrentHoverID(-1)}
                 >
-                  <PropertyCardH data={item} />
+                  <PropertyCardH data={item} setCoordinates={setCoordinates}/>
                 </div>
               ))}
             </div>
@@ -125,7 +129,7 @@ const MainMap: React.FC<MainMapProps> = ({ data }) => {
                 /> */}
         {/* --- */}
         <div className="absolute bottom-5 left-3 lg:bottom-auto lg:top-2.5 py-1 px-1 bg-white shadow-xl z-10 rounded-2xl min-w-fit lg:w-[25%]">
-          <LocationInput setPlaceId={setPlaceId} className="text-xs xl:text-sm text-neutral-800" />
+          <LocationInput setPlaceId={setPlaceId} setCoordinates={setCoordinates} className="text-xs xl:text-sm text-neutral-800" />
         </div>
 
         <div className="absolute bottom-5 left-3 lg:bottom-auto lg:top-2.5 lg:left-1/2 transform lg:-translate-x-1/2 py-2 px-4 bg-white shadow-xl z-10 rounded-2xl min-w-max">
@@ -147,7 +151,8 @@ const MainMap: React.FC<MainMapProps> = ({ data }) => {
           }}
           // defaultCenter={coordinates}
           // center={coordinates}
-          defaultCenter={places[0]?.map ?? coordinates}
+          defaultCenter={coordinates}
+          center={coordinates}
           defaultZoom={12}
           yesIWantToUseGoogleMapApiInternals
           // margin={[50,50,50,50]}

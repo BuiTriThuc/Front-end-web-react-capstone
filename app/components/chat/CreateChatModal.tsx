@@ -18,9 +18,10 @@ type Props = {
   isOpen?: boolean;
   users?: User[];
   currentUser?: Object | any | null;
+  onSuccess: () => void;
 };
 
-function GroupChatModal({ users, onClose, isOpen, currentUser }: Props) {
+function GroupChatModal({ users, onClose, isOpen, currentUser, onSuccess }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const {
@@ -45,6 +46,7 @@ function GroupChatModal({ users, onClose, isOpen, currentUser }: Props) {
       value: number,
       label: string,
     }) => m.value), Number(currentUser?.userId)]).then((response) => {
+      onSuccess();
       router.refresh();
       onClose();
     }).catch((err) => {
