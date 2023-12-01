@@ -51,7 +51,7 @@ function MemberSelect({ label, value, options, disabled, onChange }: Props) {
           menuPortalTarget={document.body}
           styles={colorStyles}
           isSearchable={true}
-          filterOption={(option: OptionType, inputValue) => {
+          filterOption={(option: FilterOptionOption<OptionType>, inputValue: string) => {
             const { label = '', avatar = '', value = 0 } = option?.data || {};
             return label.toLowerCase().includes(inputValue.toLowerCase());
           }}
