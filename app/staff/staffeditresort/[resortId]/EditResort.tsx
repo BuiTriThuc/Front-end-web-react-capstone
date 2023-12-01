@@ -21,7 +21,12 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
-import { Place, createContextHandler, createContextHandlerAdministrationLevel, mapPlaceToLocation } from '@/app/staff/createresort/CreateResort';
+import {
+  Place,
+  createContextHandler,
+  createContextHandlerAdministrationLevel,
+  mapPlaceToLocation,
+} from '@/app/staff/createresort/CreateResort';
 
 mapboxgl.accessToken =
   'pk.eyJ1IjoiaHVuZ3BkMTcwNTAxIiwiYSI6ImNsbmMycGJldjBoNWUyeXBnZXM3aXhhYXEifQ.H-6U4cHRC5mRfJKH4GI0qQ';
@@ -38,13 +43,18 @@ interface EditResortProps {
   fetchLocation: Place;
 }
 
-const EditResort: React.FC<EditResortProps> = ({ resortDetail, amineties, propertyTypes, fetchLocation }) => {
-  const MAPBOX_TOKEN = process.env.MAPBOX_TOKEN
+const EditResort: React.FC<EditResortProps> = ({
+  resortDetail,
+  amineties,
+  propertyTypes,
+  fetchLocation,
+}) => {
+  const MAPBOX_TOKEN = process.env.MAPBOX_TOKEN;
   const [resortNameValue, setResortNameValue] = useState(resortDetail.resortName);
   const [isLoading, setIsLoading] = useState(false);
   const [mapLoaded, setMapLoaded] = useState(false);
   const [resortDescriptionValue, setResortDescriptionValue] = useState(
-    resortDetail.resortDescription,
+    resortDetail.resortDescription
   );
   const [images, setImages] = useState<any>(resortDetail.resortImages);
   const [oldImages, setOldImages] = useState<any[]>(resortDetail.resortImages);
@@ -119,7 +129,9 @@ const EditResort: React.FC<EditResortProps> = ({ resortDetail, amineties, proper
       zoom: 14,
     });
 
-    resortDetail?.longitude && resortDetail?.latitude && mapboxglMap.setCenter([resortDetail?.longitude, resortDetail?.latitude]);
+    resortDetail?.longitude &&
+      resortDetail?.latitude &&
+      mapboxglMap.setCenter([resortDetail?.longitude, resortDetail?.latitude]);
     const marker = new mapboxgl.Marker({ draggable: true, color: 'orange' });
 
     const geocoder = new MapboxGeocoder({
@@ -128,16 +140,19 @@ const EditResort: React.FC<EditResortProps> = ({ resortDetail, amineties, proper
       reverseGeocode: true,
       marker: false,
     });
-    marker && resortDetail?.longitude && resortDetail?.latitude && marker.setLngLat([resortDetail?.longitude, resortDetail?.latitude]).addTo(mapboxglMap);
+    marker &&
+      resortDetail?.longitude &&
+      resortDetail?.latitude &&
+      marker.setLngLat([resortDetail?.longitude, resortDetail?.latitude]).addTo(mapboxglMap);
     mapboxglMap.addControl(geocoder, 'top-left');
-    geocoder.setCountries('VN');//ISO 3166-1 alpha-2 country codes, separated by commas
+    geocoder.setCountries('VN'); //ISO 3166-1 alpha-2 country codes, separated by commas
     geocoder.on('result', (e: any) => {
       setLocation(e.result as Place);
       setLocationContextLength(e.result.context.length);
       marker.setLngLat(e.result.geometry.coordinates).addTo(mapboxglMap);
     });
     setLocation(fetchLocation);
-    setLocationContextLength(fetchLocation?.context?.length??3);
+    setLocationContextLength(fetchLocation?.context?.length ?? 3);
     marker.on('dragend', () => {
       const lngLat = marker.getLngLat();
       setLocation((prev) => {
@@ -182,45 +197,61 @@ const EditResort: React.FC<EditResortProps> = ({ resortDetail, amineties, proper
   };
 
   return (
-    <div className='py-10'>
-      <div className='mb-14'>
-        <div className='mb-3'>Upload Image*</div>
+    <div className="py-10">
+      <div className="w-[700px]">
+        <div className=" flex flex-row mb-10">
+          <InputComponent
+            value={resortNameValue}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setResortNameValue(e.target.value)}
+            id="resortName"
+            register={register}
+            errors={errors}
+            label="Resort Name"
+          />
+        </div>
+        <div className=" flex flex-col mb-14">
+          <label>Resort description</label>
+          <Textarea
+            id="resortDescription"
+            value={resortDescriptionValue}
+            placeholder="Leave a comment..."
+            required
+            rows={10}
+            {...register('resortDescription', {
+              onChange: (e) => {
+                setResortDescriptionValue(e.target.value);
+              },
+            })}
+          />
+        </div>
+      </div>
+      <div className="mb-14">
+        <div className="mb-3">Upload Image*</div>
         <UploadImageResortEdit
           resortImages={images}
           handleAddOldImages={handleAddOldImages}
           handeChangeNewImages={handeChangeNewImages}
         />
       </div>
-      <div className='w-[700px]'>
-        <div className=' flex flex-row mb-10'>
-          <InputComponent
-            value={resortNameValue}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => setResortNameValue(e.target.value)}
-            id='resortName'
-            register={register}
-            errors={errors}
-            label='Resort Name'
-          />
+      <div className="w-[700px]">
+        <div className=" flex flex-row mb-14">
+          <div className="w-[277px] text-gray-700">Address*</div>
+          <div id="map" className="w-full h-96"></div>
         </div>
-
-        <div className=' flex flex-row mb-14'>
-          <div className='w-[277px] text-gray-700'>Address*</div>
-          <div id='map' className='w-full h-96'></div>
-        </div>
-        <FormItem label='Country' className='hidden'>
+        <FormItem label="Country" className="hidden">
           <Input
-            placeholder='...'
+            placeholder="..."
             value={location?.context?.find((ctx) => ctx.id.startsWith('country.'))?.text}
             onChange={(e: any) => setLocation((prevState) => handleCountryChange(e, prevState))}
           />
         </FormItem>
-        <FormItem label='Address Line'>
+        <FormItem label="Address Line">
           <Input
-            placeholder='...'
+            placeholder="..."
             value={location?.place_name
               ?.replace(
                 ` ${location?.context?.find((ctx) => ctx.id.startsWith('postcode.'))?.text ?? ''},`,
-                '',
+                ''
               )
               .replace(`${location?.text ?? ''},`, '')
               .trim()}
@@ -234,8 +265,8 @@ const EditResort: React.FC<EditResortProps> = ({ resortDetail, amineties, proper
             }
           />
         </FormItem>
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-5'>
-          <FormItem label='District/City'>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-5">
+          <FormItem label="District/City">
             {locationContextLength && (
               <Input
                 value={location?.context[locationContextLength - 3]?.text ?? ''}
@@ -245,7 +276,7 @@ const EditResort: React.FC<EditResortProps> = ({ resortDetail, amineties, proper
               />
             )}
           </FormItem>
-          <FormItem label='Province/State'>
+          <FormItem label="Province/State">
             {locationContextLength && (
               <Input
                 value={location?.context[locationContextLength - 2]?.text ?? ''}
@@ -255,15 +286,15 @@ const EditResort: React.FC<EditResortProps> = ({ resortDetail, amineties, proper
               />
             )}
           </FormItem>
-          <FormItem label='Postal code'>
+          <FormItem label="Postal code">
             <Input
               value={location?.context?.find((ctx) => ctx.id.startsWith('postcode.'))?.text}
               onChange={(e: any) => setLocation((prevState) => handlePostcodeChange(e, prevState))}
             />
           </FormItem>
         </div>
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-5'>
-          <FormItem label='Longtitude'>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-5">
+          <FormItem label="Longtitude">
             <Input
               value={location?.geometry?.coordinates?.[0]}
               onChange={(e: any) =>
@@ -283,7 +314,7 @@ const EditResort: React.FC<EditResortProps> = ({ resortDetail, amineties, proper
               }
             />
           </FormItem>
-          <FormItem label='Latitude'>
+          <FormItem label="Latitude">
             <Input
               value={location?.geometry?.coordinates?.[1]}
               onChange={(e: any) =>
@@ -304,9 +335,9 @@ const EditResort: React.FC<EditResortProps> = ({ resortDetail, amineties, proper
             />
           </FormItem>
         </div>
-        <div className='mb-10'>
+        <div className="mb-10">
           <Label>Detailed address</Label>
-          <span className='block w-full mt-1 text-sm text-neutral-500 dark:text-neutral-400'>
+          <span className="block w-full mt-1 text-sm text-neutral-500 dark:text-neutral-400">
             {mapLoaded && location && (
               <span>
                 {`${location?.text ?? ''}, ` +
@@ -315,7 +346,7 @@ const EditResort: React.FC<EditResortProps> = ({ resortDetail, amineties, proper
                       ` ${
                         location?.context?.find((ctx) => ctx.id.startsWith('postcode.'))?.text ?? ''
                       },`,
-                      '',
+                      ''
                     )
                     .replace(`${location?.text ?? ''},`, '')
                     .trim()}
@@ -324,7 +355,7 @@ const EditResort: React.FC<EditResortProps> = ({ resortDetail, amineties, proper
           </span>
         </div>
 
-        <div className='flex flex-row items-center mb-10'>
+        <div className="flex flex-row items-center mb-10">
           <InputAmenitiesType
             amenities={amineties}
             handleAmenitiesChange={handleAmenitiesChange}
@@ -332,7 +363,7 @@ const EditResort: React.FC<EditResortProps> = ({ resortDetail, amineties, proper
           />
         </div>
 
-        <div className='flex flex-row items-center mb-10'>
+        <div className="flex flex-row items-center mb-10">
           <InputCreatePropertyType
             propertyTypesResort={propertyTypes}
             handlePropertiesChange={handlePropertiesChange}
@@ -340,25 +371,10 @@ const EditResort: React.FC<EditResortProps> = ({ resortDetail, amineties, proper
           />
         </div>
 
-        <div className=' flex flex-col mb-14'>
-          <label>Resort description</label>
-          <Textarea
-            id='resortDescription'
-            value={resortDescriptionValue}
-            placeholder='Leave a comment...'
-            required
-            rows={10}
-            {...register('resortDescription', {
-              onChange: (e) => {
-                setResortDescriptionValue(e.target.value);
-              },
-            })}
-          />
-        </div>
         <div>
           <button
             onClick={handleSubmit(onSubmit)}
-            className='bg-[#5C98F2] px-4 py-3 mb-10 rounded-md text-white hover:bg-blue-500'
+            className="bg-[#5C98F2] px-4 py-3 mb-10 rounded-md text-white hover:bg-blue-500"
           >
             Update Resort
           </button>

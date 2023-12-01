@@ -30,9 +30,9 @@ const InputCreatePropertyType: React.FC<InputCreatePropertyTypeProps> = ({
 
   return (
     <div className="flex flex-row gap-2">
-      <div>In room amenities</div>
+      <div>Property type</div>
       <div className="grid md:grid-cols-3 grid-cols-1 gap-6 p-3 border border-slate-300 rounded-md">
-        {propertyTypesResort.content.map((item: any, index: number) => (
+        {propertyTypesResort.map((item: any, index: number) => (
           <div key={item.id} className="flex flex-row items-center gap-2">
             <Checkbox
               onChange={handleChangeProperties}
@@ -40,7 +40,7 @@ const InputCreatePropertyType: React.FC<InputCreatePropertyTypeProps> = ({
               color={'#5C98F2'}
               value={item.id}
             />
-            <Label htmlFor="promotion">{item.inRoomAmenityName}</Label>
+            <Label htmlFor="promotion">{item.propertyTypeName}</Label>
           </div>
         ))}
       </div>

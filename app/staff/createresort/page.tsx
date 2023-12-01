@@ -12,7 +12,8 @@ export const metadata = {
 
 export default async function CreateResortPage() {
   const amineties = await GetAmenityResortType();
-  const propertyTypes = await GetInRoomAmenities();
+  // const propertyTypes = await GetInRoomAmenities();
+  const propertyTypes = await GetPropertyType();
   return requireAuth(
     <CreateResort amenitiesArray={amineties} propertyTypesArray={propertyTypes} />,
     [3]
