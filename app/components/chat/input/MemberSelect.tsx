@@ -44,8 +44,8 @@ function MemberSelect({ label, value, options, disabled, onChange }: Props) {
           isSearchable={true}
           filterOption={
             (option, inputValue) => {
-              return option?.data?.label?.toString()?.toLowerCase()
-                ?.includes(inputValue.toLowerCase())
+              const optionLabel = option?.data?.label as string;
+              return optionLabel?.toLowerCase()?.includes(inputValue.toLowerCase());
             }
           }
           classNames={{
