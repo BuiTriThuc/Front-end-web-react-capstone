@@ -1,18 +1,8 @@
 'use client';
 
-import ReactSelect,{ StylesConfig } from 'react-select';
+import ReactSelect, { StylesConfig } from 'react-select';
 import Image from 'next/image';
-import { FilterOptionOption } from 'react-select/dist/declarations/src/filters';
 
-interface OptionType {
-  readonly label: string;
-  readonly value: string;
-  data?: {
-    label?: string;
-    avatar?: string;
-    value?: number;
-  };
-}
 
 type Props = {
   label: string;
@@ -53,9 +43,9 @@ function MemberSelect({ label, value, options, disabled, onChange }: Props) {
           menuPortalTarget={document.body}
           styles={colorStyles}
           isSearchable={true}
-          filterOption={(option: { data?: { label?: string } }, inputValue: string) => {
-            const { label = '' } = option?.data || {};
-            return label.toLowerCase().includes(inputValue.toLowerCase());
+          filterOption={(option, inputValue) => {
+            const label = option?.data?.label ?? ''
+            return label?.toString().toLowerCase().includes(inputValue.toLowerCase());
           }}
           classNames={{
             control: () => 'text-sm',
