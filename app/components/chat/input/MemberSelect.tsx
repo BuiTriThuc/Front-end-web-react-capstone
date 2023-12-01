@@ -13,6 +13,13 @@ type Props = {
   avatar?: string;
 };
 
+const filterOptions = (
+  option: { label: string; value: string; data: any },
+  input: string
+) => {
+  return option?.data?.label.toLowerCase().includes(input.toLowerCase());
+};
+
 function MemberSelect({ label, value, options, disabled, onChange }: Props) {
   const colorStyles: StylesConfig = {
     option: (styles) => ({
@@ -43,10 +50,7 @@ function MemberSelect({ label, value, options, disabled, onChange }: Props) {
           menuPortalTarget={document.body}
           styles={colorStyles}
           isSearchable={true}
-          filterOption={(option, inputValue) => {
-            const label = option?.data?.label ?? ''
-            return label?.toString().toLowerCase().includes(inputValue.toLowerCase());
-          }}
+          filterOption={filterOptions}
           classNames={{
             control: () => 'text-sm',
           }}
