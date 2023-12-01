@@ -35,7 +35,9 @@ const initialState = {
     listOfInRoomAmenity: [],
     listOfPropertyView: [],
     listOfPropertyType: [],
-    sortBy: 'id',
+    pageSize: 1000,
+    pageNo: 0,
+    sortBy: 'startTime',
     sortDirection: 'asc',
   },
   guest: {
