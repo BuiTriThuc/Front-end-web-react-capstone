@@ -5,9 +5,13 @@ import Image from 'next/image';
 import { FilterOptionOption } from 'react-select/dist/declarations/src/filters';
 
 interface OptionType {
-  label?: string;
-  avatar?: string;
-  value?: number;
+  readonly label: string;
+  readonly value: string;
+  data?: {
+    label?: string;
+    avatar?: string;
+    value?: number;
+  };
 }
 
 type Props = {
@@ -49,8 +53,8 @@ function MemberSelect({ label, value, options, disabled, onChange }: Props) {
           menuPortalTarget={document.body}
           styles={colorStyles}
           isSearchable={true}
-          filterOption={(option: FilterOptionOption<OptionType>, inputValue: string) => {
-            const { label = '', avatar = '', value = 0 } = option?.data || {};
+          filterOption={(option: { data?: { label?: string } }, inputValue: string) => {
+            const { label = '' } = option?.data || {};
             return label.toLowerCase().includes(inputValue.toLowerCase());
           }}
           classNames={{
