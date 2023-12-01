@@ -1,6 +1,6 @@
 'use client';
 
-import ReactSelect, { StylesConfig } from 'react-select';
+import ReactSelect,{ StylesConfig } from 'react-select';
 import Image from 'next/image';
 
 type Props = {
@@ -41,6 +41,13 @@ function MemberSelect({ label, value, options, disabled, onChange }: Props) {
           options={options}
           menuPortalTarget={document.body}
           styles={colorStyles}
+          isSearchable={true}
+          filterOption={
+            (option, inputValue) => {
+              return option?.data?.label?.toString()?.toLowerCase()
+                ?.includes(inputValue.toLowerCase())
+            }
+          }
           classNames={{
             control: () => 'text-sm',
           }}
