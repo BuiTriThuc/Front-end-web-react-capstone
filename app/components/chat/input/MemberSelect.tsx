@@ -2,15 +2,13 @@
 
 import ReactSelect,{ StylesConfig } from 'react-select';
 import Image from 'next/image';
+import { FilterOptionOption } from 'react-select/dist/declarations/src/filters';
 
 interface OptionType {
-  data?: {
-    label?: string;
-    avatar?: string;
-    value?: number;
-  };
+  label?: string;
+  avatar?: string;
+  value?: number;
 }
-
 
 type Props = {
   label: string;
