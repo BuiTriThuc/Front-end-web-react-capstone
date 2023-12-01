@@ -42,12 +42,10 @@ function MemberSelect({ label, value, options, disabled, onChange }: Props) {
           menuPortalTarget={document.body}
           styles={colorStyles}
           isSearchable={true}
-          filterOption={
-            (option, inputValue) => {
-              const optionLabel = option?.data?.label as string;
-              return optionLabel?.toLowerCase()?.includes(inputValue.toLowerCase());
-            }
-          }
+          filterOption={(option, inputValue) => {
+            const { label = '', avatar = '', value = 0 } = option?.data || {};
+            return label.toLowerCase().includes(inputValue.toLowerCase());
+          }}
           classNames={{
             control: () => 'text-sm',
           }}
