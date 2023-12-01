@@ -14,6 +14,7 @@ import { AiFillStar } from 'react-icons/ai';
 import { BsShieldFillCheck } from 'react-icons/bs';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import ConversationApis from '@/app/actions/ConversationApis';
 
 const { Text } = Typography;
 
@@ -55,6 +56,21 @@ const ApartmentDetailBody: React.FC<ApartmentDetailBodyProps> = ({
     const end = new Date(endDate);
     const nightDifference = differenceInDays(end, start);
     return nightDifference;
+  };
+  const handleContactOwner = (ownerId: string) => {
+    ConversationApis.getContactWithOwner(ownerId)
+      .then((res) => {
+        res?.conversationId && router.push(`/chat/${res.conversationId}`);
+      })
+      .catch((err) => {
+        ConversationApis.createCurrentUserConversation(ownerId)
+          .then((res) => {
+            router.push(`/chat/${res.conversationId}`);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      });
   };
 
   const router = useRouter();
@@ -164,18 +180,18 @@ const ApartmentDetailBody: React.FC<ApartmentDetailBodyProps> = ({
             {calculateNightDifference(dateRange.startDate, dateRange.endDate) === 0
               ? 'Select checkout date'
               : `${
-                  calculateNightDifference(dateRange.startDate, dateRange.endDate) === 1
-                    ? `${calculateNightDifference(dateRange.startDate, dateRange.endDate)} night`
-                    : `${calculateNightDifference(dateRange.startDate, dateRange.endDate)} nights`
-                }`}
+                calculateNightDifference(dateRange.startDate, dateRange.endDate) === 1
+                  ? `${calculateNightDifference(dateRange.startDate, dateRange.endDate)} night`
+                  : `${calculateNightDifference(dateRange.startDate, dateRange.endDate)} nights`
+              }`}
           </div>
           <div className="text-gray-500">
             {new Date(dateRange.startDate).getTime() === new Date(dateRange.endDate).getTime()
               ? 'Add your travel dates for exact pricing'
               : `${format(new Date(dateRange.startDate), 'dd MMM yyyy')} - ${format(
-                  new Date(dateRange.endDate),
-                  'dd MMM yyyy'
-                )}`}
+                new Date(dateRange.endDate),
+                'dd MMM yyyy'
+              )}`}
           </div>
         </div>
         <div className="hidden md:block lg:block xl:block">
@@ -282,8 +298,8 @@ const ApartmentDetailBody: React.FC<ApartmentDetailBodyProps> = ({
           </div>
           <div className="mt-5">
             <div
-              onClick={() => router.push('/chat')}
-              className="hover:bg-hover rounded-md cursor-pointer px-4 py-2 bg-common text-white"
+              onClick={() => handleContactOwner(apartment?.user?.userId?.toString())}
+              className="hover:bg-hover rounded-md cursor-pointer px-4 py-2 bg-common text-white text-center"
             >
               Contact with owner
             </div>
