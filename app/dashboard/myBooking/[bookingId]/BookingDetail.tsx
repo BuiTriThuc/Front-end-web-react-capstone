@@ -29,12 +29,14 @@ const BookingDetail: React.FC<BookingDetailProps> = ({
   const createReviewModal = useCreateReviewModal();
 
   return (
-    <div className="grid md:grid-cols-2 py-8 gap-10">
+    <div className="grid md:grid-cols-2 pb-8 pt-4 gap-10">
       <div className="w-full h-full">
         {/* Title */}
         <div className="py-3">
           <div className="text-3xl font-bold">Your booking is confirmed!</div>
-          <div className="text-lg text-slate-500">You are going to {bookingDetail?.resortName}</div>
+          <div className="text-lg text-slate-500 mt-4">
+            You are going to <span className="font-bold">{bookingDetail?.resortName}</span>
+          </div>
         </div>
 
         {/* Information ownership */}
@@ -57,7 +59,7 @@ const BookingDetail: React.FC<BookingDetailProps> = ({
                 .slice(-2)
                 .join(', ')}
             </div>
-            <div className="text-slate-500">On HolidaySwap since 2015</div>
+            {/* <div className="text-slate-500">On HolidaySwap since 2015</div> */}
           </div>
         </div>
 
@@ -107,7 +109,7 @@ const BookingDetail: React.FC<BookingDetailProps> = ({
           <div className="flex flex-col text-lg text-slate-500">
             <div>{format(new Date(bookingDetail?.dateCheckOut), 'E')}, </div>
             <div>{format(new Date(bookingDetail?.dateCheckOut), 'MMM dd, yyyy')}</div>
-            <div>Check-in After 3PM</div>
+            <div>Check-out Before 12PM</div>
           </div>
         </div>
 
@@ -146,15 +148,24 @@ const BookingDetail: React.FC<BookingDetailProps> = ({
         {/* Information guest */}
         <div className="py-3">
           <div className="text-lg font-bold text-slate-600">Information Guest</div>
-          <div className="grid md:grid-cols-2 grid-cols-1 py-4">
+          <div className="grid md:grid-cols-2 grid-cols-1 py-4 gap-3">
             {bookingDetail?.userOfBooking.map((item: any, index: number) => (
-              <Card key={item.id} href="#" className="max-w-sm">
-                <p className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
-                  {item.fullName}
+              <div
+                key={item.id}
+                className="flex h-full flex-col justify-center gap-4 p-3 rounded-md bg-white shadow-lg"
+              >
+                <div>
+                  <p className="text-[18px] font-bold tracking-tight text-gray-900 dark:text-white overflow-hidden ">
+                    {item.fullName}
+                  </p>
+                </div>
+                <p className="font-normal text-gray-700 dark:text-gray-400  overflow-hidden">
+                  {item.email}
                 </p>
-                <p className="font-normal text-gray-700 dark:text-gray-400">{item.email}</p>
-                <p className="font-normal text-gray-700 dark:text-gray-400">{item.phoneNumber}</p>
-              </Card>
+                <p className="font-normal text-gray-700 dark:text-gray-400 overflow-hidden">
+                  {item.phoneNumber}
+                </p>
+              </div>
             ))}
           </div>
         </div>

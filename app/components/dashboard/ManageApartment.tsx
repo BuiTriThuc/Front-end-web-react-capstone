@@ -1,6 +1,6 @@
 'use client';
 import { Image } from 'antd';
-import React, { useState, useRef, Fragment } from 'react';
+import React, { useState, useRef, Fragment, useEffect } from 'react';
 import { AiOutlineCloseCircle } from 'react-icons/ai';
 import { FiEdit } from 'react-icons/fi';
 import EditPublicTime from '../managementApartment/EditPublicTime';
@@ -55,7 +55,21 @@ const ManageApartment: React.FC<ManageApartmentProps> = ({
   const [isOpenTimePublic, setIsOpenTimePublic] = useState(false);
   const [switchActive, setSwitchActive] = useState(true);
   const createModalPublicTime = useCreatePublicTimeModal();
+  const isCreated = createModalPublicTime.isCreated;
   const axiosAuthClient = useAxiosAuthClient();
+
+  useEffect(() => {
+    if (isCreated === true) {
+      const getData = async () => {
+        const detailCoOwner = await GetApproveOwnershipById({ slug });
+        if (detailCoOwner) {
+          setDetail(detailCoOwner);
+          createModalPublicTime.onCreatedReset();
+        }
+      };
+      getData();
+    }
+  }, [isCreated, createModalPublicTime]);
 
   const [isOpenTimePublicArr, setIsOpenTimePublicArr] = useState(
     new Array(detailCoOwner.timeFrames.length).fill(false)
@@ -85,9 +99,9 @@ const ManageApartment: React.FC<ManageApartmentProps> = ({
         .delete(`available-times/${id}`)
         .then(async () => {
           toast.success('Delete public time successfully!');
-          const newDetail = await GetApproveOwnershipById(slug);
-          if (newDetail) {
-            setDetail(newDetail);
+          const detailCoOwner = await GetApproveOwnershipById({ slug });
+          if (detailCoOwner) {
+            setDetail(detailCoOwner);
           }
         })
         .catch((response) => {
@@ -219,7 +233,8 @@ const ManageApartment: React.FC<ManageApartmentProps> = ({
                   </div>
                   <div className="flex flex-row items-center w-full justify-between py-4">
                     <div>
-                      Resort: <span className="text-common">Phu Quoc Resort VIP</span>
+                      Resort:{' '}
+                      <span className="text-common">{detail.property.resort.resortName}</span>
                     </div>
                   </div>
                   <div className="flex flex-row items-center w-full justify-between py-4">

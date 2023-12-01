@@ -18,6 +18,7 @@ import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import weekday from 'dayjs/plugin/weekday';
 import ModalCreate from './ModalCreate';
+import InputYear from '../input/InputYear';
 
 dayjs.extend(isoWeek);
 
@@ -64,14 +65,10 @@ export default function ModalCreatePublicTime() {
     // const endDate = new Date(startDate);
     // endDate.setDate(startDate.getDate() + 6); // A week is 7 days
 
+    const startDate = dayjs().year(year).isoWeek(weekNumber).startOf('isoWeek');
+    const endDate = dayjs().year(year).isoWeek(weekNumber).endOf('isoWeek');
 
-
-    const startDate = dayjs().year(year).isoWeek(weekNumber).startOf("isoWeek");
-    const endDate = dayjs().year(year).isoWeek(weekNumber).endOf("isoWeek");
-
-   
-
-     setDateRange({ ...dateRange, startDate: startDate.toDate(), endDate: endDate.toDate() });
+    setDateRange({ ...dateRange, startDate: startDate.toDate(), endDate: endDate.toDate() });
     setPublicDateRange({
       ...publicDateRange,
       startDate: startDate.toDate(),
@@ -103,7 +100,8 @@ export default function ModalCreatePublicTime() {
   };
 
   useEffect(() => {
-    if (timeFramesWeekNumber) {
+    const yearRegex = new RegExp(`^2\\d{3}$`);
+    if (timeFramesWeekNumber && !yearRegex.test(format(new Date(yearCreate), 'yyyy').trim())) {
       console.log('Check week', timeFramesWeekNumber);
       getWeekDates(timeFramesWeekNumber, yearCreate);
     }
@@ -150,6 +148,7 @@ export default function ModalCreatePublicTime() {
       .post(`https://holiday-swap.click/api/v1/available-times/${timeFramesId}`, body, config)
       .then(() => {
         toast.success('Create public success');
+        createPublicTime.onCreated();
         reset();
         createPublicTime.onClose();
       })
@@ -178,11 +177,28 @@ export default function ModalCreatePublicTime() {
   }, [timeFramesId]);
 
   const bodyContent = (
-    <div className="flex flex-col gap-4 overflow-x-hidden overflow-y-auto no-scrollbar h-[90%]">
+    <div className="flex flex-col gap-4 overflow-x-hidden overflow-y-auto no-scrollbar h-[100%]">
       <div className="grid grid-cols-1">
-        <InputComponent
+        <InputYear
           id="yearCreate"
           label="Year to create"
+          type="number"
+          min={
+            detailCoOwner?.startTime
+              ? new Date(detailCoOwner?.startTime).getFullYear()
+              : new Date().getFullYear()
+          }
+          max={
+            detailCoOwner?.endTime
+              ? new Date(detailCoOwner?.endTime).getFullYear()
+              : new Date().getFullYear() + 49
+          }
+          maxLength={4}
+          onKeyUp={(e: ChangeEvent<HTMLInputElement>) => {
+            if (Number(e.target.value) === 0) {
+              return 1;
+            }
+          }}
           value={yearCreate}
           register={register}
           onChange={(e: ChangeEvent<HTMLInputElement>) => setYearCreate(Number(e.target.value))}
@@ -223,6 +239,8 @@ export default function ModalCreatePublicTime() {
         <InputComponent
           id="pricePerNight"
           label="Price/Night"
+          type="number"
+          min={1}
           register={register}
           errors={errors}
           required

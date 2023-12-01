@@ -14,6 +14,7 @@ export default async function CreatePropertyPage() {
   const propertyViews = await GetPropertyView();
   const inRoomAmenities = await GetInRoomAmenities();
   const listResort = await GetListResort('0');
+
   return requireAuth(
     <CreateProperty
       propertyTypes={propertyTypes}

@@ -98,7 +98,7 @@ const ChartTotalPointYear = () => {
       <div className="font-bold text-xl text-black">
         Total point in year {dataTotalPoint?.slice(12, 13)}
       </div>
-      <div className="p-4 min-w-full h-[300px]">
+      <div className="p-4 min-w-full ">
         <Line options={options} data={data} />
       </div>
       <div className="flex flex-row w-full justify-end gap-3">
@@ -110,7 +110,7 @@ const ChartTotalPointYear = () => {
             }}
             type="button"
           >
-            <IoIosArrowDropleftCircle size={30} />
+            <IoIosArrowDropleftCircle color="#FFCA25" size={30} />
           </button>
         </FlowTooltip>
 
@@ -122,7 +122,7 @@ const ChartTotalPointYear = () => {
             }}
             type="button"
           >
-            <IoIosArrowDroprightCircle size={30} />
+            <IoIosArrowDroprightCircle color="#5C98F2" size={30} />
           </button>
         </FlowTooltip>
       </div>

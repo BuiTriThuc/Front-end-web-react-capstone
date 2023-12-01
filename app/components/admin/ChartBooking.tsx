@@ -109,7 +109,7 @@ const ChartBooking = () => {
             }}
             type="button"
           >
-            <IoIosArrowDropleftCircle size={30} />
+            <IoIosArrowDropleftCircle color="#FFCA25" size={30} />
           </button>
         </FlowTooltip>
 
@@ -121,7 +121,7 @@ const ChartBooking = () => {
             }}
             type="button"
           >
-            <IoIosArrowDroprightCircle size={30} />
+            <IoIosArrowDroprightCircle color="#5C98F2" size={30} />
           </button>
         </FlowTooltip>
       </div>

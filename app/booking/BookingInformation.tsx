@@ -15,6 +15,7 @@ import { useDateRange } from '../apartment/DateRangeContext';
 import { useGuest } from '../apartment/GuestContext';
 import { Button, Modal } from 'flowbite-react';
 import useNewDateRange from '../hooks/useNewDateRange';
+import InputPhone from '../components/input/InputPhone';
 
 interface BookingInformationProps {
   totalGuest?: any;
@@ -61,6 +62,7 @@ const BookingInformation: React.FC<BookingInformationProps> = ({
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<FieldValues>();
 
@@ -71,6 +73,7 @@ const BookingInformation: React.FC<BookingInformationProps> = ({
       userId: userId,
       checkInDate: format(dateRangeContext.startDate, 'yyyy-MM-dd'),
       checkOutDate: format(dateRangeContext.endDate, 'yyyy-MM-dd'),
+      numberOfGuest: totalGuestContext,
       userOfBookingRequests: guests.map((item, index) => ({
         email: data[`email${index}`], // Use the indexed email field
         fullName: data[`fullName${index}`], // Use the indexed full name field
@@ -205,6 +208,7 @@ const BookingInformation: React.FC<BookingInformationProps> = ({
                   register={register}
                   required
                   errors={errors}
+                  setValue={setValue}
                 />
                 <InputComponent
                   type="text"
@@ -213,16 +217,18 @@ const BookingInformation: React.FC<BookingInformationProps> = ({
                   register={register}
                   required
                   errors={errors}
+                  setValue={setValue}
                 />
               </div>
               <div className="grid grid-cols-1">
-                <InputComponent
+                <InputPhone
                   type="text"
                   label={`Phone Number`}
                   id={`phoneNumber${index}`}
                   register={register}
                   required
                   errors={errors}
+                  setValue={setValue}
                 />
               </div>
             </div>

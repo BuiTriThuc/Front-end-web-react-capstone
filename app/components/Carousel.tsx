@@ -46,7 +46,7 @@ const Carousel: React.FC<CarouselProps> = ({ slices }) => {
   }, []);
 
   return (
-    <div className="flex gap-4 justify-center">
+    <div className="flex gap-4 ">
       {' '}
       {/* Center the entire carousel */}
       <Swiper
@@ -67,7 +67,7 @@ const Carousel: React.FC<CarouselProps> = ({ slices }) => {
           {slices?.map((s: any, index: any) => (
             <SwiperSlide key={index}>
               <div
-                className="flex flex-row items-end justify-center min-w-auto"
+                className="flex flex-col items-center justify-end  "
                 onMouseEnter={() => handleMouseEnter(index)}
                 onMouseLeave={handleMouseLeave}
               >
@@ -77,7 +77,7 @@ const Carousel: React.FC<CarouselProps> = ({ slices }) => {
                     alt="destination"
                     height={700}
                     width="100%"
-                    className="object-cover rounded-xl relative"
+                    className="object-cover rounded-xl relative "
                     style={{ height: 500 }}
                   />
                 </div>

@@ -81,7 +81,7 @@ const ListApproveOwnership: React.FC<OwnershipProps> = ({ ownershipStaff }) => {
 
       let apiUrl = `https://holiday-swap.click/api/co-owners?pageNo=${
         currentPage - 1
-      }&pageSize=8&sortBy=property_id&sortDirection=desc`;
+      }&pageSize=8&sortDirection=desc`;
 
       // If search term is present, include it in the API call
       if (searchTerm) {
@@ -107,7 +107,7 @@ const ListApproveOwnership: React.FC<OwnershipProps> = ({ ownershipStaff }) => {
 
   useEffect(() => {
     fetchData();
-  }, [currentPage, totalPages]);
+  }, [searchTerm, currentPage, totalPages]);
 
   return (
     <div>
@@ -120,6 +120,16 @@ const ListApproveOwnership: React.FC<OwnershipProps> = ({ ownershipStaff }) => {
         <SelectRouterStaff />
       </div>
       <Fragment>
+        <div className="flex flex-row items-center gap-2 pb-5">
+          <div>Search by room ID</div>
+          <input
+            className="rounded-md"
+            type="text"
+            id="search"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
         <Table>
           <Table.Head>
             <Table.HeadCell className="w-[130px]">Property ID</Table.HeadCell>

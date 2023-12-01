@@ -15,7 +15,7 @@ export default async function DetailOwnershipApprovePage({ params }: { params: I
 
   const approveDetail = await GetApproveOwnershipById(params);
   const propertyDetail = await GetPropertyDetail(propertyId);
-  const userDetail = await GetUserById(userId);
+  const userDetail = await GetUserById({userId});
   return requireAuth(
     <DetailOwnershipApprove
       approveDetail={approveDetail}

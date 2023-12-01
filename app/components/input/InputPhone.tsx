@@ -13,14 +13,11 @@ interface InputProps {
   value?: any;
   valueRegister?: any;
   onChange?: (value: any) => void;
-  onKeyUp?: (value: any) => void;
   type?: string;
   placeholder?: string;
   disabled?: boolean;
   formatPrice?: boolean;
   min?: number;
-  max?: number;
-  maxLength?: number;
   required?: boolean;
   register: UseFormRegister<FieldValues>;
   setValue?: UseFormSetValue<FieldValues>;
@@ -31,7 +28,7 @@ interface FormInputs {
   multipleErrorInput: string;
 }
 
-const InputComponent: React.FC<InputProps> = ({
+const InputPhone: React.FC<InputProps> = ({
   id,
   label,
   type,
@@ -43,20 +40,13 @@ const InputComponent: React.FC<InputProps> = ({
   value,
   required,
   min,
-  max,
-  maxLength,
   register,
   setValue,
   onChange,
-  onKeyUp,
   errors,
 }) => {
-  const emailPattern = id.includes('email')
-    ? new RegExp(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      )
-    : /^.*$/;
-
+  const phoneNumberPattern =
+    id.includes('phone')  ? new RegExp(/((^(\+84|84|0|0084){1})(3|5|7|8|9))+([0-9]{8})$/) : /^.*$/;
   return (
     <div className="w-full flex-col flex">
       {/* {formatPrice && (
@@ -66,9 +56,7 @@ const InputComponent: React.FC<InputProps> = ({
         />
       )} */}
       <div className="py-3 flex flex-row gap-1 items-center">
-        <label>
-          {label} <span className="text-rose-500">{required ? '*' : ''}</span>
-        </label>
+        <label>{label}<span className='text-rose-500'>{required ? "*" : ""}</span></label>
         {tooltipContent && (
           <Tooltip content={tooltipContent}>
             <BiHelpCircle size={20} />
@@ -81,18 +69,15 @@ const InputComponent: React.FC<InputProps> = ({
         {...register(id, {
           required: `${label} is required`,
           pattern: {
-            value: emailPattern,
-            message: id.includes('email') ? 'Invalid email format' : 'Invalid phone number',
+            value: phoneNumberPattern,
+            message: id.includes('phone') ? 'Invalid phone number' : '',
           },
         })}
         placeholder={placeholder}
         name={id}
         type={type}
         min={min}
-        max={max}
-        maxLength={maxLength}
         value={value}
-        onKeyUp={onKeyUp}
         onChange={onChange}
         className={`peer p-4 pt-6 font-light bg-white border-2 rounded-md outline-none transition disabled:opacity-70 disabled:cursor-not-allowed focus:ring-0
         ${errors[id] ? 'border-red-400' : 'border-gray-400'} ${
@@ -111,4 +96,4 @@ const InputComponent: React.FC<InputProps> = ({
   );
 };
 
-export default InputComponent;
+export default InputPhone;

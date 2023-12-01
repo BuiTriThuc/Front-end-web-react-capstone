@@ -64,7 +64,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser }) => {
       <Container
         className={
           scroll
-            ? 'bg-white opacity-90 -translate-y-1 duration-300 shadow-md py-5 md:block hidden'
+            ? 'bg-white opacity-90 -translate-y-1 duration-300 shadow-md py-4 md:block hidden'
             : 'py-4'
         }
       >

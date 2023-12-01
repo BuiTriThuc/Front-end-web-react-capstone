@@ -32,7 +32,7 @@ const PostDetail: React.FC<PostDetailProps> = ({ postDetail, currentUser }) => {
           config
         )
         .then(async () => {
-          const userId = currentUser.userId
+          const userId = currentUser.userId;
           const params = { postId, userId }; // Wrap postId in an object
           const newData = await GetPostById(params);
           if (newData) {
@@ -87,14 +87,16 @@ const PostDetail: React.FC<PostDetailProps> = ({ postDetail, currentUser }) => {
             <div className="flex flex-row items-center gap-2">
               <Image
                 className="rounded-full object-cover"
-                width={100}
-                height={100}
+                width={70}
+                height={70}
                 src={postDetailValue?.avatar || '/images/placeholder.jpg'}
                 alt="Avatar"
               />
               <div>
                 <div className="text-[20px] font-bold">{postDetailValue?.userName}</div>
-                <div>{format(new Date(postDetailValue?.datePosted), 'dd-MM-yyyy')}</div>
+                <div className="text-[15px] text-gray-500">
+                  {format(new Date(postDetailValue?.datePosted), 'dd-MM-yyyy')}
+                </div>
               </div>
             </div>
             <div className="flex flex-row gap-7 px-32">
@@ -124,7 +126,7 @@ const PostDetail: React.FC<PostDetailProps> = ({ postDetail, currentUser }) => {
         </div>
       </div>
 
-      <div className="text-xl pt-3 pb-5 font-bold px-36 mt-5">{postDetailValue?.title}</div>
+      <div className="text-[40px] font-bold px-36 mt-5">{postDetailValue?.title}</div>
       <div
         className="px-5 md:px-36 py-10"
         dangerouslySetInnerHTML={{ __html: postDetailValue?.content }}

@@ -24,13 +24,13 @@ const OwnerBookingDetail: React.FC<OwnerBookingDetailProps> = ({
   };
 
   return (
-    <div className="grid md:grid-cols-2 py-8 gap-10">
+    <div className="grid md:grid-cols-2 py-3 gap-10">
       <div className="w-full h-full">
         {/* Title */}
         <div className="py-3">
-          <div className="text-3xl font-bold">Your owner booking is successfully!</div>
+          <div className="text-2xl font-bold mb-3">Your owner booking is successfully!</div>
           <div className="text-lg text-slate-500">
-            You are going to {ownerBookingDetail?.resortName}
+            You are going to <span className="font-bold"> {ownerBookingDetail?.resortName} </span>
           </div>
         </div>
 
@@ -48,19 +48,24 @@ const OwnerBookingDetail: React.FC<OwnerBookingDetailProps> = ({
           <div className="flex flex-col">
             <div>{memberBooking?.content[0].fullName}</div>
             <div className="text-slate-500">
-              {ownerResort?.content[0].addressLine
+              {ownerResort?.content[0]?.addressLine
                 .split(',')
                 .map((part: any) => part.trim())
                 .slice(-2)
                 .join(', ')}
             </div>
-            <div className="text-slate-500">On HolidaySwap since 2015</div>
+            {/* <div className="text-slate-500">On HolidaySwap since 2015</div> */}
           </div>
         </div>
 
         {/* Image apartment */}
         <div className="py-3 w-full h-80 relative rounded-lg">
-          <Image src="/images/resort1.jpg" fill alt="resort" className="absolute rounded-lg" />
+          <Image
+            src={ownerBookingDetail?.propertyImage}
+            fill
+            alt="resort"
+            className="absolute rounded-lg"
+          />
         </div>
 
         {/* Information apartment */}
@@ -76,12 +81,12 @@ const OwnerBookingDetail: React.FC<OwnerBookingDetailProps> = ({
           <div className="flex flex-col text-lg text-slate-500">
             <div>{format(new Date(ownerBookingDetail?.dateCheckIn), 'E')}, </div>
             <div>{format(new Date(ownerBookingDetail?.dateCheckIn), 'MMM dd, yyyy')}</div>
-            <div>Check-in After 3PM</div>
+            <div>Check-in After 2PM</div>
           </div>
           <div className="flex flex-col text-lg text-slate-500">
             <div>{format(new Date(ownerBookingDetail?.dateCheckOut), 'E')}, </div>
             <div>{format(new Date(ownerBookingDetail?.dateCheckOut), 'MMM dd, yyyy')}</div>
-            <div>Check-in After 3PM</div>
+            <div>Check-out Before 12PM</div>
           </div>
         </div>
 
@@ -113,8 +118,10 @@ const OwnerBookingDetail: React.FC<OwnerBookingDetailProps> = ({
             </div>
 
             <div className="flex flex-row justify-between items-center text-slate-500">
-              <div>HolidaySwap service fee</div>
-              <div>{(ownerBookingDetail?.price * (10 / 100)).toFixed(1)}</div>
+              <div><span className='text-black'>Holiday<span className='text-common'>Swap</span></span> service fee</div>
+              <div className="text-rose-500">
+                - {(ownerBookingDetail?.price * (10 / 100)).toFixed(1)}
+              </div>
             </div>
           </div>
         </div>
@@ -128,7 +135,7 @@ const OwnerBookingDetail: React.FC<OwnerBookingDetailProps> = ({
         {/* Information guest */}
         <div className="py-3">
           <div className="text-lg font-bold text-slate-600">Information Guest</div>
-          <div className="grid md:grid-cols-2 grid-cols-1 py-4">
+          <div className="grid md:grid-cols-2 grid-cols-1 py-4 gap-3">
             {ownerBookingDetail?.userOfBooking.map((item: any, index: number) => (
               <Card key={item.id} href="#" className="max-w-sm">
                 <p className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">

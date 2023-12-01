@@ -19,7 +19,13 @@ const Wallet: React.FC<WalletProps> = ({ userWallet, transfer, historyTransactio
   ).length;
   return (
     <div>
-      <HeadingDashboard routerDashboard='/dashboard' pageCurrentContent='My wallet' pageCurrentRouter='/dashboard/wallet' />
+      <div className="mt-12">
+        <HeadingDashboard
+          routerDashboard="/dashboard"
+          pageCurrentContent="My wallet"
+          pageCurrentRouter="/dashboard/wallet"
+        />
+      </div>
       <div className="flex flex-col px-10 w-full items-center">
         <div className="bg-white w-full rounded-3xl h-auto px-5 py-8 shadow-xl mt-10">
           <div className="flex flex-row items-center gap-60 justify-between">

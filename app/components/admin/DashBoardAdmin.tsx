@@ -29,21 +29,33 @@ const DashBoardAdmin: React.FC<DashboardAdminProps> = ({ listUser }) => {
           Dashboard
         </span>{' '}
       </div>
-      <div className="bg-gray-200 w-auto h-auto rounded-lg px-20 pt-14">
-        <div className="grid grid-cols-1 md:grid-cols-1">
+      <div className="bg-[#F0F4F7] rounded-md w-auto h-auto px-20 pt-14">
+        <div className="grid grid-cols-1 md:grid-cols-1 bg-[#FFFFFF] rounded-md shadow-lg">
           <ChartUser listUser={listUser} />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 py-5">
-          <ChartBooking />
-          <ChartBookingYear />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-5">
+          <div className="bg-white rounded-md shadow-lg">
+            <ChartBooking />
+          </div>
+          <div className="bg-white rounded-md shadow-lg">
+            <ChartBookingYear />
+          </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 py-5">
-          <ChartIncome />
-          <ChartIncomeYear />
+        <div className="grid grid-cols-1 md:grid-cols-2 pb-5 gap-6">
+          <div className="bg-white rounded-md shadow-lg">
+            <ChartIncome />
+          </div>
+          <div className="bg-white rounded-md shadow-lg">
+            <ChartIncomeYear />
+          </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 py-5">
-          <ChartTotalPoint />
-          <ChartTotalPointYear />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-5">
+          <div className="bg-white rounded-md shadow-lg">
+            <ChartTotalPoint />
+          </div>
+          <div className="bg-white rounded-md shadow-lg">
+            <ChartTotalPointYear />
+          </div>
         </div>
       </div>
     </div>

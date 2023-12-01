@@ -76,7 +76,7 @@ module.exports = {
         common: '#5C98F2',
       },
       backgroundImage: {
-        'resort-banner': "url('/images/resort1.jpg')",
+        'resort-banner': "url('/images/imgHeader2.jpg')",
       },
     },
   },

@@ -83,11 +83,11 @@ const ChartTotalPoint = () => {
   return (
     <div className="p-5 w-full flex flex-col items-center">
       <div className="font-bold text-xl text-black">Total point in week</div>
-      <div className="p-4 min-w-full h-[300px]">
+      <div className="p-4 min-w-full ">
         <Line options={options} data={data} />
       </div>
       <div className="flex flex-row w-full justify-end gap-3">
-        <FlowTooltip content="Prev year">
+        <FlowTooltip content="Prev week">
           <button
             onClick={() => {
               setType('back');
@@ -95,11 +95,11 @@ const ChartTotalPoint = () => {
             }}
             type="button"
           >
-            <IoIosArrowDropleftCircle size={30} />
+            <IoIosArrowDropleftCircle color="#FFCA25" size={30} />
           </button>
         </FlowTooltip>
 
-        <FlowTooltip content="Next year">
+        <FlowTooltip content="Next week">
           <button
             onClick={() => {
               setType('next');
@@ -107,7 +107,7 @@ const ChartTotalPoint = () => {
             }}
             type="button"
           >
-            <IoIosArrowDroprightCircle size={30} />
+            <IoIosArrowDroprightCircle color="#5C98F2" size={30} />
           </button>
         </FlowTooltip>
       </div>

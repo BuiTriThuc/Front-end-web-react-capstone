@@ -76,6 +76,7 @@ const ListResortAll: React.FC<ListResortAllProps> = ({ resorts: initialResorts }
   const [resorts, setResorts] = React.useState<any>(initialResorts);
   const [currentPage, setCurrentPage] = React.useState<number>(1);
   const [totalPages, setTotalPages] = React.useState<number>(resorts?.totalPages);
+  const [isChangeStatus, setIsChangeStatus] = React.useState(false);
   const pageSize = 10;
   // const totalPages = Math.ceil(resorts?.totalElements / pageSize);
   const axiosAuthClient = useAxiosAuthClient();
@@ -103,17 +104,18 @@ const ListResortAll: React.FC<ListResortAllProps> = ({ resorts: initialResorts }
       .put(`/resorts/${id}/status`, body, config)
       .then(async () => {
         toast.success('Update status success');
-        const newList = await GetListResort(currentPage.toString());
+        const newList = await GetListResort((currentPage - 1).toString());
         setResorts({
           content: newList.content,
           totalElements: newList.totalElements,
         });
+        setIsChangeStatus(true);
       })
       .catch((response) => {
         toast.error(response);
       })
       .finally(async () => {
-        const newList = await GetListResort(currentPage.toString());
+        const newList = await GetListResort((currentPage - 1).toString());
         setResorts({
           content: newList.content,
           totalElements: newList.totalElements,

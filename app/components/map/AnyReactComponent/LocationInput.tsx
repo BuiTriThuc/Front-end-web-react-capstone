@@ -4,7 +4,6 @@ import { ClockIcon, MapPinIcon } from "@heroicons/react/24/outline";
 import React, { useState, useRef, useEffect, FC } from "react";
 import ClearDataButton from "./ClearDataButton";
 import usePlacesService from "react-google-autocomplete/lib/usePlacesAutocompleteService";
-import { Coords } from 'google-map-react-concurrent';
 
 
 export interface LocationInputProps {
@@ -14,7 +13,6 @@ export interface LocationInputProps {
   divHideVerticalLineClass?: string;
   autoFocus?: boolean;
   setPlaceId: React.Dispatch<React.SetStateAction<string | null>>;
-  setCoordinates?: React.Dispatch<React.SetStateAction<Coords | undefined>>;
 }
 
 const LocationInput: FC<LocationInputProps> = ({
@@ -24,7 +22,6 @@ const LocationInput: FC<LocationInputProps> = ({
   className = "nc-flex-1.5",
   divHideVerticalLineClass = "left-10 -right-0.5",
   setPlaceId,
-                                                 setCoordinates
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -82,26 +79,6 @@ const LocationInput: FC<LocationInputProps> = ({
   const handleSelectLocation = (description: string, place_id: string) => {
     setValue(description);
     setPlaceId(place_id);
-    console.log(description, place_id);
-    const placeDetailsRequest = {
-      placeId: place_id
-    };
-    console.log(description, place_id);
-
-    placesService?.getDetails(placeDetailsRequest, (place, status) => {
-      if (status === google.maps.places.PlacesServiceStatus.OK) {
-        const coordinates = place?.geometry?.location;
-        const longitude = coordinates?.lng();
-        const latitude = coordinates?.lat();
-        if (setCoordinates) {
-          setCoordinates({ lat: latitude??10.200809, lng: longitude??103.96685 });
-        }
-        console.log('Longitude:', longitude);
-        console.log('Latitude:', latitude);
-      } else {
-        console.error('An error occurred:', status);
-      }
-    });
     setShowPopover(false);
   };
 
@@ -112,19 +89,19 @@ const LocationInput: FC<LocationInputProps> = ({
           Popular searches
         </h3>
         <div className="mt-2">
-          {[{description: "Nha Trang, Khanh Hoa, Vietnam", place_id: "ChIJb4jMEXhncDERudweqAq8S1w"},
-            {description: "Phu Quoc, Kien Giang, Vietnam", place_id: "ChIJ0en_g_GLpzERFBvXmwFqVk4"},
-            {description: "Vung Tau, Ba Ria - Vung Tau, Vietnam", place_id: "ChIJ9QxPVdRvdTERQPpB9jvST7I"},].map((item) => (
+          {["Phu Quoc, Kien Giang, Viet Nam",
+            "Nha Trang, Khanh Hoa, Viet Nam"  
+          ].map((item) => (
             <span
-              onClick={() => handleSelectLocation(item.description, item.place_id)}
-              key={item.place_id}
+              onClick={() => handleSelectLocation(item, item)}
+              key={item}
               className="flex px-4 sm:px-8 items-center space-x-3 sm:space-x-4 py-4 hover:bg-neutral-100 dark:hover:bg-neutral-700 cursor-pointer"
             >
               <span className="block text-neutral-400">
                 <ClockIcon className="h-4 sm:h-6 w-4 sm:w-6" />
               </span>
               <span className=" block font-medium text-neutral-700 dark:text-neutral-200">
-                {item.description}
+                {item}
               </span>
             </span>
           ))}
@@ -198,8 +175,7 @@ const LocationInput: FC<LocationInputProps> = ({
 
       {showPopover && (
         <div className="absolute left-0 z-40 w-full min-w-[300px] sm:min-w-[500px] bg-white dark:bg-neutral-800 top-full mt-3 py-3 sm:py-6 rounded-3xl shadow-xl max-h-96 overflow-y-auto">
-          {value && (renderSearchValue())}
-          {value.length < 2 && renderRecentSearches()}
+          {value ? renderSearchValue() : renderRecentSearches()}
         </div>
       )}
     </div>

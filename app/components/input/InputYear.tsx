@@ -31,7 +31,7 @@ interface FormInputs {
   multipleErrorInput: string;
 }
 
-const InputComponent: React.FC<InputProps> = ({
+const InputYear: React.FC<InputProps> = ({
   id,
   label,
   type,
@@ -51,12 +51,6 @@ const InputComponent: React.FC<InputProps> = ({
   onKeyUp,
   errors,
 }) => {
-  const emailPattern = id.includes('email')
-    ? new RegExp(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      )
-    : /^.*$/;
-
   return (
     <div className="w-full flex-col flex">
       {/* {formatPrice && (
@@ -80,15 +74,12 @@ const InputComponent: React.FC<InputProps> = ({
         disabled={disabled}
         {...register(id, {
           required: `${label} is required`,
-          pattern: {
-            value: emailPattern,
-            message: id.includes('email') ? 'Invalid email format' : 'Invalid phone number',
-          },
         })}
         placeholder={placeholder}
         name={id}
         type={type}
         min={min}
+        pattern="\d{4}"
         max={max}
         maxLength={maxLength}
         value={value}
@@ -111,4 +102,4 @@ const InputComponent: React.FC<InputProps> = ({
   );
 };
 
-export default InputComponent;
+export default InputYear;

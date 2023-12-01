@@ -46,7 +46,7 @@ const Ownership: React.FC<OwnershipProps> = ({ ownershipUser, resort, currentUse
 
       let apiUrl = `https://holiday-swap.click/api/co-owners?userId=${currentUser?.userId}&pageNo=${
         currentPage - 1
-      }&pageSize=10&sortBy=property_id`;
+      }&pageSize=10&sortDirection=desc`;
 
       // If search term is present, include it in the API call
       if (searchTerm) {

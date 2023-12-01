@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, ChangeEvent } from 'react';
 import InputComponent from '../input/Input';
 import Link from 'next/link';
 import BtnRegister from './BtnRegister';
@@ -30,6 +30,8 @@ import dayjs from 'dayjs';
 import { DatePicker } from 'antd';
 import StepCreateApartmentRegister from './StepCreateApartmentRegister';
 import useCreateApartmentRegister from '@/app/hooks/useCreateApartmentRegister';
+import InputPhone from '../input/InputPhone';
+import { Checkbox, Label } from 'flowbite-react';
 
 enum STEPS {
   INFO = 0,
@@ -411,6 +413,7 @@ const RegisterBody: React.FC<RegisterBodyProps> = ({ listResort }) => {
   const createApartmentRegister = useCreateApartmentRegister();
   const axiosAuthClient = useAxiosAuthClient();
   const loginModal = useLoginModal();
+  const [accept, setAccept] = useState(false);
   const router = useRouter();
   const dateFormat = 'YYYY/MM/DD';
 
@@ -461,7 +464,12 @@ const RegisterBody: React.FC<RegisterBodyProps> = ({ listResort }) => {
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     if (step !== STEPS.REGISTERAPARTMENT) {
       setIsLoading(true);
-      axios
+      if (!accept) {
+        toast.error("You need to accept the terms before registering for an account")
+      } else if (data.password !== data.confirmPassword) {
+        toast.error("Password not match confirm password")
+      } else {
+        axios
         .post('https://holiday-swap.click/api/v1/auth/register', data)
         .then((response) => {
           toast.success('Register Success');
@@ -476,6 +484,7 @@ const RegisterBody: React.FC<RegisterBodyProps> = ({ listResort }) => {
         .finally(() => {
           setIsLoading(false);
         });
+      }
     }
   };
 
@@ -490,16 +499,18 @@ const RegisterBody: React.FC<RegisterBodyProps> = ({ listResort }) => {
             errors={errors}
             type="text"
             id="username"
-            label="Username*"
+            label="Username"
             placeholder="Username"
+            required={true}
           />
           <InputComponent
             register={register}
             errors={errors}
             type="text"
             id="email"
-            label="Email*"
+            label="Email"
             placeholder="Email"
+            required={true}
           />
         </div>
 
@@ -511,6 +522,7 @@ const RegisterBody: React.FC<RegisterBodyProps> = ({ listResort }) => {
             id="password"
             label="Password"
             placeholder="Password"
+            required={true}
           />
           <InputComponent
             register={register}
@@ -519,12 +531,13 @@ const RegisterBody: React.FC<RegisterBodyProps> = ({ listResort }) => {
             id="confirmPassword"
             label="Confirm Password"
             placeholder="Confirm Password"
+            required={true}
           />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div className="w-full flex flex-col">
-            <div className="py-3">Birth Date*</div>
+            <div className="py-3">Birth Date<span className='text-rose-500'>*</span></div>
 
             {/* <DateTimePicker
               id="dob"
@@ -546,7 +559,7 @@ const RegisterBody: React.FC<RegisterBodyProps> = ({ listResort }) => {
           </div>
 
           <div className="w-full flex flex-col">
-            <label className="py-3">Gender</label>
+            <label className="py-3">Gender<span className='text-rose-500'>*</span></label>
             <select
               onChange={(e) => setCustomValue('gender', e.target.value)}
               className="peer  p-4 pt-6 font-light bg-white border rounded-md outline-none transition disabled:opacity-70"
@@ -559,13 +572,14 @@ const RegisterBody: React.FC<RegisterBodyProps> = ({ listResort }) => {
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <InputComponent
+          <InputPhone
             register={register}
             errors={errors}
             type="text"
             id="phone"
             label="Phone"
             placeholder="Phone"
+            required={true}
           />
           {/* <InputComponent
             type="text"
@@ -575,10 +589,22 @@ const RegisterBody: React.FC<RegisterBodyProps> = ({ listResort }) => {
           /> */}
         </div>
         <div className="flex flex-row w-full items-center justify-center pt-10 pb-4    ">
-          <input type="checkbox" />
+          {/* <input type="checkbox" />
           <div>
             * Creating an account means you&apos;re okay with our Terms of Service and Privacy
             Statement.
+          </div> */}
+          <div className="flex items-center gap-2">
+            <Checkbox
+              id="accept"
+              checked={accept}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setAccept(e.target.checked)}
+            />
+            <Label htmlFor="accept" className="flex text-lg">
+              Creating an account means you&apos;re okay with our <span><a href="#" className="text-cyan-600 hover:underline dark:text-cyan-500">
+                 Terms of Service and Privacy Statement.
+               </a></span>
+            </Label>
           </div>
         </div>
         <BtnRegister onClick={handleSubmit(onSubmit)} label="Continue" />

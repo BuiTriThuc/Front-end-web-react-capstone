@@ -13,6 +13,7 @@ import useCreateOwnershipModal from '@/app/hooks/useCreateOwnershipModal';
 import { AiOutlineCloseCircle } from 'react-icons/ai';
 import ModalCreate from './ModalCreate';
 import ToolTipCreateOwnership from '../tooltip/ToolTipCreateOwnership';
+import UploadImageCreateOwnership from './UploadImageCreateOwnership';
 
 export const type = [
   {
@@ -37,7 +38,7 @@ export default function ModalCreateOwnership() {
   const [file, setFile] = useState<any[]>([]);
   const [resortId, setResortId] = useState<any>();
   const [properties, setProperties] = useState<any[]>([]);
-  const [propertyValue, setPropertyValue] = useState();
+  const [propertyValue, setPropertyValue] = useState<any>();
   const [typeValue, setTypeValue] = useState<any>(type[0].type);
   const [visibleCalendar, setVisibleCalendar] = useState(false);
   const [startYear, setStartYear] = useState(new Date());
@@ -47,45 +48,17 @@ export default function ModalCreateOwnership() {
   const [openModal, setOpenModal] = useState(false);
   const axiosAuthClient = useAxiosAuthClient();
   const [previewImages, setPreviewImages] = useState<{ src: string; index: number }[]>([]);
+  const [isClearImage, setIsClearImage] = useState(false);
 
   const [weekNumbers, setWeekNumbers] = useState([{ id: 1 }]);
 
-  // Thêm một tuần mới
-  const addWeekNumber = () => {
-    const newWeekNumbers = [...weekNumbers];
-    newWeekNumbers.push({ id: newWeekNumbers.length + 1 });
-    setWeekNumbers(newWeekNumbers);
+  const handleDeleteImage = (image: any) => {
+    setFile(file.filter((prev) => prev.size !== image.size));
   };
 
-  const removeWeekNumber = (index: number) => {
-    const newWeekNumbers = weekNumbers.filter((_, i) => i !== index);
-    setWeekNumbers(newWeekNumbers);
-  };
-
-  const handleDeleteImage = (index: number) => {
-    setFile((prevFiles) => prevFiles.filter((_, i) => i !== index));
-    setPreviewImages((prevImages) => prevImages.filter((image) => image.index !== index));
-  };
-
-  const handleChangeImage = (e: ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files) {
-      return null;
-    } else {
-      const selectedFile = Array.from(e.target.files);
-
-      if (selectedFile) {
-        setFile((prevFiles) => [...prevFiles, ...selectedFile]);
-
-        // Assuming only one file is selected, update the preview image
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setPreviewImages((prevImages) => [
-            ...prevImages,
-            { src: reader.result as string, index: prevImages.length },
-          ]);
-        };
-        reader.readAsDataURL(selectedFile[0]);
-      }
+  const handeChangeNewImages = (image: any) => {
+    if (image) {
+      setFile((old) => [...old, image]);
     }
   };
 
@@ -95,9 +68,14 @@ export default function ModalCreateOwnership() {
     setValue,
     reset,
     formState: { errors },
-  } = useForm();
+  } = useForm<FieldValues>({
+    defaultValues: {
+      propertyId: '',
+      roomId: '',
+    },
+  });
 
-  const setCustomeValue = (id: string, value: any) => {
+  const setCustomeValue = (id: any, value: any) => {
     setValue(id, value, {
       shouldDirty: true,
       shouldTouch: true,
@@ -126,35 +104,39 @@ export default function ModalCreateOwnership() {
       const newArray = value.split(',');
       setWeekNumberValue(newArray);
     } else {
-      setWeekNumberValue((prev: any) => [...prev, value]);
+      setWeekNumberValue([value]);
     }
   };
 
+  // useEffect(() => {
+  //   if (dataResort) {
+  //     setResortId(dataResort[0].id);
+  //   }
+  // }, [dataResort]);
+
   useEffect(() => {
-    if (dataResort) {
-      setResortId(dataResort[0].id);
-    }
-  }, [dataResort]);
+    setCustomeValue('propertyId', propertyValue);
+  }, [propertyValue]);
 
   useEffect(() => {
     const fetchProperty = async () => {
       if (resortId) {
         const data = await axios.get(
-          `https://holiday-swap.click/api/v1/properties?resortId=${resortId}&numberGuest=0&pageNo=0&pageSize=10&sortBy=id`
+          `https://holiday-swap.click/api/v1/properties/getListPropertyActive?resortId=${resortId}`
         );
-        setProperties(data.data.content);
+        setProperties(data?.data);
+        setPropertyValue(data?.data[0]?.id);
       }
     };
     fetchProperty();
   }, [resortId]);
 
-  useEffect(() => {
-    setCustomeValue('propertyId', propertyValue);
-  }, [propertyValue, file]);
-
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
     const formData = new FormData();
+
+    if (data.weekNumber) {
+    }
 
     const coOwnerId = {
       propertyId: data.propertyId as number,
@@ -179,25 +161,43 @@ export default function ModalCreateOwnership() {
       formData.append('contractImages', element);
     });
 
-    axiosAuthClient
-      .post('https://holiday-swap.click/api/co-owners', formData)
-      .then(() => {
-        toast.success('Create ownership success!');
-        setOpenModal(false);
-        createOwnershipModal.onSuccess();
-        createOwnershipModal.onClose();
-        reset();
-      })
-      .catch((response) => {
-        toast.error(response.response.data.message);
-        setOpenModal(false);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    const weekNumberRegex = /^(([1-9]|[1-4][0-9]|5[0-2])(,(?!,))?)+$/;
+
+    if (!weekNumberRegex.test(data.weekNumber.trim().split(' ').join(''))) {
+      setWeekNumberValue([]);
+      setValue('weekNumber', '');
+      toast.error('Invalid week number format. Please enter a valid format (e.g., 1, 2, 3).');
+      console.log('Check data', data.weekNumber.split(' ').join(''));
+      console.log('Regex Test Result:', weekNumberRegex.test(data.weekNumber.trim()));
+      setIsLoading(false);
+      setOpenModal(false);
+    } else {
+      axiosAuthClient
+        .post('https://holiday-swap.click/api/co-owners', formData)
+        .then(() => {
+          toast.success('Create ownership success!');
+          setOpenModal(false);
+          setTypeValue(type[0].type);
+          setResortId(dataResort[0]?.id);
+          setPropertyValue(null);
+          setWeekNumberValue(null);
+          setFile([]);
+          setIsClearImage(true);
+          reset();
+          createOwnershipModal.onSuccess();
+          createOwnershipModal.onClose();
+        })
+        .catch((response) => {
+          toast.error(response.response.data.message);
+        })
+        .finally(() => {
+          setIsLoading(false);
+          setIsClearImage(false);
+        });
+    }
   };
 
-  console.log('Check length', weekNumberValue.length);
+  console.log('Check file', file);
 
   const bodyContent = (
     <div className="flex flex-col gap-4 ">
@@ -257,8 +257,9 @@ export default function ModalCreateOwnership() {
               <div className="text-xs">Start year</div>
               <input
                 type="number"
-                min={new Date().getFullYear() - 30}
+                min={new Date().getFullYear()}
                 max={new Date().getFullYear() + 25}
+                maxLength={4}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => {
                   const selectedYear = parseInt(e.target.value);
                   const newStartDate = new Date(selectedYear, 0, 1); // Month is 0-based, so 0 represents January
@@ -272,8 +273,9 @@ export default function ModalCreateOwnership() {
               <div className="text-xs">End year</div>
               <input
                 type="number"
-                min={new Date().getFullYear() - 30}
+                min={new Date().getFullYear()}
                 max={new Date().getFullYear() + 25}
+                maxLength={4}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => {
                   const selectedYear = parseInt(e.target.value);
                   const newEndDate = new Date(selectedYear, 0, 1); // Month is 0-based, so 0 represents January
@@ -297,6 +299,7 @@ export default function ModalCreateOwnership() {
             handleChangeWeekNumberValue(e.target.value)
           }
           errors={errors}
+          setValue={setValue}
           required
           tooltipContent="This is the week you own in the year, for example if you own the 6th week in 2023, you enter 6. You can enter multiple weeks by separating the weeks with a comma. For example: 6, 10, 11"
         />
@@ -306,6 +309,7 @@ export default function ModalCreateOwnership() {
           disabled={isLoading}
           register={register}
           errors={errors}
+          setValue={setValue}
           required
         />
       </div>
@@ -314,30 +318,13 @@ export default function ModalCreateOwnership() {
           <label>Contract Image</label>
           <ToolTipCreateOwnership />
         </div>
-        <FileInput
-          {...register('contractImages', {
-            required: 'Recipe picture is required',
-          })}
-          id="contractImages"
-          onChange={handleChangeImage}
-          multiple
-        />
-        <div className="grid grid-cols-2">
-          {previewImages.map((image) => (
-            <div key={image.index} className="relative w-full">
-              <img
-                src={image.src}
-                alt="Preview"
-                style={{ width: '100%', maxHeight: '200px', marginTop: '10px' }}
-              />
 
-              <AiOutlineCloseCircle
-                size={20}
-                className="absolute top-5 right-3"
-                onClick={() => handleDeleteImage(image.index)}
-              />
-            </div>
-          ))}
+        <div className="">
+          <UploadImageCreateOwnership
+            handeChangeNewImages={handeChangeNewImages}
+            handleDeleteImage={handleDeleteImage}
+            isClearImage={isClearImage}
+          />
         </div>
       </div>
 

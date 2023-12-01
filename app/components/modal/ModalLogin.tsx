@@ -98,6 +98,7 @@ export default function ModalLogin() {
           <InputComponent
             id="email"
             label="Email"
+            type="email"
             disabled={isLoading}
             register={register}
             errors={errors}
@@ -135,16 +136,13 @@ export default function ModalLogin() {
     } else {
       return (
         <div className="grid grid-cols-1">
+          <button
+            className="text-common pb-2  flex flex-row justify-end w-full"
+            onClick={toggleForgotPasswordModal}
+          >
+            <div className="hover:underline">Forgot password?</div>
+          </button>
 
-            <button
-              className="text-common pb-2  flex flex-row justify-end w-full"
-              onClick={toggleForgotPasswordModal}
-            >
-              <div className='hover:underline'>
-                Forgot password?
-              </div>
-            </button>
-         
           <hr />
           <div className="text-neutral-500 text-center mt-4 font-light">
             <div className="flex flex-row justify-center items-center gap-2">

@@ -7,6 +7,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import HeadingDashboard from '../HeadingDashboard';
+import { Checkbox, Label } from 'flowbite-react';
 
 const Money = [
   {
@@ -83,10 +84,14 @@ const Money = [
       currentUser,
       userToEmail,
       moneyTransfer,
+      accept,
+      handleChangeAccept,
     }: {
       currentUser: any;
       userToEmail: any;
       moneyTransfer: any;
+      accept: any;
+      handleChangeAccept: (value: any) => void;
     }) => (
       <>
         <div className="mt-10 py-5 w-full bg-white flex flex-col items-center justify-center border border-gray-300 rounded-md">
@@ -123,8 +128,19 @@ const Money = [
             </div>
           </div>
           <div className="flex flex-row items-center mt-5 gap-1">
-            <input type="checkbox" />
-            <div>I have read and agree to HolidaySwap&apos;s money transfer terms</div>
+            <Checkbox
+              id="accept"
+              checked={accept}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => handleChangeAccept(e.target.checked)}
+            />
+            <Label htmlFor="accept" className="flex text-lg">
+              I have read and agree to HolidaySwap&apos;s{' '}
+              <span>
+                <a href="#" className="text-cyan-600 hover:underline dark:text-cyan-500">
+                  money transfer terms
+                </a>
+              </span>
+            </Label>
           </div>
         </div>
       </>
@@ -143,7 +159,12 @@ const TransferMoney: React.FC<TransferMoneyProps> = ({ currentUser, memberships 
   const [userToEmail, setUserToEmail] = useState<any>();
   const [moneyTransfer, setMoneyTransfer] = useState<any>(0);
   const { data: session } = useSession();
+  const [accept, setAccept] = useState(false);
   const router = useRouter();
+
+  const handleChangeAccept = (value: any) => {
+    setAccept(value);
+  };
 
   const next = () => {
     if (!userTo || !moneyTransfer) {
@@ -172,20 +193,25 @@ const TransferMoney: React.FC<TransferMoneyProps> = ({ currentUser, memberships 
       headers: { Authorization: `Bearer ${session?.user.access_token}` },
     };
 
-    axios
-      .post('https://holiday-swap.click/api/v1/transfer', data, config)
-      .then(() => {
-        toast.success('Transfer point success!');
-        setTimeout(() => {
-          router.push('/dashboard/wallet');
-        }, 3000);
-      })
-      .catch((error) => {
-        toast.error(error.response.data.message);
-      })
-      .finally(() => {
-        setCurrent(0);
-      });
+    if (!accept) {
+      toast.error('Your must be accept term to tranfer');
+      return;
+    } else {
+      axios
+        .post('https://holiday-swap.click/api/v1/transfer', data, config)
+        .then(() => {
+          toast.success('Transfer point success!');
+          setTimeout(() => {
+            router.push('/dashboard/wallet');
+          }, 1000);
+        })
+        .catch((error) => {
+          toast.error(error.response.data.message);
+        })
+        .finally(() => {
+          setCurrent(0);
+        });
+    }
   };
 
   const filteredMemberships = memberships?.content.filter(
@@ -217,7 +243,13 @@ const TransferMoney: React.FC<TransferMoneyProps> = ({ currentUser, memberships 
 
   return (
     <>
-      <HeadingDashboard routerDashboard='/dashboard' pageCurrentContent='Tranfer point' pageCurrentRouter='/dashboard/transfer' />
+      <div className="mt-6">
+        <HeadingDashboard
+          routerDashboard="/dashboard"
+          pageCurrentContent="Tranfer point"
+          pageCurrentRouter="/dashboard/transfer"
+        />
+      </div>
       <Steps className="mt-5" current={current} items={items} />
       <div>
         {Money[current].content({
@@ -228,24 +260,26 @@ const TransferMoney: React.FC<TransferMoneyProps> = ({ currentUser, memberships 
           moneyTransfer,
           handleChangeUserTo,
           handleChangeMoneyTransfer,
+          accept,
+          handleChangeAccept,
         })}
       </div>
-      <div style={{ marginTop: 24 }}>
+      <div style={{ marginTop: 24 }} className="flex flex-row gap-3">
         {current < Money.length - 1 && (
           <button className="bg-common px-5 py-2 rounded-md text-white" onClick={() => next()}>
             Next
           </button>
         )}
         {current === Money.length - 1 && (
-          <Link href="/dashboard/wallet">
+          <div>
             <button className="bg-common px-5 py-2 rounded-md text-white" onClick={handleDone}>
               Done
             </button>
-          </Link>
+          </div>
         )}
         {current > 0 && (
           <button
-            className="bg-common px-5 py-2 rounded-md text-white"
+            className="bg-slate-300 px-5 py-2 rounded-md text-black"
             style={{ margin: '0 8px' }}
             onClick={() => prev()}
           >

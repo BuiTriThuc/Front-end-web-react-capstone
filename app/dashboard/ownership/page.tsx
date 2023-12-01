@@ -4,11 +4,13 @@ import GetOwnershipByUserId from '@/app/actions/getOwnershipByUserId';
 import GetListResort from '@/app/actions/getListResort';
 import GetCurrentUser from '@/app/actions/getCurrentUser';
 import requireAuth from '@/app/libs/requireAuth';
+import GetListResortForCreateOwner from '@/app/actions/getListResortForCreateOwner';
 
 const OwnershipPage = async () => {
   const ownershipUser = await GetOwnershipByUserId();
-  const listResort = await GetListResort('0');
+  const listResort = await GetListResortForCreateOwner('0');
   const currentUser = await GetCurrentUser();
+
   return requireAuth(
     <Fragment>
       <Ownership ownershipUser={ownershipUser} resort={listResort} currentUser={currentUser} />
