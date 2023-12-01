@@ -10,6 +10,7 @@ import { fetchNotifications } from '@/app/redux/slices/pushNotificationSlice';
 import { NotificationResponse } from '@/app/components/notification/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { formatRelative } from 'date-fns';
+import NotificationApis from '@/app/actions/NotificationApis';
 
 export interface NotificationProps {
   notificationId: string;
@@ -42,12 +43,17 @@ export default function Notification({
 
   const toggleOptions = () => {
     setShowOptions((prev) => !prev);
-    const updatedNotifications = notification.map((item: NotificationResponse) =>
-      item.notificationId.toString() === notificationId
-        ? { ...item, isRead: true }
-        : item,
-    );
-    dispatch(fetchNotifications(updatedNotifications));
+    if(!isRead){
+      dispatch(fetchNotifications(notification.map((item: NotificationResponse) =>
+        item.notificationId.toString() === notificationId
+          ? { ...item, isRead: true }
+          : item,
+      )));
+      NotificationApis.readById(notificationId.toString())
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
 
   const handleClick = () => {

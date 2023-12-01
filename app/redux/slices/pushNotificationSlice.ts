@@ -27,11 +27,9 @@ export const pushNotificationSlice = createSlice({
     },
     fetchNotifications: (state, action) => {
       state.data = action.payload;
-      console.log('action.payload', action.payload);
-      console.log('state.data', state.data);
     },
     addNotification: (state, action) => {
-      state.data = [...state.data, action.payload];
+      state.data = [action.payload, ...state.data];
     },
     removeNotifications: (state) => {
       state.data = initialState.data;
