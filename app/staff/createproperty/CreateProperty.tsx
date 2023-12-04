@@ -378,11 +378,13 @@ const CreateProperty: React.FC<CreatePropertyProps> = ({
   }
   return (
     <div>
-      <HeadingDashboard
-        routerDashboard="/staff"
-        pageCurrentContent="Create property"
-        pageCurrentRouter="/staff/createproperty"
-      />
+      <div className="mt-2">
+        <HeadingDashboard
+          routerDashboard="/staff"
+          pageCurrentContent="Create property"
+          pageCurrentRouter="/staff/createproperty"
+        />
+      </div>
       <SelectRouterStaff />
 
       {bodyContent}

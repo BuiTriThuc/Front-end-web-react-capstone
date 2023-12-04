@@ -52,11 +52,6 @@ const statusList = [
     icon: BiBlock,
     color: '#e62538',
   },
-  {
-    status: 'NO_LONGER_IN_BUSINESS',
-    icon: MdOutlinePending,
-    color: '#e06d14',
-  },
 ];
 
 function createData(
@@ -124,11 +119,13 @@ const ListResortAll: React.FC<ListResortAllProps> = ({ resorts: initialResorts }
   };
   return (
     <>
-      <HeadingDashboard
-        routerDashboard="/staff"
-        pageCurrentContent="List resort"
-        pageCurrentRouter="/staff/listresort"
-      />
+      <div className="mt-2">
+        <HeadingDashboard
+          routerDashboard="/staff"
+          pageCurrentContent="List resort"
+          pageCurrentRouter="/staff/listresort"
+        />
+      </div>
       <SelectRouterStaff />
       <div className="text-common text-[20px] font-bold py-5 ">List Resort</div>
       <TableContainer component={Paper}>
@@ -216,7 +213,7 @@ const ListResortAll: React.FC<ListResortAllProps> = ({ resorts: initialResorts }
                       if (row.status === 'ACTIVE') {
                         return (
                           <>
-                            {statusList.slice(1, 3).map((status: any, index: number) => (
+                            {statusList.slice(0, 1).map((status: any, index: number) => (
                               <Dropdown.Item
                                 key={index}
                                 value={status.status}
@@ -231,30 +228,9 @@ const ListResortAll: React.FC<ListResortAllProps> = ({ resorts: initialResorts }
                           </>
                         );
                       } else if (row.status === 'DEACTIVATE') {
-                        const newArrray = statusList.filter(
-                          (item) =>
-                            item.status === 'ACTIVE' || item.status === 'NO_LONGER_IN_BUSINESS'
-                        );
                         return (
                           <>
-                            {newArrray.map((status: any, index: number) => (
-                              <Dropdown.Item
-                                key={index}
-                                value={status.status}
-                                className="flex items-center gap-2"
-                                onClick={() => handleOnChangeStatus(row.id, status.status)}
-                              >
-                                <status.icon size={18} color={status.color} />
-
-                                <span className={`text-[${status.color}]`}>{status.status}</span>
-                              </Dropdown.Item>
-                            ))}
-                          </>
-                        );
-                      } else if (row.status === 'NO_LONGER_IN_BUSINESS') {
-                        return (
-                          <>
-                            {statusList.slice(0, 2).map((status: any, index: number) => (
+                            {statusList.slice(1, 2).map((status: any, index: number) => (
                               <Dropdown.Item
                                 key={index}
                                 value={status.status}

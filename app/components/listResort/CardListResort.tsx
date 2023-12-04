@@ -47,7 +47,7 @@ const CardListResort: React.FC<CardListResortProps> = ({ data }) => {
       <div className="flex flex-row justify-between py-3 ">
         <div
           onClick={() =>
-            route.push(
+            handleRedirectApartmentDetail(
               `/apartment/${data.availableTime.id}?propertyId=${data.coOwnerId.propertyId}&roomId=${data.coOwnerId.roomId}`
             )
           }

@@ -111,7 +111,7 @@ const ListApproveOwnership: React.FC<OwnershipProps> = ({ ownershipStaff }) => {
 
   return (
     <div>
-      <div className=" mb-10">
+      <div className=" mb-10 mt-2">
         <HeadingDashboard
           routerDashboard="/staff"
           pageCurrentContent="List approve ownership"
@@ -139,7 +139,7 @@ const ListApproveOwnership: React.FC<OwnershipProps> = ({ ownershipStaff }) => {
             <Table.HeadCell>End date</Table.HeadCell>
             <Table.HeadCell>Type</Table.HeadCell>
             <Table.HeadCell>Status</Table.HeadCell>
-            <Table.HeadCell>Action</Table.HeadCell>
+            <Table.HeadCell className="w-[130px]">Action</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
             {ownershipUserList?.content.map((item: any, index: number) => {

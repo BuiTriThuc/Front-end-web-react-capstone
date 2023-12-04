@@ -48,11 +48,13 @@ const CreatePropertyType = () => {
   };
   return (
     <div>
-      <HeadingDashboard
-        routerDashboard="/staff"
-        pageCurrentContent="Create property type"
-        pageCurrentRouter="/staff/createPropertyType"
-      />
+      <div className="mt-2">
+        <HeadingDashboard
+          routerDashboard="/staff"
+          pageCurrentContent="Create property type"
+          pageCurrentRouter="/staff/createPropertyType"
+        />
+      </div>
 
       <div className="pb-10 grid grid-cols-2">
         <div>

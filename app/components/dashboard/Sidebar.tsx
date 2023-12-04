@@ -79,12 +79,12 @@ const Sidebar = () => {
     //   icon: LiaFileInvoiceDollarSolid,
     //   current: pathName?.includes('/dashboard/invoices') ? true : false,
     // },
-    {
-      name: 'Reviews',
-      href: '/dashboard/review',
-      icon: AiOutlineStar,
-      current: pathName?.includes('/dashboard/review') ? true : false,
-    },
+    // {
+    //   name: 'Reviews',
+    //   href: '/dashboard/review',
+    //   icon: AiOutlineStar,
+    //   current: pathName?.includes('/dashboard/review') ? true : false,
+    // },
   ];
 
   // const sidebarExchange = [

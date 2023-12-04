@@ -125,12 +125,12 @@ const ListMembershipAll: React.FC<ListMembershipAllProps> = ({ users }) => {
               >
                 Day of birth{' '}
               </StyledTableCell>
-              <StyledTableCell
+              {/* <StyledTableCell
                 className="!bg-white !text-black !text-[17px] !font-semibold"
                 align="right"
               >
                 Action{' '}
-              </StyledTableCell>
+              </StyledTableCell> */}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -156,18 +156,18 @@ const ListMembershipAll: React.FC<ListMembershipAllProps> = ({ users }) => {
                 <StyledTableCell className="!py-5 " align="right">
                   {row.email}
                 </StyledTableCell>
-                <StyledTableCell className="!py-5 !text-green-500 " align="right">
+                <StyledTableCell className="!py-5 " align="right">
                   {row.phone}
                 </StyledTableCell>
                 <StyledTableCell className="!py-5 !text-green-500 " align="right">
                   {row.status}
                 </StyledTableCell>
-                <StyledTableCell className="!py-5 !text-green-500 " align="right">
-                  {format(new Date(row.dob), 'yyyy-MM-dd')}
+                <StyledTableCell className="!py-5  " align="right">
+                  {format(new Date(row.dob), 'dd-MM-yyyy')}
                 </StyledTableCell>
-                <StyledTableCell className="!py-5" align="right">
+                {/* <StyledTableCell className="!py-5" align="right">
                   <DropDownBanMember />
-                </StyledTableCell>
+                </StyledTableCell> */}
               </StyledTableRow>
             ))}
           </TableBody>

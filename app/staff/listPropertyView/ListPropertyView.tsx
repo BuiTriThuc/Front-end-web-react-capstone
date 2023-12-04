@@ -96,11 +96,13 @@ const ListPropertyView: React.FC<ListPropertyViewProps> = () => {
 
   return (
     <Fragment>
-      <HeadingDashboard
-        routerDashboard="/staff"
-        pageCurrentContent="List property view"
-        pageCurrentRouter="/staff/listPropertyView"
-      />
+      <div className="mt-2">
+        <HeadingDashboard
+          routerDashboard="/staff"
+          pageCurrentContent="List property view"
+          pageCurrentRouter="/staff/listPropertyView"
+        />
+      </div>
 
       <div className="">
         <div className="pb-5 pt-3">

@@ -17,6 +17,10 @@ const Wallet: React.FC<WalletProps> = ({ userWallet, transfer, historyTransactio
   const numberTopup = historyTransaction?.filter(
     (item: any) => item.message.includes('Admin') && item.status === 'SUCCESS'
   ).length;
+
+  const numberPayment = historyTransaction?.filter(
+    (item: any) => item.message.includes('pay for') && item.status === 'SUCCESS'
+  ).length;
   return (
     <div>
       <div className="mt-12">
@@ -62,9 +66,9 @@ const Wallet: React.FC<WalletProps> = ({ userWallet, transfer, historyTransactio
                   </div>
                   <div className="flex flex-col">
                     <div>Number of top-up</div>
-                    <div className="text-gray-500">
+                    {/* <div className="text-gray-500">
                       Total: <span>200k</span>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>
@@ -73,17 +77,17 @@ const Wallet: React.FC<WalletProps> = ({ userWallet, transfer, historyTransactio
               <div className="flex flex-row items-center">
                 <div className="bg-[#e4f1ef] w-auto h-auto rounded-lg px-5 py-3 flex flex-row items-center">
                   <div className="bg-white rounded-full w-11 h-11 flex flex-col justify-center items-center mr-[10px]">
-                    <div className="text-[25px] text-[#b0e0d8]">4</div>
+                    <div className="text-[25px] text-[#b0e0d8]">{numberPayment}</div>
                   </div>
                   <div className="flex flex-col">
                     <div>Number of payments</div>
-                    <div className="text-gray-500 flex flex-row items-center">
+                    {/* <div className="text-gray-500 flex flex-row items-center">
                       <div>Total: </div>
                       <span className="flex flex-row items-center ml-1">
                         <img className="w-[15px] h-[15px]" src="/images/coin.png" alt="" />
                         400
                       </span>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>

@@ -45,7 +45,7 @@ const CurrentBooking: React.FC<CurrentBookingProps> = ({ historyBooking }) => {
           <div
             onClick={() => router.push(`/dashboard/myBooking/${item.bookingId}`)}
             key={item.bookingId}
-            className="grid grid-cols-12 h-[150px] bg-white rounded-lg shadow-lg justify-between hover:cursor-pointer my-5"
+            className="grid grid-cols-12 h-[150px] bg-white rounded-lg shadow-lg justify-between hover:cursor-pointer mb-5 "
           >
             <div className="col-span-9">
               <div className="grid grid-cols-9 h-full gap-5">

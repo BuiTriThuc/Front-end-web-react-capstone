@@ -49,11 +49,13 @@ const CreatePropertyView = () => {
   };
   return (
     <div>
-      <HeadingDashboard
-        routerDashboard="/staff"
-        pageCurrentContent="Create property view"
-        pageCurrentRouter="/staff/createPropertyView"
-      />
+      <div className="mt-2">
+        <HeadingDashboard
+          routerDashboard="/staff"
+          pageCurrentContent="Create property view"
+          pageCurrentRouter="/staff/createPropertyView"
+        />
+      </div>
 
       <div className="pb-10 grid grid-cols-2">
         <div>

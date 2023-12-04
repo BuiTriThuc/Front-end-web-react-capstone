@@ -292,7 +292,7 @@ export default function ModalCreateOwnership() {
       <div className="grid grid-cols-2 gap-4">
         <InputComponent
           id="weekNumber"
-          label="Number of week in a year"
+          label="Week number"
           disabled={isLoading}
           register={register}
           onChange={(e: ChangeEvent<HTMLInputElement>) =>

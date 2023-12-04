@@ -191,11 +191,13 @@ const ListMembershipAll: React.FC<ListMembershipAllProps> = ({ users }) => {
 
   return (
     <>
-      <HeadingDashboard
-        routerDashboard="/staff"
-        pageCurrentContent="List membership"
-        pageCurrentRouter="/staff/listmember"
-      />
+      <div className="mt-2">
+        <HeadingDashboard
+          routerDashboard="/staff"
+          pageCurrentContent="List membership"
+          pageCurrentRouter="/staff/listmember"
+        />
+      </div>
       <SelectRouterStaff />
       <div className="flex flex-row justify-between items-center py-5 ">
         <div className="text-common text-[20px] font-bold ">List Membership</div>

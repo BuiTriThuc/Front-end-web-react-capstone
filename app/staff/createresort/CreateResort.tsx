@@ -257,7 +257,7 @@ const CreateResort: React.FC<CreateResortProps> = ({ amenitiesArray, propertyTyp
       reverseGeocode: true,
       marker: false,
     });
-    geocoder.setCountries('VN');//ISO 3166-1 alpha-2 country codes, separated by commas
+    geocoder.setCountries('VN'); //ISO 3166-1 alpha-2 country codes, separated by commas
     mapboxglMap.addControl(geocoder, 'top-left');
     geocoder.on('result', (e: any) => {
       setLocation(e.result as Place);
@@ -282,11 +282,13 @@ const CreateResort: React.FC<CreateResortProps> = ({ amenitiesArray, propertyTyp
 
   return (
     <div>
-      <HeadingDashboard
-        routerDashboard="/staff"
-        pageCurrentContent="Create resort"
-        pageCurrentRouter="/staff/createresort"
-      />
+      <div className="mt-2">
+        <HeadingDashboard
+          routerDashboard="/staff"
+          pageCurrentContent="Create resort"
+          pageCurrentRouter="/staff/createresort"
+        />
+      </div>
       <SelectRouterStaff />
 
       <div className="mb-14 mt-5">
@@ -460,7 +462,6 @@ const CreateResort: React.FC<CreateResortProps> = ({ amenitiesArray, propertyTyp
             handlePropertiesChange={handlePropertiesChange}
           />
         </div>
-        
 
         {/* <div className=" flex flex-row mb-14">
           <div className="w-[277px] text-gray-700">Detail*</div>

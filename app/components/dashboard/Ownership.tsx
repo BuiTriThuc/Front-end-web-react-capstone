@@ -81,11 +81,13 @@ const Ownership: React.FC<OwnershipProps> = ({ ownershipUser, resort, currentUse
 
   return (
     <Fragment>
-      <HeadingDashboard
-        routerDashboard="/dashboard"
-        pageCurrentContent="Ownership"
-        pageCurrentRouter="/dashboard/ownership"
-      />
+      <div className="mt-7">
+        <HeadingDashboard
+          routerDashboard="/dashboard"
+          pageCurrentContent="Ownership"
+          pageCurrentRouter="/dashboard/ownership"
+        />
+      </div>
       <div className="py-6 flex flex-row w-full justify-between">
         <div className="flex flex-row items-center gap-2">
           <div>Search by room ID</div>

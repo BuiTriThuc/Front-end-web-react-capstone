@@ -99,11 +99,13 @@ const ListPropertyType: React.FC<ListPropertyTypeProps> = () => {
 
   return (
     <Fragment>
-      <HeadingDashboard
-        routerDashboard="/staff"
-        pageCurrentContent="List property type"
-        pageCurrentRouter="/staff/listPropertyType"
-      />
+      <div className="mt-2">
+        <HeadingDashboard
+          routerDashboard="/staff"
+          pageCurrentContent="List property type"
+          pageCurrentRouter="/staff/listPropertyType"
+        />
+      </div>
 
       <div className="">
         <div className="pb-6 pt-4">
