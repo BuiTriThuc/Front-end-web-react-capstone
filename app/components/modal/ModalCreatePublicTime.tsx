@@ -27,7 +27,10 @@ const initialDateRange = {
   endDate: new Date(),
   key: 'selection',
 };
-
+interface IDate {
+  checkIn: string;
+  checkOut: string;
+}
 export default function ModalCreatePublicTime() {
   const { data: session } = useSession();
   const router = useRouter();
@@ -41,11 +44,17 @@ export default function ModalCreatePublicTime() {
 
   const [dateRange, setDateRange] = useState(initialDateRange);
   const [publicDateRange, setPublicDateRange] = useState(dateRange);
-  const [timeFramesId, setTimeFramesId] = useState();
+  const [timeFramesId, setTimeFramesId] = useState(1);
   const [timeFramesWeekNumber, setTimeFramesWeekNumber] = useState();
   const [yearCreate, setYearCreate] = useState<number>(new Date().getFullYear() + 1);
   const [dateOut, setDateOut] = useState<any>();
-
+  const [timeHasBooked, setTimeHasBooked] = useState<IDate[]>([{ checkIn: '', checkOut: '' }]);
+  const [availableTimeCreated, setAvailableTimeCreated] = useState<IDate[]>([
+    { checkIn: '', checkOut: '' },
+  ]);
+  const [arrayTimeDisAble, setArrayTimeDisAble] = useState<IDate[]>([
+    { checkIn: '', checkOut: '' },
+  ]);
   useEffect(() => {
     if (detailCoOwner) {
       setTimeFramesId(detailCoOwner?.timeFrames[0]?.id);
@@ -53,20 +62,10 @@ export default function ModalCreatePublicTime() {
   }, [detailCoOwner]);
 
   const getWeekDates = (weekNumber: number, year: number) => {
-    // const januaryFirst = new Date(year, 0, 1); // January is month 0 in JavaScript
-    // const weekStart = startOfWeek(januaryFirst, { weekStartsOn: 1 }); // Assuming your week starts on Monday
-
-    // // Calculate the number of days to add to reach the desired week
-    // const daysToAdd = (weekNumber - 1) * 7;
-
-    // const startDate = new Date(weekStart);
-    // startDate.setDate(weekStart.getDate() + daysToAdd);
-
-    // const endDate = new Date(startDate);
-    // endDate.setDate(startDate.getDate() + 6); // A week is 7 days
-
-    const startDate = dayjs().year(year).isoWeek(weekNumber).startOf('isoWeek');
-    const endDate = dayjs().year(year).isoWeek(weekNumber).endOf('isoWeek');
+    const startDate = dayjs().year(year).isoWeek(weekNumber).startOf('isoWeek').startOf('day');
+    //.set('hour', 7);
+    const endDate = dayjs().year(year).isoWeek(weekNumber).endOf('isoWeek').startOf('day');
+    //.set('hour', 7);
 
     setDateRange({ ...dateRange, startDate: startDate.toDate(), endDate: endDate.toDate() });
     setPublicDateRange({
@@ -94,23 +93,152 @@ export default function ModalCreatePublicTime() {
 
     return datesOutsideDateRange;
   };
+  const fetchAvailableTimeCreated = (availableId: number, year: number) => {
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: `http://localhost:8080/api/v1/available-times/getAvailableTimeCreated?timeFrameId=${availableId}&year=${year}`,
+      headers: {},
+    };
 
+    axios
+      .request(config)
+      .then((response) => {
+        const rs = response.data.map((element: any) => {
+          const startDate = element.startTime;
+          const endDate = element.endTime;
+          const obj = { checkIn: startDate, checkOut: endDate };
+          return obj;
+        });
+        setAvailableTimeCreated(rs);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   const handleChangeTimeFrameId = (value: any) => {
     setTimeFramesId(value);
   };
+  useEffect(() => {
+    setDateOut([]);
+    fetchtimeHasBooked(timeFramesId, yearCreate);
+    fetchAvailableTimeCreated(timeFramesId, yearCreate);
+    setTimeHasBooked([...timeHasBooked, ...availableTimeCreated]);
+  }, [timeFramesId, yearCreate, createPublicTime.isOpen]);
+  useEffect(() => {
+    setArrayTimeDisAble([...timeHasBooked, ...availableTimeCreated]);
+  }, [timeHasBooked, availableTimeCreated]);
+  //getTimeHasBookedInTimeFrame and year
+  const fetchtimeHasBooked = (timeFrameId: number, year: number) => {
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: `https://holiday-swap.click/api/booking/timeHasBooked?timeFrameId=${timeFrameId}&year=${year}`,
+      headers: {},
+    };
 
+    axios
+      .request(config)
+      .then((response) => {
+        setTimeHasBooked(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  useEffect(() => {
+    var checkDateInBoundary: Date[] = checkDateIsInBoundary(arrayTimeDisAble);
+    var dateDiffGreaterTwo = dateDiffIsGreaterTwo(arrayTimeDisAble);
+    var dateConsecutive = dateIsConsecutive(arrayTimeDisAble);
+    setDateOut([...checkDateInBoundary, ...dateDiffGreaterTwo, ...dateConsecutive]);
+    // console.log('useEffect timeHasBooked');
+  }, [arrayTimeDisAble]);
+  const checkDateIsInBoundary = (array: IDate[]) => {
+    var arr: Date[] = [];
+    array.forEach((element) => {
+      var checkIn = new Date(element.checkIn);
+      checkIn.setHours(0, 0, 0, 0);
+      var checkOut = new Date(element.checkOut);
+      checkOut.setHours(0, 0, 0, 0);
+      if (checkIn.getTime() == dateRange.startDate.getTime()) {
+        arr.push(checkIn);
+      }
+      if (checkOut.getTime() == dateRange.endDate.getTime()) {
+        arr.push(checkOut);
+      }
+    });
+    return arr;
+  };
+  const dateDiffIsGreaterTwo = (array: IDate[]) => {
+    var arr: Date[] = [];
+    array.forEach((element) => {
+      var checkIn = new Date(element.checkIn);
+      var checkOut = new Date(element.checkOut);
+      const timeDifference = checkOut.getTime() - checkIn.getTime();
+      const daysDifference = timeDifference / (1000 * 3600 * 24);
+
+      if (daysDifference > 1) {
+        var theDateStart = checkIn;
+        theDateStart = new Date(theDateStart.getTime() + 24 * 60 * 60 * 1000);
+        while (theDateStart.getTime() < checkOut.getTime()) {
+          arr.push(theDateStart);
+          theDateStart = new Date(theDateStart.getTime() + 24 * 60 * 60 * 1000);
+        }
+      }
+    });
+    return arr;
+  };
+  const dateIsConsecutive = (array: IDate[]) => {
+    var arr: Date[] = [];
+    array.forEach((element) => {
+      var checkIn = new Date(element.checkIn);
+      var checkOut = new Date(element.checkOut);
+      for (let index = 1; index < array.length; index++) {
+        const nextCheckIn = new Date(array[index].checkIn);
+        const nextCheckOut = new Date(array[index].checkOut);
+        if (checkOut.getTime() == nextCheckIn.getTime()) {
+          arr.push(nextCheckIn);
+        } else if (checkIn.getTime() == nextCheckOut.getTime()) {
+          arr.push(nextCheckOut);
+        }
+      }
+    });
+    return arr;
+  };
+  const func4 = (ranges: any, array: IDate[]) => {
+    console.log(dateOut);
+    const { selection } = ranges;
+    const startDate = selection.startDate;
+
+    const endDate = selection.endDate;
+    array.forEach((element) => {
+      var checkIn = new Date(element.checkIn);
+      checkIn.setHours(0, 0, 0, 0);
+      var checkOut = new Date(element.checkOut);
+      checkOut.setHours(0, 0, 0, 0);
+      if (startDate.getTime() < checkIn.getTime()) {
+        const result = dateOut.filter((date: any) => date.getTime() != checkIn.getTime());
+        setDateOut([...result, ...[checkOut]]);
+        // arr.push(checkOut);
+      } else if (startDate.getTime() > checkIn.getTime()) {
+        const result = dateOut.filter((date: any) => date.getTime() != checkOut.getTime());
+        setDateOut([...result, ...[checkIn]]);
+        // arr.push(checkIn);
+      }
+    });
+  };
   useEffect(() => {
     const yearRegex = new RegExp(`^2\\d{3}$`);
     if (timeFramesWeekNumber && !yearRegex.test(format(new Date(yearCreate), 'yyyy').trim())) {
-      console.log('Check week', timeFramesWeekNumber);
+      // console.log('Check week', timeFramesWeekNumber);
       getWeekDates(timeFramesWeekNumber, yearCreate);
     }
   }, [timeFramesWeekNumber, yearCreate]);
 
   useEffect(() => {
     if (dateRange) {
-      const newDateOUt = getDatesOutsideDateRange(dateRange);
-      setDateOut(newDateOUt);
+      // const newDateOUt = getDatesOutsideDateRange(dateRange);
+      // setDateOut(newDateOUt);
     }
   }, [dateRange]);
 
@@ -228,8 +356,10 @@ export default function ModalCreatePublicTime() {
             value={publicDateRange}
             onChange={(value: any) => {
               setPublicDateRange(value.selection);
+              func4(value, arrayTimeDisAble);
             }}
             minDate={dateRange.startDate}
+            maxDate={dateRange.endDate}
             disabledDates={dateOut}
             className="w-full"
           />
