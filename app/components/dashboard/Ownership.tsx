@@ -10,6 +10,9 @@ import toast from 'react-hot-toast';
 import { Pagination } from 'flowbite-react';
 import axios from 'axios';
 import HeadingDashboard from '../HeadingDashboard';
+import dayjs from 'dayjs';
+import isoWeek from 'dayjs/plugin/isoWeek';
+dayjs.extend(isoWeek);
 
 const TABLE_HEAD = [
   'Resort',
@@ -142,55 +145,77 @@ const Ownership: React.FC<OwnershipProps> = ({ ownershipUser, resort, currentUse
                 {(ownershipUserList?.content || [])
                   .slice()
                   .reverse()
-                  .map((item: any, index: number) => (
-                    <Table.Row
-                      key={index}
-                      className="bg-white dark:border-gray-700 dark:bg-gray-800"
-                    >
-                      <Table.Cell>{item?.resort?.resortName}</Table.Cell>
-                      <Table.Cell>{item.property.propertyName}</Table.Cell>
-                      <Table.Cell>{item.id.roomId}</Table.Cell>
-                      <Table.Cell>
-                        {item.startTime !== null
-                          ? format(new Date(item.startTime), 'yyyy')
-                          : 'Forever'}
-                      </Table.Cell>
-                      <Table.Cell>
-                        {item.endTime !== null ? format(new Date(item.endTime), 'yyyy') : 'Forever'}
-                      </Table.Cell>
-                      <Table.Cell>
-                        {item.type === 'DEEDED' ? 'Owner forever' : 'Owner for a period of time'}
-                      </Table.Cell>
-                      <Table.Cell>
-                        {item.status === 'ACCEPTED' ? (
-                          <div className="py-2 px-1 text-sm text-center  bg-slate-200 rounded-md text-green-500">
-                            ACCEPTED
-                          </div>
-                        ) : (
-                          <div className="py-2 px-1 text-center text-sm bg-slate-200 rounded-md text-orange-500">
-                            PENDING
-                          </div>
-                        )}
-                      </Table.Cell>
-                      <Table.Cell>
-                        {item.status === 'ACCEPTED' && (
-                          <div
-                            onClick={() =>
-                              handleRouter(
-                                item.id.propertyId,
-                                item.id.userId,
-                                item.id.roomId,
-                                item.status
-                              )
-                            }
-                            className="font-medium text-cyan-600 hover:underline dark:text-cyan-500 hover:cursor-pointer"
-                          >
-                            <p>Detail</p>
-                          </div>
-                        )}
-                      </Table.Cell>
-                    </Table.Row>
-                  ))}
+                  .map((item: any, index: number) => {
+                    let endYear = new Date(item.endTime).getFullYear();
+                    let currentWeekIso = dayjs().isoWeek();
+                    let flagTimeFramesCheck = false;
+                    if (item.status === 'ACCEPTED') {
+                      // Deeded always true
+                      if (item.type === 'DEEDED') flagTimeFramesCheck = true;
+                      else if (endYear > new Date().getFullYear()) flagTimeFramesCheck = true;
+                      else if ((endYear = new Date().getFullYear()))
+                        item.timeFrames.forEach((element: any) => {
+                          if (element.weekNumber > currentWeekIso) flagTimeFramesCheck = true;
+                        });
+                    }
+                    return (
+                      <>
+                        <Table.Row
+                          key={index}
+                          className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                        >
+                          <Table.Cell>{item?.property.resort?.resortName}</Table.Cell>
+                          <Table.Cell>{item.property.propertyName}</Table.Cell>
+                          <Table.Cell>{item.id.roomId}</Table.Cell>
+                          <Table.Cell>
+                            {item.startTime !== null
+                              ? format(new Date(item.startTime), 'yyyy')
+                              : '-'}
+                          </Table.Cell>
+                          <Table.Cell>
+                            {item.endTime !== null ? format(new Date(item.endTime), 'yyyy') : '-'}
+                          </Table.Cell>
+                          <Table.Cell>
+                            {item.type === 'DEEDED'
+                              ? 'Owner forever'
+                              : 'Owner for a period of time'}
+                          </Table.Cell>
+                          <Table.Cell>
+                            {item.status === 'ACCEPTED' ? (
+                              <div className="py-2 px-1 text-sm text-center  bg-slate-200 rounded-md text-green-500">
+                                ACCEPTED
+                              </div>
+                            ) : (
+                              <div className="py-2 px-1 text-center text-sm bg-slate-200 rounded-md text-orange-500">
+                                PENDING
+                              </div>
+                            )}
+                          </Table.Cell>
+                          <Table.Cell>
+                            {flagTimeFramesCheck ? (
+                              <div
+                                onClick={() =>
+                                  handleRouter(
+                                    item.id.propertyId,
+                                    item.id.userId,
+                                    item.id.roomId,
+                                    item.status
+                                  )
+                                }
+                                className="font-medium text-cyan-600 hover:underline dark:text-cyan-500 hover:cursor-pointer"
+                              >
+                                <p>Detail</p>
+                              </div>
+                            ) : (
+                              <div className="font-medium text-red-600">
+                                <p>Is expired</p>
+                              </div>
+                            )}
+                          </Table.Cell>
+                        </Table.Row>
+                      </>
+                    );
+                  })}
               </Table.Body>
             </Table>
           ) : (
