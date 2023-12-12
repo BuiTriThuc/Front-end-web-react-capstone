@@ -124,8 +124,8 @@ const ListPropertyType: React.FC<ListPropertyTypeProps> = () => {
         <Table>
           <Table.Head>
             <Table.HeadCell>No</Table.HeadCell>
-            <Table.HeadCell className="w-[200px]">Property View Name</Table.HeadCell>
-            <Table.HeadCell>Property View Description</Table.HeadCell>
+            <Table.HeadCell className="w-[200px]">Property Type Name</Table.HeadCell>
+            <Table.HeadCell>Property Type Description</Table.HeadCell>
             <Table.HeadCell>
               <span className="sr-only">Edit</span>
             </Table.HeadCell>
