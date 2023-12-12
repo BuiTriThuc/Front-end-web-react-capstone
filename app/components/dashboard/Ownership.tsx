@@ -192,25 +192,40 @@ const Ownership: React.FC<OwnershipProps> = ({ ownershipUser, resort, currentUse
                             )}
                           </Table.Cell>
                           <Table.Cell>
-                            {flagTimeFramesCheck ? (
-                              <div
-                                onClick={() =>
-                                  handleRouter(
-                                    item.id.propertyId,
-                                    item.id.userId,
-                                    item.id.roomId,
-                                    item.status
-                                  )
-                                }
-                                className="font-medium text-cyan-600 hover:underline dark:text-cyan-500 hover:cursor-pointer"
-                              >
-                                <p>Detail</p>
-                              </div>
-                            ) : (
-                              <div className="font-medium text-red-600">
-                                <p>Is expired</p>
-                              </div>
-                            )}
+                            {(() => {
+                              if (flagTimeFramesCheck) {
+                                return (
+                                  <div
+                                    onClick={() =>
+                                      handleRouter(
+                                        item.id.propertyId,
+                                        item.id.userId,
+                                        item.id.roomId,
+                                        item.status
+                                      )
+                                    }
+                                    className="font-medium text-cyan-600 hover:underline dark:text-cyan-500 hover:cursor-pointer"
+                                  >
+                                    <p>Detail</p>
+                                  </div>
+                                );
+                              } else if (
+                                item.property.resort.status === 'DEACTIVATE' ||
+                                item.property.status === 'DEACTIVATE'
+                              ) {
+                                return (
+                                  <div className="font-medium text-red-600">
+                                    <p>Resort is Deactive</p>
+                                  </div>
+                                );
+                              } else {
+                                return (
+                                  <div className="font-medium text-red-600">
+                                    <p>Is expired</p>
+                                  </div>
+                                );
+                              }
+                            })()}
                           </Table.Cell>
                         </Table.Row>
                       </>
