@@ -15,6 +15,9 @@ import ModalCreate from './ModalCreate';
 import ToolTipCreateOwnership from '../tooltip/ToolTipCreateOwnership';
 import UploadImageCreateOwnership from './UploadImageCreateOwnership';
 import { format } from 'date-fns';
+import { Checkbox, Col, Row } from 'antd';
+import { CheckboxValueType } from 'antd/es/checkbox/Group';
+import { CheckboxChangeEvent } from 'antd/es/checkbox';
 
 export const type = [
   {
@@ -28,7 +31,11 @@ export const type = [
     label: 'Owner for a period of time',
   },
 ];
-
+interface Option {
+  label: string;
+  value: string;
+  disabled?: boolean;
+}
 export default function ModalCreateOwnership() {
   const { data: session } = useSession();
   const router = useRouter();
@@ -42,7 +49,7 @@ export default function ModalCreateOwnership() {
   const [propertyValue, setPropertyValue] = useState<any>();
   const [typeValue, setTypeValue] = useState<any>(type[0].type);
   const [visibleCalendar, setVisibleCalendar] = useState(false);
-  const [startYear, setStartYear] = useState<any>(new Date('2000-01-01').getFullYear());
+  const [startYear, setStartYear] = useState<any>(new Date().getFullYear());
   const [endYear, setEndYear] = useState<any>(new Date('2000-01-01').getFullYear() + 1);
   const [weekNumberValue, setWeekNumberValue] = useState<any>([]);
   const [weekNumberSingle, setWeekNumberSingle] = useState<any>();
@@ -174,58 +181,82 @@ export default function ModalCreateOwnership() {
       roomId: data.roomId,
     };
     const coOwner = {
+      propertyId: data.propertyId as number,
+      userId: currentUser.userId as number,
+      roomId: data.roomId,
+      startTime: `${startYear}-01-01`,
       endTime: typeValue === 'DEEDED' ? null : `${endYear}-01-01`,
-      startTime: typeValue === 'DEEDED' ? null : `${startYear}-01-01`,
       type: typeValue,
-      timeFrames: weekNumberValue?.map((element: any) => ({ weekNumber: element as number })),
+      timeFrames: checkedList,
     };
-    const coOwnerIdBlob = new Blob([JSON.stringify(coOwnerId)], {
-      type: 'application/json',
-    });
+    // const coOwnerIdBlob = new Blob([JSON.stringify(coOwnerId)], {
+    //   type: 'application/json',
+    // });
     const coOwnerBlob = new Blob([JSON.stringify(coOwner)], {
       type: 'application/json',
     });
-    formData.append('coOwnerId', coOwnerIdBlob);
-    formData.append('coOwner', coOwnerBlob);
+    // formData.append('coOwnerId', coOwnerIdBlob);
+    formData.append('dtoRequest', coOwnerBlob);
     file.forEach((element) => {
       formData.append('contractImages', element);
     });
 
     const weekNumberRegex = /^(([1-9]|[1-4][0-9]|5[0-2])(,(?!,))?)+$/;
 
-    if (!weekNumberRegex.test(data.weekNumber.trim().split(' ').join(''))) {
-      setWeekNumberValue([]);
-      setValue('weekNumber', '');
-      toast.error('Invalid week number format. Please enter a valid format (e.g., 1, 2, 3).');
-      console.log('Regex Test Result:', weekNumberRegex.test(data.weekNumber.trim()));
-      setIsLoading(false);
-      setOpenModal(false);
-    } else {
-      axiosAuthClient
-        .post('https://holiday-swap.click/api/co-owners', formData)
-        .then(() => {
-          toast.success('Create ownership success!');
-          setOpenModal(false);
-          setTypeValue(type[0].type);
-          setResortId(dataResort[0]?.id);
-          setPropertyValue(null);
-          setWeekNumberValue(null);
-          setFile([]);
-          setIsClearImage(true);
-          reset();
-          createOwnershipModal.onSuccess();
-          createOwnershipModal.onClose();
-        })
-        .catch((response) => {
-          toast.error(response.response.data.message);
-        })
-        .finally(() => {
-          setIsLoading(false);
-          setIsClearImage(false);
-        });
-    }
+    // if (!weekNumberRegex.test(data.weekNumber.trim().split(' ').join(''))) {
+    //   setWeekNumberValue([]);
+    //   setValue('weekNumber', '');
+    //   toast.error('Invalid week number format. Please enter a valid format (e.g., 1, 2, 3).');
+    //   console.log('Regex Test Result:', weekNumberRegex.test(data.weekNumber.trim()));
+    //   setIsLoading(false);
+    //   setOpenModal(false);
+    // } else {
+    axiosAuthClient
+      .post('https://holiday-swap.click/api/co-owners', formData)
+      .then(() => {
+        toast.success('Create ownership success!');
+        setOpenModal(false);
+        setTypeValue(type[0].type);
+        setResortId(dataResort[0]?.id);
+        setPropertyValue(null);
+        setWeekNumberValue(null);
+        setCheckedList([]);
+        setFile([]);
+        setIsClearImage(true);
+        reset();
+        createOwnershipModal.onSuccess();
+        createOwnershipModal.onClose();
+      })
+      .catch((response) => {
+        toast.error(response.response.data.message);
+      })
+      .finally(() => {
+        setIsLoading(false);
+        setIsClearImage(false);
+      });
+    // }
+  };
+  const plainOptions: Option[] = [];
+  for (let index = 1; index <= 52; index++) {
+    let week = {
+      label: index < 10 ? `${index}` : `${index}`,
+      value: String(index),
+    };
+    plainOptions.push(week);
+  }
+  const defaultCheckedList: CheckboxValueType[] = [];
+  const [checkedList, setCheckedList] = useState<CheckboxValueType[]>(defaultCheckedList);
+
+  const checkAll = plainOptions.length === checkedList.length;
+  const indeterminate = checkedList.length > 0 && checkedList.length < plainOptions.length;
+
+  const onChange = (list: CheckboxValueType[]) => {
+    setCheckedList(list);
   };
 
+  const onCheckAllChange = (e: CheckboxChangeEvent) => {
+    setCheckedList(e.target.checked ? plainOptions.map((op) => op.value) : []);
+  };
   const bodyContent = (
     <div className="flex flex-col gap-4 ">
       <div className="grid grid-cols-2 gap-4">
@@ -261,7 +292,17 @@ export default function ModalCreateOwnership() {
           </Select>
         </div>
       </div>
-
+      <div className="grid grid-cols-2 gap-4">
+        <InputComponent
+          id="apartmentId"
+          label="Apartment ID"
+          disabled={isLoading}
+          register={register}
+          errors={errors}
+          setValue={setValue}
+          required
+        />
+      </div>
       <div className="grid grid-cols-1">
         <Label value="Select type ownership" />
         <Select
@@ -277,6 +318,29 @@ export default function ModalCreateOwnership() {
         </Select>
       </div>
 
+      {typeValue === 'DEEDED' && (
+        <div onClick={handleVisibleCalendar} className="grid grid-cols-1 gap-4">
+          <div className={`grid grid-cols-2 `}>
+            <div className={`p-2 `}>
+              <div className="text-base">Year Next Use</div>
+
+              <Select
+                value={startYear}
+                className="focus:ring-0 focus:border-0"
+                onChange={(e: ChangeEvent<HTMLSelectElement>) => {
+                  setStartYear(Number(e.target.value));
+                }}
+              >
+                {arrayYear.map((item) => (
+                  <option key={item} value={item}>
+                    {item}
+                  </option>
+                ))}
+              </Select>
+            </div>
+          </div>
+        </div>
+      )}
       {typeValue === 'RIGHT_TO_USE' && (
         <div onClick={handleVisibleCalendar} className="grid grid-cols-1 gap-4">
           <div className={`grid grid-cols-2 `}>
@@ -318,8 +382,8 @@ export default function ModalCreateOwnership() {
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-4">
-        <InputComponent
+      <div className="">
+        {/* <InputComponent
           id="weekNumber"
           label="Week number"
           disabled={isLoading}
@@ -331,16 +395,27 @@ export default function ModalCreateOwnership() {
           setValue={setValue}
           required
           tooltipContent="This is the week you own in the year, for example if you own the 6th week in 2023, you enter 6. You can enter multiple weeks by separating the weeks with a comma. For example: 6, 10, 11"
-        />
-        <InputComponent
-          id="roomId"
-          label="Apartment ID"
-          disabled={isLoading}
-          register={register}
-          errors={errors}
-          setValue={setValue}
-          required
-        />
+        /> */}
+        <>
+          <Checkbox indeterminate={indeterminate} onChange={onCheckAllChange} checked={checkAll}>
+            Select all
+          </Checkbox>
+          <br />
+          <div>
+            {/* <Checkbox.Group options={plainOptions} value={checkedList} onChange={onChange} /> */}
+            <Checkbox.Group style={{ width: '100%' }} onChange={onChange} value={checkedList}>
+              <Row gutter={24}>
+                {plainOptions.map((e, i) => {
+                  return (
+                    <Col span={2} key={i}>
+                      <Checkbox value={e.value}>{e.label}</Checkbox>
+                    </Col>
+                  );
+                })}
+              </Row>
+            </Checkbox.Group>
+          </div>
+        </>
       </div>
       <div className="grid grid-cols-1 gap-1">
         <div className="flex flex-row items-center gap-1">
