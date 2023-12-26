@@ -45,15 +45,10 @@ const DetailOwnershipApprove: React.FC<DetailOwnershipApproveProps> = ({ approve
     // };
 
     axiosAuthClient
-      .put(
-        `https://holiday-swap.click/api/co-owners/status?propertyId=${propertyId}&userId=${userId}&roomId=${roomId}&coOwnerStatus=${value}`,
-        body
-      )
+      .put(`https://holiday-swap.click/api/co-owners/${approveDetail.id}?coOwnerStatus=${value}`, body)
       .then(async () => {
         toast.success('Update status success');
-        const newDetail = await axios.get(
-          `https://holiday-swap.click/api/co-owners/detail?propertyId=${propertyId}&userId=${userId}&roomId=${roomId}`
-        );
+        const newDetail = await axios.get(`https://holiday-swap.click/api/co-owners/${approveDetail.id}`);
 
         if (newDetail) {
           setDetail(newDetail.data);
@@ -113,7 +108,9 @@ const DetailOwnershipApprove: React.FC<DetailOwnershipApproveProps> = ({ approve
               <div className="grid grid-cols-2">
                 <div className="text-black mb-5">
                   Resort:{' '}
-                  <span className="text-slate-600">{approveDetail?.resort?.resortName}</span>
+                  <span className="text-slate-600">
+                    {approveDetail?.property.resort?.resortName}
+                  </span>
                 </div>
                 <div className="text-black mb-5">
                   Property:{' '}
@@ -126,7 +123,7 @@ const DetailOwnershipApprove: React.FC<DetailOwnershipApproveProps> = ({ approve
                   </span>
                 </div>
                 <div className="text-black">
-                  Apartment ID: <span className="text-slate-600">{detail.id.roomId}</span>
+                  Apartment ID: <span className="text-slate-600">{detail.roomId}</span>
                 </div>
               </div>
 

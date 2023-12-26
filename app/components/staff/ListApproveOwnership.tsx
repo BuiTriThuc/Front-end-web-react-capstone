@@ -147,7 +147,7 @@ const ListApproveOwnership: React.FC<OwnershipProps> = ({ ownershipStaff }) => {
                 <Table.Row key={index} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                   <Table.Cell className="w-[250px]">{item?.property.resort?.resortName}</Table.Cell>
                   <Table.Cell>{item.property.propertyName}</Table.Cell>
-                  <Table.Cell className="w-[140px]">{item.id.roomId}</Table.Cell>
+                  <Table.Cell className="w-[140px]">{item.roomId}</Table.Cell>
                   <Table.Cell>
                     {item.user.fullName ? item.user.fullName : item.user.username}
                   </Table.Cell>
@@ -181,7 +181,7 @@ const ListApproveOwnership: React.FC<OwnershipProps> = ({ ownershipStaff }) => {
                     <span
                       onClick={() =>
                         router.push(
-                          `/staff/listapproveOwnership/${item.id.propertyId}/${item.id.userId}/${item.id.roomId}`
+                          `/staff/listapproveOwnership/${item.id}`
                         )
                       }
                       className="text-sky-500 hover:underline cursor-pointer "
