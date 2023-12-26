@@ -43,14 +43,14 @@ const ApartmentDetail: React.FC<ApartmentDetailProps> = ({ apartment, currentUse
   const [dateRange, setDateRange] = useState(initialDateRange);
   const [initialDateRangeValue, setInitialDateRangeValue] = useState(initialDateRange);
   const [apartmentAllowGuest, setApartmentAllowGuest] = useState(
-    apartment.property.numberKingBeds * 2 +
-      apartment.property.numberQueenBeds * 2 +
-      apartment.property.numberSingleBeds +
-      apartment.property.numberDoubleBeds * 2 +
-      apartment.property.numberTwinBeds * 2 +
-      apartment.property.numberFullBeds * 2 +
-      apartment.property.numberSofaBeds +
-      apartment.property.numberMurphyBeds
+    apartment.availableTime.coOwner.property.numberKingBeds * 2 +
+      apartment.availableTime.coOwner.property.numberQueenBeds * 2 +
+      apartment.availableTime.coOwner.property.numberSingleBeds +
+      apartment.availableTime.coOwner.property.numberDoubleBeds * 2 +
+      apartment.availableTime.coOwner.property.numberTwinBeds * 2 +
+      apartment.availableTime.coOwner.property.numberFullBeds * 2 +
+      apartment.availableTime.coOwner.property.numberSofaBeds +
+      apartment.availableTime.coOwner.property.numberMurphyBeds
   );
 
   const [checkInMap, setCheckInMap] = useState<Map<string, any>>(new Map());

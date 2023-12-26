@@ -28,12 +28,12 @@ const CardListResort: React.FC<CardListResortProps> = ({ data }) => {
           slide={false}
           className="relative w-full h-[300px] rounded-xl z-40 object-cover  "
         >
-          {data?.property.propertyImage.slice(0, 5).map((item: any) => (
+          {data?.availableTime.coOwner.property.propertyImages.slice(0, 5).map((item: any) => (
             <div key={item.id} className="w-full h-full ">
               <Image
                 onClick={() =>
                   handleRedirectApartmentDetail(
-                    `/apartment/${data.availableTime.id}?propertyId=${data.coOwnerId.propertyId}&roomId=${data.coOwnerId.roomId}`
+                    `/apartment/${data.availableTime.id}?propertyId=${data.availableTime.coOwner.property.id}&roomId=${data.availableTime.coOwner.roomId}`
                   )
                 }
                 src={item.link}
@@ -49,15 +49,22 @@ const CardListResort: React.FC<CardListResortProps> = ({ data }) => {
         <div
           onClick={() =>
             handleRedirectApartmentDetail(
-              `/apartment/${data.availableTime.id}?propertyId=${data.coOwnerId.propertyId}&roomId=${data.coOwnerId.roomId}`
+              `/apartment/${data.availableTime.id}?propertyId=${data.availableTime.coOwner.property.id}&roomId=${data.availableTime.coOwner.roomId}`
             )
           }
           className="w-full "
         >
-          <div className="text-base font-bold line-clamp-1">{data?.property.propertyName}</div>
-          <div className="text-gray-600 text-base line-clamp-1">{data?.resort.resortName}</div>
+          <div className="text-base font-bold line-clamp-1">
+            {data?.availableTime.coOwner.property.propertyName}
+          </div>
+          <div className="text-gray-600 text-base line-clamp-1">
+            {data?.availableTime.coOwner.property.resort.resortName}
+          </div>
           <div className="text-gray-600 text-base">
-            Owner by: {data?.user.fullName ? data?.user.fullName : data?.user.username}
+            Owner by:{' '}
+            {data?.availableTime.coOwner.user.fullName
+              ? data?.availableTime.coOwner.user.fullName
+              : data?.availableTime.coOwner.user.username}
           </div>
           <div className="text-gray-600 text-base">
             {new Date(data?.availableTime.startTime).getMonth() ===
@@ -74,11 +81,11 @@ const CardListResort: React.FC<CardListResortProps> = ({ data }) => {
             </div>
           </div>
         </div>
-        {data?.property?.rating && (
+        {data?.availableTime.coOwner.property?.rating && (
           <div className="">
             <div className="flex flex-row items-center gap-1">
               <AiFillStar color="orange" />
-              <div>{Number(data?.property.rating).toFixed(2)}</div>
+              <div>{Number(data?.availableTime.coOwner.property.rating).toFixed(2)}</div>
             </div>
           </div>
         )}

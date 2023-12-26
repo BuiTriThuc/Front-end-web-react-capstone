@@ -14,7 +14,7 @@ export const generateMetadata = async ({ params }: { params: IParams }) => {
   const apartment = await GetApartmentById(params);
 
   return {
-    title: apartment?.property.propertyName,
+    title: apartment?.availableTime.coOwner.property.propertyName ,
   };
 };
 

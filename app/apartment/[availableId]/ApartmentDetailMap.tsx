@@ -16,40 +16,40 @@ const Marker: React.FC<MarkerProps> = ({ text }) => (
 );
 
 interface ApartmentDetailMapProps {
-    apartment: any;
+  apartment: any;
 }
 
 const ApartmentDetailMap: React.FC<ApartmentDetailMapProps> = ({ apartment }) => {
   return (
     <div className="flex flex-col">
-        <div className="text-2xl font-bold">Location</div>
-        <span className="block mt-2 text-neutral-500 dark:text-neutral-400 py-5">
-          {apartment.resort.locationFormattedName}
-        </span>
-        <div className="aspect-w-5 aspect-h-5 sm:aspect-h-3 ring-1 ring-black/10 rounded-xl z-0">
-        
-      <div className="rounded-xl overflow-hidden z-0">
-        <GoogleMapReact
-          bootstrapURLKeys={{
-            key: 'AIzaSyDTZQ9gsIrh6G2_HtnX7pTgFS74G_VVedU',
-            version: 'weekly',
-          }}
-          defaultCenter={{
-            lat: apartment.resort.latitude,
-            lng: apartment.resort.longitude,
-          }}
-          defaultZoom={12}
-          yesIWantToUseGoogleMapApiInternals
-        >
-          <Marker
-            key={apartment.resort.id}
-            lat={apartment.resort.latitude}
-            lng={apartment.resort.longitude}
-            text={apartment.availableTime.pricePerNight}
-          />
-        </GoogleMapReact>
+      <div className="text-2xl font-bold">Location</div>
+      <span className="block mt-2 text-neutral-500 dark:text-neutral-400 py-5">
+        {apartment.availableTime.coOwner.property.resort.locationFormattedName}
+      </span>
+      <div className="aspect-w-5 aspect-h-5 sm:aspect-h-3 ring-1 ring-black/10 rounded-xl z-0">
+
+        <div className="rounded-xl overflow-hidden z-0">
+          <GoogleMapReact
+            bootstrapURLKeys={{
+              key: 'AIzaSyDTZQ9gsIrh6G2_HtnX7pTgFS74G_VVedU',
+              version: 'weekly',
+            }}
+            defaultCenter={{
+              lat: apartment.availableTime.coOwner.property.resort.latitude,
+              lng: apartment.availableTime.coOwner.property.resort.longitude,
+            }}
+            defaultZoom={12}
+            yesIWantToUseGoogleMapApiInternals
+          >
+            <Marker
+              key={apartment.availableTime.coOwner.property.resort.id}
+              lat={apartment.availableTime.coOwner.property.resort.latitude}
+              lng={apartment.availableTime.coOwner.property.resort.longitude}
+              text={apartment.availableTime.pricePerNight}
+            />
+          </GoogleMapReact>
+        </div>
       </div>
-    </div>
     </div>
   );
 };

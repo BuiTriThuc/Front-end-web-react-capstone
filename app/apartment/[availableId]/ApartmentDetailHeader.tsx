@@ -27,28 +27,28 @@ const ApartmentDetailHeader: React.FC<ApartmentDetailHeaderProps> = ({ apartment
   return (
     <div className="w-full">
       <div className="text-xl font-bold py-3 md:text-2xl md:font-bold md:py-3 lg:text-2xl lg:font-bold lg:py-3 xl:text-2xl xl:font-bold xl:py-3">
-        {apartment.property.propertyName}
+        {apartment.availableTime.coOwner.property.propertyName}
       </div>
       <div className="w-full py-3">
         <div className="font-normal text-base text-black flex flex-row gap-4">
-          {apartment.property.rating && (
+          {apartment.availableTime.coOwner.property.rating && (
             <div className="flex flex-row items-center">
-              <AiFillStar size={18} /> {apartment.property.rating} ·{' '}
+              <AiFillStar size={18} /> {apartment.availableTime.coOwner.property.rating} ·{' '}
               {rating ? `${rating?.content.length} reviews` : ''}
             </div>
           )}
           <div>·</div>
-          <div>{apartment.resort.resortName}</div>
+          <div>{apartment.availableTime.coOwner.property.resort.resortName}</div>
         </div>
 
         <div className="w-full  gap-2 py-4 md:grid md:grid-cols-2 md:h-[55vh] lg:h-[60vh] md:gap-2 md:py-4">
           <div className=" w-full h-80  relative md:w-full md:rounded-l-xl md:h-96 md:relative md:overflow-hidden lg:w-full lg:h-auto lg:rounded-l-xl lg:relative lg:overflow-hidden xl:h-auto xl:w-full xl:rounded-l-xl xl:relative xl:overflow-hidden ">
             <Image
               onClick={showDrawer}
-              key={apartment?.property.propertyImage[0].id}
+              key={apartment.availableTime.coOwner.property.propertyImages[0].id}
               alt="image"
               fill
-              src={apartment?.property.propertyImage[0].link}
+              src={apartment.availableTime.coOwner.property.propertyImages[0].link}
               className="w-[100%] md:object-cover md:h-full md:cursor-pointer lg:object-cover lg:h-full lg:cursor-pointer xl:object-cover xl:h-full xl:cursor-pointer"
             />
             <Link
@@ -62,7 +62,7 @@ const ApartmentDetailHeader: React.FC<ApartmentDetailHeaderProps> = ({ apartment
 
           <div className="relative hidden md:block md:relative lg:block lg:relative xl:block xl:relative">
             <div className="hidden md:grid md:grid-cols-2 md:gap-2 md:rounded-r-xl lg:grid lg:grid-cols-2 lg:gap-2 lg:rounded-r-xl xl:grid xl:grid-cols-2 xl:gap-2 xl:rounded-r-xl">
-              {apartment?.property.propertyImage.slice(1, 5).map((item: any, index: number) => (
+              {apartment.availableTime.coOwner.property.propertyImages.slice(1, 5).map((item: any, index: number) => (
                 <div
                   key={item.id}
                   className={`w-full md:h-[189px] lg:h-[220px] relative overflow-hidden  md:block ${
@@ -91,7 +91,7 @@ const ApartmentDetailHeader: React.FC<ApartmentDetailHeaderProps> = ({ apartment
         </div>
       </div>
       <Drawer placement={placement} width={500} onClose={onClose} open={open}>
-        <ViewFullImage listImage={apartment?.property.propertyImage} />
+        <ViewFullImage listImage={apartment.availableTime.coOwner.property.propertyImages} />
       </Drawer>
     </div>
   );

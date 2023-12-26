@@ -84,14 +84,17 @@ const ApartmentDetailBody: React.FC<ApartmentDetailBodyProps> = ({
       {/* Information of host */}
       <div className="flex flex-row  gap-2 border-b border-gray-400 pb-8  items-center">
         <Image
-          src={apartment.user.avatar || '/images/placeholder.jpg'}
+          src={apartment.availableTime.coOwner.user.avatar || '/images/placeholder.jpg'}
           alt="Avatar"
           width={50}
           height={50}
           className="rounded-full object-cover"
         />
         <div className="text-bold text-lg text-black">
-          Owner by {apartment.user.fullName ? apartment.user.fullName : apartment.user.username}
+          Owner by{' '}
+          {apartment.availableTime.coOwner.user.fullName
+            ? apartment.availableTime.coOwner.user.fullName
+            : apartment.availableTime.coOwner.user.username}
         </div>
       </div>
       {/* Room host by */}
@@ -99,14 +102,14 @@ const ApartmentDetailBody: React.FC<ApartmentDetailBodyProps> = ({
         <div className="px-1 py-3 gap-2 border border-gray-500 rounded-lg flex flex-col items-center justify-center  md:px-3 md:py-5 md:gap-2 md:border md:border-gray-500 md:rounded-lg md:flex md:flex-row md:items-center md:justify-center  lg:p-6 lg:gap-2 lg:border lg:border-gray-500 lg:rounded-lg lg:flex lg:flex-row lg:items-center lg:justify-center  xl:p-6 xl:gap-2 xl:border xl:border-gray-500 xl:rounded-lg xl:flex xl:flex-row xl:items-center xl:justify-center">
           <Image src="/images/icons/bed-room.png" alt="icon" width={25} height={25} />
           <div className="text-center">
-            {apartment.property.numberKingBeds +
-              apartment.property.numberQueenBeds +
-              apartment.property.numberSingleBeds +
-              apartment.property.numberDoubleBeds +
-              apartment.property.numberTwinBeds +
-              apartment.property.numberFullBeds +
-              apartment.property.numberSofaBeds +
-              apartment.property.numberMurphyBeds}{' '}
+            {apartment.availableTime.coOwner.property.numberKingBeds +
+              apartment.availableTime.coOwner.property.numberQueenBeds +
+              apartment.availableTime.coOwner.property.numberSingleBeds +
+              apartment.availableTime.coOwner.property.numberDoubleBeds +
+              apartment.availableTime.coOwner.property.numberTwinBeds +
+              apartment.availableTime.coOwner.property.numberFullBeds +
+              apartment.availableTime.coOwner.property.numberSofaBeds +
+              apartment.availableTime.coOwner.property.numberMurphyBeds}{' '}
             beds
           </div>
         </div>
@@ -160,14 +163,14 @@ const ApartmentDetailBody: React.FC<ApartmentDetailBodyProps> = ({
           <div className="">
             <div className="font-bold text-center">Bedroom</div>
             <div className="text-center">
-              {apartment.property.numberKingBeds +
-                apartment.property.numberQueenBeds +
-                apartment.property.numberSingleBeds +
-                apartment.property.numberDoubleBeds +
-                apartment.property.numberTwinBeds +
-                apartment.property.numberFullBeds +
-                apartment.property.numberSofaBeds +
-                apartment.property.numberMurphyBeds}{' '}
+              {apartment.availableTime.coOwner.property.numberKingBeds +
+                apartment.availableTime.coOwner.property.numberQueenBeds +
+                apartment.availableTime.coOwner.property.numberSingleBeds +
+                apartment.availableTime.coOwner.property.numberDoubleBeds +
+                apartment.availableTime.coOwner.property.numberTwinBeds +
+                apartment.availableTime.coOwner.property.numberFullBeds +
+                apartment.availableTime.coOwner.property.numberSofaBeds +
+                apartment.availableTime.coOwner.property.numberMurphyBeds}{' '}
               beds
             </div>
           </div>
@@ -178,15 +181,21 @@ const ApartmentDetailBody: React.FC<ApartmentDetailBodyProps> = ({
       <div className="flex flex-col py-8 border-b border-gray-500">
         <div className="text-2xl font-bold py-5">What this place offers</div>
         <div className="grid grid-cols-2 gap-5">
-          {apartment.property.inRoomAmenityType[0].inRoomAmenities.slice(0, 10).map((item: any) => (
-            <div key={item.id} className="flex flex-row gap-4 items-center">
-              <Image src={item.inRoomAmenityLinkIcon} alt="icon" width={30} height={30} />
-              <div>{item.inRoomAmenityName}</div>
-            </div>
-          ))}
+          {apartment.availableTime.coOwner.property.inRoomAmenityType != null ? (
+            apartment.availableTime.coOwner.property.inRoomAmenityType[0].inRoomAmenities
+              .slice(0, 10)
+              .map((item: any) => (
+                <div key={item.id} className="flex flex-row gap-4 items-center">
+                  <Image src={item.inRoomAmenityLinkIcon} alt="icon" width={30} height={30} />
+                  <div>{item.inRoomAmenityName}</div>
+                </div>
+              ))
+          ) : (
+            <></>
+          )}
         </div>
 
-        <div onClick={() => apartmentAmenitiesModal.onOpen(apartment)} className="py-4">
+        <div onClick={() => apartmentAmenitiesModal.onOpen(apartment.availableTime.coOwner)} className="py-4">
           <button className="py-3 px-4 border border-gray-500 rounded-lg w-48 text-center hover:bg-blue-gray-100 hover:cursor-pointer transition-all duration-300 transform active:scale-95">
             Show all aminities
           </button>
@@ -276,7 +285,11 @@ const ApartmentDetailBody: React.FC<ApartmentDetailBodyProps> = ({
         <div className="w-[60%]">
           <div
             onClick={() =>
-              router.push(`/usersprofile/${apartment.user.userId}?rating=${JSON.stringify(rating)}`)
+              router.push(
+                `/usersprofile/${
+                  apartment.availableTime.coOwner.user.userId
+                }?rating=${JSON.stringify(rating)}`
+              )
             }
             className="flex flex-row items-center gap-2"
           >
@@ -285,13 +298,16 @@ const ApartmentDetailBody: React.FC<ApartmentDetailBodyProps> = ({
                 className="rounded-full cursor-pointer"
                 width={55}
                 height={55}
-                src={apartment.user.avatar || '/images/placeholder.jpg'}
+                src={apartment.availableTime.coOwner.user.avatar || '/images/placeholder.jpg'}
                 alt="avatar"
               />
             </div>
             <div>
               <div className="text-[20px] font-bold hover:underline cursor-pointer">
-                Owner {apartment.user.fullName ? apartment.user.fullName : apartment.user.username}
+                Owner{' '}
+                {apartment.availableTime.coOwner.user.fullName
+                  ? apartment.availableTime.coOwner.user.fullName
+                  : apartment.availableTime.coOwner.user.username}
               </div>
               <div>Joins November 10, 2023</div>
             </div>
@@ -315,7 +331,7 @@ const ApartmentDetailBody: React.FC<ApartmentDetailBodyProps> = ({
           {/* <div className="mt-5">
             <div className="font-bold">Hi!</div>
             <div className="text-gray-700">
-              I&apos;m {apartment.user.fullName}, I&apos;m very passionate about traveling
+              I&apos;m {apartment.availableTime.coOwner.user.fullName}, I&apos;m very passionate about traveling
               everywhere, to meet new people, and approach new cultures. Since I have a family and
               young children, we don&apos;t have time to travel much anymore, so I host on
               HolidaySwap to meet people. I hope everyone will support me Sincerely thank
