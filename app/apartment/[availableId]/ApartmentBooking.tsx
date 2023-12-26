@@ -152,8 +152,8 @@ const ApartmentBooking: React.FC<ApartmentBookingProps> = ({
     } else {
       router.push(
         `/booking?availableTimeId=${apartment.availableTime.id}&apartmentImage=${
-          apartment.property.propertyImage[0].link
-        }&aparmentName=${apartment.property.propertyName}&priceNight=${
+          apartment.availableTime.coOwner.property.propertyImages[0].link
+        }&aparmentName=${apartment.availableTime.coOwner.property.propertyName}&priceNight=${
           apartment.availableTime.pricePerNight
         }&userId=${
           currentUser.userId
@@ -161,10 +161,12 @@ const ApartmentBooking: React.FC<ApartmentBookingProps> = ({
           dateRangeBooking
         )}&dateRange=${JSON.stringify(
           fixedDateRange
-        )}&apartmentAllowGuest=${apartmentAllowGuest}&avatar=${apartment.user.avatar}&fullName=${
-          apartment.user.fullName
-        }&rating=${apartment.property.rating}&resortName=${apartment.resort.resortName}&username=${
-          apartment.user.username
+        )}&apartmentAllowGuest=${apartmentAllowGuest}&avatar=${
+          apartment.availableTime.coOwner.user.avatar
+        }&fullName=${apartment.availableTime.coOwner.property.fullName}&rating=${
+          apartment.availableTime.coOwner.property.rating
+        }&resortName=${apartment.availableTime.coOwner.property.resort.resortName}&username=${
+          apartment.availableTime.coOwner.property.username
         }`
       );
     }
