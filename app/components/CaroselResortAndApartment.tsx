@@ -273,7 +273,7 @@ const CaroselResortAndApartment: React.FC = ({}) => {
                               style={{ height: 380 }}
                               cover={
                                 <Carousel>
-                                  {element.property?.propertyImage.map(
+                                  {element.availableTime.coOwner.property?.propertyImages.map(
                                     (image: any, index: number) => (
                                       <Image
                                         key={index}
@@ -294,17 +294,21 @@ const CaroselResortAndApartment: React.FC = ({}) => {
                                   )
                                 }
                               >
-                                <b> {element.property.propertyName}</b>
+                                <b> {element.availableTime.coOwner.property.propertyName}</b>
                                 <Meta
                                   style={{ margin: '1px' }}
                                   avatar={
-                                    element.user.avatar ? (
-                                      <Avatar src={element.user.avatar} />
+                                    element.availableTime.coOwner.user.avatar ? (
+                                      <Avatar src={element.availableTime.coOwner.user.avatar} />
                                     ) : (
-                                      <Avatar>{element.user.username} </Avatar>
+                                      <Avatar>
+                                        {element.availableTime.coOwner.user.username}
+                                      </Avatar>
                                     )
                                   }
-                                  description={'Owner: ' + element.user.username}
+                                  description={
+                                    'Owner: ' + element.availableTime.coOwner.user.username
+                                  }
                                 />
                                 <div className="px-3 py-2 ">
                                   <div>
@@ -328,9 +332,9 @@ const CaroselResortAndApartment: React.FC = ({}) => {
                                       />
                                       <div className="text-[13px]"> /night</div>
                                     </div>
-                                    {element.property.rating ? (
+                                    {element.availableTime.coOwner.property.rating ? (
                                       <div className="flex flex-row items-center">
-                                        <div>{element.property.rating}</div>
+                                        <div>{element.availableTime.coOwner.property.rating}</div>
 
                                         <div className="text-[13px]">
                                           <MdStar color="orange" size={20} />
