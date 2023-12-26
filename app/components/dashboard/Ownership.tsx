@@ -44,9 +44,9 @@ const Ownership: React.FC<OwnershipProps> = ({ ownershipUser, resort, currentUse
 
   const onPageChange = (page: number) => setCurrentPage(page);
 
-  const handleRouter = (propertyId: any, userId: any, roomId: any, status: any) => {
+  const handleRouter = (coOwnerId : any, status: any) => {
     if (status === 'ACCEPTED') {
-      router.push(`/dashboard/ownership/${propertyId}/${userId}/${roomId}`);
+      router.push(`/dashboard/ownership/${coOwnerId}`);
     } else {
       toast.error('Apartment can only be edited once the status has been updated to ACCEPTED');
     }
@@ -56,6 +56,7 @@ const Ownership: React.FC<OwnershipProps> = ({ ownershipUser, resort, currentUse
     try {
       setLoading(true);
 
+      // let apiUrl = `https://holiday-swap.click/api/co-owners?userId=${currentUser?.userId}&pageNo=${
       let apiUrl = `https://holiday-swap.click/api/co-owners?userId=${currentUser?.userId}&pageNo=${
         currentPage - 1
       }&pageSize=10&sortDirection=desc`;
@@ -149,7 +150,7 @@ const Ownership: React.FC<OwnershipProps> = ({ ownershipUser, resort, currentUse
                       >
                         <Table.Cell>{item?.property.resort?.resortName}</Table.Cell>
                         <Table.Cell>{item.property.propertyName}</Table.Cell>
-                        <Table.Cell className="w-[140px]">{item.id.roomId}</Table.Cell>
+                        <Table.Cell className="w-[140px]">{item.roomId}</Table.Cell>
                         <Table.Cell className="w-[120px]">
                           {item.startTime !== null ? format(new Date(item.startTime), 'yyyy') : '-'}
                         </Table.Cell>
@@ -193,9 +194,7 @@ const Ownership: React.FC<OwnershipProps> = ({ ownershipUser, resort, currentUse
                                 <div
                                   onClick={() =>
                                     handleRouter(
-                                      item.id.propertyId,
-                                      item.id.userId,
-                                      item.id.roomId,
+                                      item.id,
                                       item.status
                                     )
                                   }
